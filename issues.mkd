@@ -4,3 +4,7 @@
 ## Open Issues ##
 
 1. Basic Skeleton
+2. Screen Scrolling
+3. Networking
+4. Sprite Additions
+5. Pathfinding
