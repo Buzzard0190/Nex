@@ -6,3 +6,4 @@
 	<classpathentry kind="lib" path="/lib/slick.jar" sourcepath="/lib/slick-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
+
