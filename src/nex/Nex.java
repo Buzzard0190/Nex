@@ -1,5 +1,8 @@
 package nex;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -20,6 +23,7 @@ public class Nex extends StateBasedGame{
 	// public static final String GAMEOVER_BANNER_RSC = "platformer/resource/gameover_banner.png";
 	
 	public static final String PLAYER = "nex/resource/sprites/player/player.png";
+	public static final String BLOCK = "nex/resource/sprites/player/block.png";
 	
 	//----- Sounds -----//
 	
@@ -31,6 +35,7 @@ public class Nex extends StateBasedGame{
 	//----- Declare Objects -----//
 	
 	Player player;
+	List<Temp> temp;
 
 	// ---- Declare Arrays -----//
 	
@@ -57,6 +62,7 @@ public class Nex extends StateBasedGame{
 		
 		//----- Create Arrays -----//
 		
+		temp = new ArrayList<Temp>(50);
 		// blocks = new ArrayList<Block>(100);
 		
 	}
@@ -81,6 +87,7 @@ public class Nex extends StateBasedGame{
 		// ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		
 		ResourceManager.loadImage(PLAYER);
+		ResourceManager.loadImage(BLOCK);
 		
 		//----- Sounds -----//
 		
