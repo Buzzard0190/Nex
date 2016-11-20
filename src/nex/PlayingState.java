@@ -9,6 +9,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 import jig.Entity;
 import jig.ResourceManager;
@@ -24,13 +25,41 @@ public class PlayingState extends BasicGameState {
 	private float xVelocity = 0;
 	private float yVelocity = 0;
 	public int count = 0;
-	// public static final int LEFT = -2;
+	private static TiledMap map;
+	static Tile[][] tileSet;
+	int stoneLayer, collisionLayer;
+	int player1x = 867, player1y = 967, player1Speed = 5;
+	// int player1x = 878, player1y = 878, player1Speed = 5;
+	boolean playerCollision = false;
+	String debugString;
+	boolean hmove = false, vmove = false;
+	int hspeed = 0, vspeed = 0;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		
 		Nex nx = (Nex)game;
+		
+			//--------------------------
+			//	Load map built in tiled
+			//--------------------------
+			
+			tileSet = new Tile[40][40];
+
+			try{
+				map = new TiledMap("nex/resource/sprites/tiled/Stone_Background.tmx");
+			} catch (SlickException e){
+				System.out.println("Slick Exception Error: Level 1 map failed to load.");
+			}
+			
+			stoneLayer = map.getLayerIndex("Stone_Background");
+//			stoneLayer = map.getLayerIndex("Red_Line");
+			collisionLayer = map.getLayerIndex("Collision");
+			
+			System.out.println(stoneLayer);
+			
+			initVars();
 		
 	}
 	
@@ -57,6 +86,21 @@ public class PlayingState extends BasicGameState {
 		
 		//----- Render -----//
 		
+		map.render(-player1x,-player1y,stoneLayer);
+//		map.render(-hspeed,-vspeed,stoneLayer);
+		
+//		System.out.println(map.getTileId(20, 20, map.getLayerIndex("Stone_Background")));
+//		System.out.println(map.);
+				
+//		for(int i = 0; i < 40; i++)
+//		{
+//			for(int j = 0; j < 40; j++)
+//			{
+//				System.out.print(tileSet[i][j]. + " ");
+//			}
+//			System.out.println();
+//		}
+		
 		nx.player.render(g);
 		
 		count = 0;
@@ -70,24 +114,50 @@ public class PlayingState extends BasicGameState {
 			}
 			
 		}
+		
+		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed, 10, 50);
+		
 //		System.out.println(count + " blocks rendered"); // DEBUG
+		
+		/*
+		 * DEBUG LEVEL COLLISIONS
+		 */
+		
+//		for(int i = 0; i < 40; i++){
+//			for(int j = 0; j < 40; j++){
+//				//sets a grid
+//				if(tileSet[j][i].getCollision() == 1){
+//					debugString = "1";
+//				} else {
+//					debugString = "0";
+//				}
+////				if(false){
+////					g.setColor(Color.orange);
+////					g.drawString(debugString, j*32, i*32);
+////				}
+//				if(true){
+//					g.setColor(Color.black);
+//					g.drawRect(j*65, i*65, 65, 65);
+//				}
+//				if(true){
+//					g.setColor(Color.blue);
+//					g.drawString(String.valueOf(tileSet[j][i].getWeight()), j*65, i*65+32);	
+//				}
+//			}
+//		}
 	}
 	
-	public void shift(StateBasedGame game, String direction)
+	public void shift(Nex nx, int hspeed, int vspeed)
 	{
-		Nex nx = (Nex)game;
-		
 		for (Temp t : nx.temp)
 		{
-			if(direction == "left")
-				t.setX(t.getX()+4);
-			else if(direction == "right")
-				t.setX(t.getX()-4);
-			else if(direction == "up")
-				t.setY(t.getY()+4);
-			else if(direction == "down")
-				t.setY(t.getY()-4);
+			t.setX(t.getX()-hspeed);
+			t.setY(t.getY()-vspeed);
 		}
+		
+		player1x += hspeed;
+		player1y += vspeed;
+			
 	}
 	
 	@Override
@@ -103,21 +173,53 @@ public class PlayingState extends BasicGameState {
 		
 		// dg.player.update(delta);
 		
+		for(int i = 0; i < 40; i++)
+		{
+			for(int j = 0; j < 40; j++)
+			{
+				if(tileSet[i][j].getCollision() == 1)
+					playerCollision = true;
+			}
+		}
+		
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- Moving Player ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
-		if (input.isKeyDown(Input.KEY_A)) {	// Left Key
-			shift(nx, "left");
+		if(Math.abs(player1x) % 65 == 22 || Math.abs(player1x) % 65 == 43)
+		{
+			hmove = false;
+			hspeed = 0;
 		}
-		else if (input.isKeyDown(Input.KEY_D)){
-			shift(nx, "right");
+		
+		if(Math.abs(player1y) % 65 == 57 || Math.abs(player1y) % 65 == 8)
+		{
+			vmove = false;
+			vspeed = 0;
 		}
-		else if (input.isKeyDown(Input.KEY_W)){
-			shift(nx, "up");
+		
+		if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) && vmove == false && !input.isKeyDown(Input.KEY_D)) {	// Left Key
+			hmove = true;
+			hspeed = -player1Speed;
 		}
-		else if (input.isKeyDown(Input.KEY_S)){
-			shift(nx, "down");
+		else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) && vmove == false && !input.isKeyDown(Input.KEY_A)){
+			hmove = true;
+			hspeed = player1Speed;
 		}
+		else if (input.isKeyDown(Input.KEY_W) && hmove == false && (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)){
+			vmove = true;
+			vspeed = -player1Speed;
+		}
+		else if (input.isKeyDown(Input.KEY_S) && hmove == false && (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)){
+			vmove = true;
+			vspeed = player1Speed;
+		}
+		
+		if(hmove || vmove)
+		{
+			shift(nx, hspeed, vspeed);
+		}
+		
+		System.out.println("player1x = " + player1x + ", player1y = " + player1y);
 		
 //		nx.player.setVelocity(new Vector(xVelocity, yVelocity));;
 //		nx.player.update(delta);
@@ -137,6 +239,26 @@ public class PlayingState extends BasicGameState {
 //				t.setPosition(new Vector(t.getX(),t.getY()));
 //			}
 //		}
+	}
+	
+	public static void initVars(){
+		//------------------------------------------------------------------------------
+		//cycle through collisions layer and mark any tiles with a collision as such
+		//------------------------------------------------------------------------------
+				
+		for(int i = 0; i < 40; i++){
+			for(int j = 0; j < 40; j++){
+				if(map.getTileId(i, j, map.getLayerIndex("Collision")) > 0){
+					tileSet[i][j] = new Tile();
+					tileSet[i][j].setCollision();
+					tileSet[i][j].setWeight(100);
+				} else {
+					tileSet[i][j] = new Tile();
+					tileSet[i][j].setWeight(1);
+				}
+			}
+		}
+		
 	}
 	
 	private void gameOver(Nex nx){
