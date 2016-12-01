@@ -5,7 +5,7 @@ import jig.Vector;
 public class Tile {
 	private boolean collision, bolt = false;
 	private int weight;	
-	private Vector location;
+	private Vector position;
 	
 	
 	public Tile(){
@@ -19,12 +19,8 @@ public class Tile {
 		this.collision = true;
 	}
 	
-	public void setLocation(Vector location){
-		this.location = location;
-	}
-	
-	public Vector getLocation(){
-		return this.location;
+	public void resetCollision(){
+		this.collision = false;
 	}
 	
 	public int getCollision(){
