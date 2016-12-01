@@ -7,6 +7,7 @@ import jig.Vector;
 public class Player extends Entity{
 	
 	private Vector velocity;
+	private Vector position;
 	
 	public Player(final int x, final int y){
 		super(x, y);
@@ -25,5 +26,15 @@ public class Player extends Entity{
 	
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
+	}
+	
+	public void setPlayerPosition(Vector position)
+	{
+		this.position = position;
+	}
+	
+	public Vector getPlayerPosition()
+	{
+		return this.position;
 	}
 }

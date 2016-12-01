@@ -24,8 +24,6 @@ public class PlayingState extends BasicGameState {
 	
 	private float xVelocity = 0;
 	private float yVelocity = 0;
-	private int player1x = 0;
-	private int player1y = 0;
 	public int count = 0;
 	private static TiledMap map;
 	static Tile[][] tileSet;
@@ -135,28 +133,28 @@ public class PlayingState extends BasicGameState {
 		
 //		for(int i = (int) nx.player.getPlayerPosition().getX(); i < 40; i++){
 //			for(int j = (int) nx.player.getPlayerPosition().getY(); j < 40; j++){
-		for(int i = 0; i < 40; i++){
-			for(int j = 0; j < 40; j++){
-				//sets a grid
-				if(tileSet[j][i].getCollision() == 1){
-					debugString = "1";
-				} else {
-					debugString = "0";
-				}
-//				if(false){
-//					g.setColor(Color.orange);
-//					g.drawString(debugString, j*32, i*32);
+//		for(int i = 0; i < 40; i++){
+//			for(int j = 0; j < 40; j++){
+//				//sets a grid
+//				if(tileSet[j][i].getCollision() == 1){
+//					debugString = "1";
+//				} else {
+//					debugString = "0";
 //				}
+////				if(false){
+////					g.setColor(Color.orange);
+////					g.drawString(debugString, j*32, i*32);
+////				}
+////				if(true){
+////					g.setColor(Color.black);
+////					g.drawRect(j*65, i*65, 65, 65);
+////				}
 //				if(true){
-//					g.setColor(Color.black);
-//					g.drawRect(j*65, i*65, 65, 65);
+//					g.setColor(Color.blue);
+//					g.drawString(String.valueOf(tileSet[j][i].getWeight()), j*65, i*65+65);
 //				}
-				if(true){
-					g.setColor(Color.blue);
-					g.drawString(String.valueOf(tileSet[j][i].getWeight()), j*65, i*65+65);
-				}
-			}
-		}
+//			}
+//		}
 	}
 	
 	public void shift(Nex nx, int hspeed, int vspeed)
@@ -195,26 +193,6 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- Moving Player ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
-<<<<<<< HEAD
-		if (input.isKeyDown(Input.KEY_A)) {	// Left Key
-			shift(nx, "left");
-			player1x -= 1;
-		}
-		else if (input.isKeyDown(Input.KEY_D)){
-			shift(nx, "right");
-			player1x += 1;
-		}
-		else if (input.isKeyDown(Input.KEY_W)){
-			shift(nx, "up");
-			player1y -= 1;
-		}
-		else if (input.isKeyDown(Input.KEY_S)){
-			shift(nx, "down");
-			player1y += 1;
-		}
-		
-		System.out.println("Player x: " + player1x + " ,y " + player1y);
-=======
 		if(Math.abs(player1x) % 65 == 22 || Math.abs(player1x) % 65 == 43)
 		{
 			hmove = false;
@@ -295,8 +273,9 @@ public class PlayingState extends BasicGameState {
 			shift(nx, hspeed, vspeed);
 		}
 		
+		System.out.println("Player x: " + player1x + " ,y " + player1y);
+		
 		// System.out.println("player1x = " + player1x + ", player1y = " + player1y);
->>>>>>> issue2
 		
 //		nx.player.setVelocity(new Vector(xVelocity, yVelocity));;
 //		nx.player.update(delta);
