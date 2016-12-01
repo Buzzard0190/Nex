@@ -23,6 +23,8 @@ public class PlayingState extends BasicGameState {
 	
 	private float xVelocity = 0;
 	private float yVelocity = 0;
+	private int player1x = 0;
+	private int player1y = 0;
 	public int count = 0;
 	// public static final int LEFT = -2;
 	
@@ -108,16 +110,22 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		if (input.isKeyDown(Input.KEY_A)) {	// Left Key
 			shift(nx, "left");
+			player1x -= 1;
 		}
 		else if (input.isKeyDown(Input.KEY_D)){
 			shift(nx, "right");
+			player1x += 1;
 		}
 		else if (input.isKeyDown(Input.KEY_W)){
 			shift(nx, "up");
+			player1y -= 1;
 		}
 		else if (input.isKeyDown(Input.KEY_S)){
 			shift(nx, "down");
+			player1y += 1;
 		}
+		
+		System.out.println("Player x: " + player1x + " ,y " + player1y);
 		
 //		nx.player.setVelocity(new Vector(xVelocity, yVelocity));;
 //		nx.player.update(delta);
