@@ -11,6 +11,7 @@ public class ClientHandler extends Thread {
 	BufferedReader in;
 	PrintWriter out;
 	
+	
 	public void run(){
 
 		String serverAddress = "localhost";
@@ -28,23 +29,32 @@ public class ClientHandler extends Thread {
 		
 		
 		while (true) {
-            String line = null;
+			
+
 			try {
-				line = in.readLine();
+				System.out.println(PlayingState.row + ", " + PlayingState.col);
+				out.print(PlayingState.row);
+				out.print(PlayingState.col);
+				out.flush();
+				int p1x = in.read();
+				int p1y = in.read();
+
+				PlayingState.updateP1(p1x, p1y);
+					
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-            if (line.startsWith("PlayerNumber")) {
-                //out.println(getName());
-            	//set the players number
-            } else if (line.startsWith("Error")) {
-            	//error if there are too many players....
-            	
-            } else if (line.startsWith("MESSAGE")) {
-                line.substring(8);
-            }
+//            if (line.startsWith("PlayerNumber")) {
+//                //out.println(getName());
+//            	//set the players number
+//            } else if (line.startsWith("Error")) {
+//            	//error if there are too many players....
+//            	
+//            } else if (line.startsWith("MESSAGE")) {
+//                line.substring(8);
+//            }
         }
     
 	} 

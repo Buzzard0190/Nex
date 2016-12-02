@@ -28,15 +28,14 @@ public class PlayingState extends BasicGameState {
 	private static TiledMap map;
 	static Tile[][] tileSet;
 	int stoneLayer, collisionLayer;
-	int player1x = 867, player1y = 967, player1Speed = 5;
-	// int player1x = 878, player1y = 878, player1Speed = 5;
+	static int player1x = 867, player1y = 967, player1Speed = 5;
 	boolean playerCollision = false;
 	String debugString;
 	boolean hmove = false, vmove = false;
 	int hspeed = 0, vspeed = 0;
 	float playerXPosition = 19;
 	float playerYPosition = 19;
-	float row = 0, col = 0;
+	public static int row = 0, col = 0;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -60,8 +59,8 @@ public class PlayingState extends BasicGameState {
 //			stoneLayer = map.getLayerIndex("Red_Line");
 			collisionLayer = map.getLayerIndex("Collision");
 			
-			System.out.println(stoneLayer);
-			System.out.println(collisionLayer);
+			//System.out.println(stoneLayer);
+			//System.out.println(collisionLayer);
 			
 			initVars();
 		
@@ -198,8 +197,8 @@ public class PlayingState extends BasicGameState {
 			hmove = false;
 			hspeed = 0;
 			
-			row = nx.player.getPlayerPosition().getX();
-			col = nx.player.getPlayerPosition().getY();
+			row = (int)nx.player.getPlayerPosition().getX();
+			col = (int)nx.player.getPlayerPosition().getY();
 		}
 		
 		if(Math.abs(player1y) % 65 == 57 || Math.abs(player1y) % 65 == 8)
@@ -207,14 +206,14 @@ public class PlayingState extends BasicGameState {
 			vmove = false;
 			vspeed = 0;
 			
-			row = nx.player.getPlayerPosition().getX();
-			col = nx.player.getPlayerPosition().getY();
+			row = (int)nx.player.getPlayerPosition().getX();
+			col = (int)nx.player.getPlayerPosition().getY();
 		}
 		
 		
 		if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_D)
-				&& tileSet[(int)row][(int)col-1].getCollision() == 0) {	// Left Key
+				&& tileSet[row][col-1].getCollision() == 0) {	// Left Key
 			hmove = true;
 			hspeed = -player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -223,7 +222,7 @@ public class PlayingState extends BasicGameState {
 		}
 		else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_A)
-				&& tileSet[(int)row][(int)col+1].getCollision() == 0){
+				&& tileSet[row][col+1].getCollision() == 0){
 			hmove = true;
 			hspeed = player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -232,7 +231,7 @@ public class PlayingState extends BasicGameState {
 		}
 		else if (input.isKeyDown(Input.KEY_W) && hmove == false 
 				&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
-				&& tileSet[(int)row-1][(int)col].getCollision() == 0){
+				&& tileSet[row-1][col].getCollision() == 0){
 			vmove = true;
 			vspeed = -player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -241,7 +240,7 @@ public class PlayingState extends BasicGameState {
 		}
 		else if (input.isKeyDown(Input.KEY_S) && hmove == false 
 				&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
-				&& tileSet[(int)row+1][(int)col].getCollision() == 0){
+				&& tileSet[row+1][col].getCollision() == 0){
 			vmove = true;
 			vspeed = player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -253,27 +252,25 @@ public class PlayingState extends BasicGameState {
 		if(hmove || vmove)
 		{
 			// DEBUG
-			System.out.println("Shifting");
-			for(int i = 0; i < 40; i++){
-				for(int j = 0; j < 40; j++){
-					System.out.print(tileSet[i][j].getCollision());
-				}
-				System.out.println();
-			}
-			System.out.println("\n");
+//			System.out.println("Shifting");
+//			for(int i = 0; i < 40; i++){
+//				for(int j = 0; j < 40; j++){
+//					System.out.print(tileSet[i][j].getCollision());
+//				}
+//				System.out.println();
+//			}
+//			System.out.println("\n");
 			
+			row = (int)nx.player.getPlayerPosition().getX();
+			col = (int)nx.player.getPlayerPosition().getY();
 			
-			
-			row = nx.player.getPlayerPosition().getX();
-			col = nx.player.getPlayerPosition().getY();
-			
-			System.out.println(row + " " + col + " " + playerXPosition + " " + playerYPosition);
-			tileSet[(int)row][(int)col].setCollision();
+//			System.out.println(row + " " + col + " " + playerXPosition + " " + playerYPosition);
+			tileSet[row][col].setCollision();
 			tileSet[(int)playerXPosition][(int)playerYPosition].resetCollision();
 			shift(nx, hspeed, vspeed);
 		}
 		
-		System.out.println("Player x: " + player1x + " ,y " + player1y);
+		//System.out.println("Player x: " + player1x + " ,y " + player1y);
 		
 		// System.out.println("player1x = " + player1x + ", player1y = " + player1y);
 		
@@ -304,14 +301,19 @@ public class PlayingState extends BasicGameState {
 			}
 		}
 		
-		System.out.println("Initial map: 0 = open, 1 = collision");
-		for(int i = 0; i < 40; i++){
-			for(int j = 0; j < 40; j++){
-				System.out.print(tileSet[i][j].getCollision());
-			}
-			System.out.println();
-		}
+//		System.out.println("Initial map: 0 = open, 1 = collision");
+//		for(int i = 0; i < 40; i++){
+//			for(int j = 0; j < 40; j++){
+//				System.out.print(tileSet[i][j].getCollision());
+//			}
+//			System.out.println();
+//		}
 		
+	}
+	
+	public static void updateP1(int x, int y){
+//		row = x;
+//		col = y;
 	}
 	
 	private void gameOver(Nex nx){

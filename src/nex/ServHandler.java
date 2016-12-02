@@ -31,7 +31,6 @@ public class ServHandler  extends Thread {
 		//Creates a print writer that connects to the sockets output stream
 		try {
 			
-			
 			out = new PrintWriter(userSocket.getOutputStream());
 			in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
 			
@@ -51,19 +50,26 @@ public class ServHandler  extends Thread {
 			}
 
 			data.playerWriters.add(out);
-			
+			System.out.println(data.playerWriters.isEmpty());
+			System.out.println(data.playerWriters.size());
+
 			
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
-                String input = in.readLine();
-                if (input == null) {
-                    return;
-                }
-                for (PrintWriter writer : data.playerWriters) {
-                    writer.println();
-                }
-            }
 
+                data.p1X = in.read();
+                data.p1Y = in.read();
+//                System.out.println("Hellllooooooooooooooo");
+
+                for (PrintWriter writer : data.playerWriters) {
+                	
+                	writer.print(data.p1X);
+                    writer.print(data.p1Y);
+                    writer.flush();
+
+                }
+                //System.out.println(data.p1X + "  " + data.p1Y);   
+			}
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
