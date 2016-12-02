@@ -122,10 +122,6 @@ public class ServerMain extends JFrame {
 		p2Connect.setBounds(310, 76, 110, 21);
 		contentPane.add(p2Connect);
 		
-		textField = new JTextField();
-		textField.setBounds(130, 206, 79, 21);
-		contentPane.add(textField);
-		textField.setColumns(10);
 		
 	}
 }

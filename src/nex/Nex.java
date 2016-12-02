@@ -17,6 +17,7 @@ public class Nex extends StateBasedGame{
 	public static final int PLAYINGSTATE = 0;
 	// public static final int STARTUPSTATE = 1;
 	public static final int GAMEOVERSTATE = 2;
+	public static final int CONNECTSTATE = 3;
 	
 	//----- Images -----//
 	// public static final String STARTUP_BANNER_RSC = "platformer/resource/startup_banner.png";
@@ -74,7 +75,9 @@ public class Nex extends StateBasedGame{
 		//----- States -----//
 		
 		// addState(new StartUpState());
+		addState(new ConnectState());
 		addState(new PlayingState());
+		
 		// addState(new GameOverState());
 		
 		//------------------------------------------------//
