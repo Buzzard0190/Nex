@@ -28,7 +28,8 @@ public class ServerMain extends JFrame {
 	JLabel p1Connect, p2Connect;
 	private JTextField textField;
 	static ServerMain frame;
-	
+	JLabel playerOneX, playerOneY;
+	JLabel playerTwoX, playerTwoY;
 
 	/**
 	 * Launch the application.
@@ -87,19 +88,19 @@ public class ServerMain extends JFrame {
 		playerTwo.setBounds(310, 52, 54, 21);
 		contentPane.add(playerTwo);
 		
-		JLabel playerOneX = new JLabel("x:  " + data.p1X);
+		playerOneX = new JLabel("x:  " + data.p1X);
 		playerOneX.setBounds(45, 99, 54, 21);
 		contentPane.add(playerOneX);
 		
-		JLabel playerOneY = new JLabel("y:  " + data.p1Y);
+		playerOneY = new JLabel("y:  " + data.p1Y);
 		playerOneY.setBounds(45, 118, 54, 21);
 		contentPane.add(playerOneY);
 		
-		JLabel playerTwoX = new JLabel("x:  " + data.p2X);
+		playerTwoX = new JLabel("x:  " + data.p2X);
 		playerTwoX.setBounds(310, 99, 54, 21);
 		contentPane.add(playerTwoX);
 		
-		JLabel playerTwoY = new JLabel("y:  " + data.p2Y);
+		playerTwoY = new JLabel("y:  " + data.p2Y);
 		playerTwoY.setBounds(310, 118, 54, 21);
 		contentPane.add(playerTwoY);
 		
@@ -121,7 +122,16 @@ public class ServerMain extends JFrame {
 		
 		p2Connect.setBounds(310, 76, 110, 21);
 		contentPane.add(p2Connect);
+	}
+
+	public void updateFrame(){
 		
 		
+		playerOneX.setText("x: " + data.p1X);
+		playerOneY.setText("y: " + data.p1Y);
+		
+		
+		playerTwoX.setText("x: " + data.p2X);
+		playerTwoY.setText("y: " + data.p2Y);
 	}
 }

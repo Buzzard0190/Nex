@@ -110,17 +110,17 @@ public class PlayingState extends BasicGameState {
 		
 		nx.player.render(g);
 		
-		count = 0;
-		for (Temp t : nx.temp)
-		{
-			if(t.getX() < nx.ScreenWidth+t.getCoarseGrainedWidth()/2 && t.getY() < nx.ScreenHeight+t.getCoarseGrainedHeight()/2
-					&& t.getX() > 0-t.getCoarseGrainedWidth()/2 && t.getY() > 0-t.getCoarseGrainedHeight()/2)
-			{
-				t.render(g);
-				count++; // DEBUG
-			}
-			
-		}
+//		count = 0;
+//		for (Temp t : nx.temp)
+//		{
+//			if(t.getX() < nx.ScreenWidth+t.getCoarseGrainedWidth()/2 && t.getY() < nx.ScreenHeight+t.getCoarseGrainedHeight()/2
+//					&& t.getX() > 0-t.getCoarseGrainedWidth()/2 && t.getY() > 0-t.getCoarseGrainedHeight()/2)
+//			{
+//				t.render(g);
+//				count++; // DEBUG
+//			}
+//			
+//		}
 		
 		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
 		
@@ -130,8 +130,6 @@ public class PlayingState extends BasicGameState {
 		 * DEBUG LEVEL COLLISIONS
 		 */
 		
-//		for(int i = (int) nx.player.getPlayerPosition().getX(); i < 40; i++){
-//			for(int j = (int) nx.player.getPlayerPosition().getY(); j < 40; j++){
 //		for(int i = 0; i < 40; i++){
 //			for(int j = 0; j < 40; j++){
 //				//sets a grid
@@ -158,11 +156,11 @@ public class PlayingState extends BasicGameState {
 	
 	public void shift(Nex nx, int hspeed, int vspeed)
 	{
-		for (Temp t : nx.temp)
-		{
-			t.setX(t.getX()-hspeed);
-			t.setY(t.getY()-vspeed);
-		}
+//		for (Temp t : nx.temp)
+//		{
+//			t.setX(t.getX()-hspeed);
+//			t.setY(t.getY()-vspeed);
+//		}
 		
 		player1x += hspeed;
 		player1y += vspeed;
@@ -222,7 +220,7 @@ public class PlayingState extends BasicGameState {
 		}
 		else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_A)
-				&& tileSet[row][col+1].getCollision() == 0){
+				&& tileSet[row][col+1].getCollision() == 0) {
 			hmove = true;
 			hspeed = player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -231,7 +229,7 @@ public class PlayingState extends BasicGameState {
 		}
 		else if (input.isKeyDown(Input.KEY_W) && hmove == false 
 				&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
-				&& tileSet[row-1][col].getCollision() == 0){
+				&& tileSet[row-1][col].getCollision() == 0) {
 			vmove = true;
 			vspeed = -player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -240,7 +238,7 @@ public class PlayingState extends BasicGameState {
 		}
 		else if (input.isKeyDown(Input.KEY_S) && hmove == false 
 				&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
-				&& tileSet[row+1][col].getCollision() == 0){
+				&& tileSet[row+1][col].getCollision() == 0) {
 			vmove = true;
 			vspeed = player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -291,12 +289,12 @@ public class PlayingState extends BasicGameState {
 		for(int i = 0; i < 40; i++){
 			for(int j = 0; j < 40; j++){
 				if(map.getTileId(i, j, map.getLayerIndex("Collision")) > 0){
-					tileSet[i][j] = new Tile();
-					tileSet[i][j].setCollision();
-					tileSet[i][j].setWeight(100);
+					tileSet[j][i] = new Tile();
+					tileSet[j][i].setCollision();
+					tileSet[j][i].setWeight(100);
 				} else {
-					tileSet[i][j] = new Tile();
-					tileSet[i][j].setWeight(1);
+					tileSet[j][i] = new Tile();
+					tileSet[j][i].setWeight(1);
 				}
 			}
 		}
