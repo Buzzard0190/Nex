@@ -1,11 +1,14 @@
 ## Resolved Issues ##
 
+1. Basic Skeleton
+2. Screen Scrolling and Grid Based Movement
 
 ## Open Issues ##
 
-1. Basic Skeleton
-2. Screen Scrolling and Grid Based Movement
 3. Networking
 4. Sprite Additions
-5. Pathfinding
-6. Random Map Generation
+5. Pathfinding 
+
+## High-bar ##
+
+7. Random Map Generation
