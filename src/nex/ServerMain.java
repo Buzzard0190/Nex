@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 
 public class ServerMain extends JFrame {
