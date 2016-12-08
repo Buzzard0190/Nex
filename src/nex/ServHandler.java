@@ -1,6 +1,8 @@
 package nex;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -8,13 +10,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashSet;
 
-public class ServHandler  extends Thread {
+public class ServHandler extends Thread {
 	
 	Socket userSocket;
 	ServerSocket server;
 	ServerData data;
-	PrintWriter out;
-	BufferedReader in;
+	DataOutputStream out;
+	DataInputStream in;
 	int playerSpot = 0;
 	ServerMain frame;
 
@@ -30,9 +32,11 @@ public class ServHandler  extends Thread {
 			
 		//Creates a print writer that connects to the sockets output stream
 		try {
-			
-			out = new PrintWriter(userSocket.getOutputStream());
-			in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
+			in = new DataInputStream(userSocket.getInputStream());
+		    out = new DataOutputStream(userSocket.getOutputStream());
+		    
+//			out = new PrintWriter(userSocket.getOutputStream());
+//			in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
 			
 			
 			if(!data.playerOne) {
@@ -44,15 +48,12 @@ public class ServHandler  extends Thread {
 				playerSpot = 2;
 				frame.p2Connect.setText("Connected");
 			} else {
-				out.println("No player spots available!");
+				//out.println("No player spots available!");
 				out.flush();
 				return;
 			}
 
 			data.playerWriters.add(out);
-			System.out.println(data.playerWriters.isEmpty());
-			System.out.println(data.playerWriters.size());
-
 			
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
@@ -61,13 +62,14 @@ public class ServHandler  extends Thread {
                 data.p1Y = in.read();
 //                System.out.println("Hellllooooooooooooooo");
 
-                for (PrintWriter writer : data.playerWriters) {
+                for (DataOutputStream writer : data.playerWriters) {
                 	
-                	writer.print(data.p1X);
-                    writer.print(data.p1Y);
+                	writer.write(data.p1X);
+                    writer.write(data.p1Y);
                     writer.flush();
 
                 }
+                frame.updateFrame();
                 //System.out.println(data.p1X + "  " + data.p1Y);   
 			}
 			

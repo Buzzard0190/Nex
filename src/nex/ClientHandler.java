@@ -1,6 +1,8 @@
 package nex;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -32,13 +34,24 @@ public class ClientHandler extends Thread {
 			
 
 			try {
-				System.out.println(PlayingState.row + ", " + PlayingState.col);
-				out.print(PlayingState.row);
-				out.print(PlayingState.col);
-				out.flush();
-				int p1x = in.read();
-				int p1y = in.read();
+				//System.out.println(PlayingState.row + ", " + PlayingState.col);
+//				out.print(PlayingState.row);
+//				out.print(PlayingState.col);
+//				out.flush();
+//				int p1x = in.read();
+//				int p1y = in.read();
 
+				DataInputStream in = new DataInputStream(socket.getInputStream());
+			    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+			    
+			    out.write(PlayingState.row);
+			    out.write(PlayingState.col);
+			    
+			    int p1x = in.read();
+			    int p1y = in.read();
+			    
+			    //System.out.println(p1x + ", " + p1y);
+			    
 				PlayingState.updateP1(p1x, p1y);
 					
 			} catch (IOException e) {
