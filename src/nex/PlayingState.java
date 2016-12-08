@@ -1,6 +1,8 @@
 package nex;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -22,12 +24,25 @@ public class PlayingState extends BasicGameState {
 	//-------------------- Variables --------------------//
 	//---------------------------------------------------//
 	
-	private float xVelocity = 0;
-	private float yVelocity = 0;
+	/*
+	 * Graph setup
+	 */
+	static ArrayList<Node> dijkstraGraph = new ArrayList<Node>();
+	int wallType;
+	static Graph graph;
+
+	/*
+	 * Map setup
+	 */
 	public int count = 0;
 	private static TiledMap map;
 	static Tile[][] tileSet;
 	int stoneLayer, collisionLayer;
+	public static int row = 0, col = 0;
+	
+	/*
+	 * Player setup
+	 */
 	static int player1x = 867, player1y = 967, player1Speed = 5;
 	boolean playerCollision = false;
 	String debugString;
@@ -35,7 +50,16 @@ public class PlayingState extends BasicGameState {
 	int hspeed = 0, vspeed = 0;
 	float playerXPosition = 19;
 	float playerYPosition = 19;
-	public static int row = 0, col = 0;
+	static int playerTileX;
+	static int playerTileY;
+	
+	/*
+	 * Enemy setup
+	 */
+	static ArrayList<EnemyCharacters> monsters = new ArrayList<EnemyCharacters>();
+	private int monsterX;
+	private int monsterY;
+	
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -60,13 +84,31 @@ public class PlayingState extends BasicGameState {
 			collisionLayer = map.getLayerIndex("Collision");
 			
 			//System.out.println(stoneLayer);
-			//System.out.println(collisionLayer);
+			//System.out.println(collisionLayer);			
 			
 			initVars();
 		
 			// Player starting position
 			nx.player.setPlayerPosition(new Vector(19,19));
 			tileSet[19][19].setCollision();
+			
+			monsterX = (int)nx.player.getPlayerPosition().getX();
+			monsterY = (int)nx.player.getPlayerPosition().getY();
+			
+			/*
+			 * Add and set up enemies
+			 */
+//			for(int i = 0; i < 3; i++)
+//			{
+				generateMonsterLoc();
+				
+				EnemyCharacters enemy = new EnemyCharacters(1, (monsterY*65)-player1x+32, (monsterX*65)-player1y+32);
+				monsters.add(enemy);
+				enemy.setEnemyPosition(new Vector(monsterX, monsterY));
+//				enemy.setID(i);
+				enemy.setID(0);
+				tileSet[monsterX][monsterY].setCollision();
+//			}
 	}
 	
 	@Override
@@ -77,12 +119,6 @@ public class PlayingState extends BasicGameState {
 		Nex nx = (Nex)game;
 		
 		// ResourceManager.getSound(Nex.MUSIC_RSC).loop();
-		
-		//----- Variable Value Initialization -----//
-		for(int i = -10; i < 30; i++)
-		{
-			nx.temp.add(new Temp(100*i, nx.ScreenHeight/3));
-		}
 	}
 	
 	@Override
@@ -110,6 +146,8 @@ public class PlayingState extends BasicGameState {
 		
 		nx.player.render(g);
 		
+		for (EnemyCharacters e : monsters) e.render(g);
+		
 //		count = 0;
 //		for (Temp t : nx.temp)
 //		{
@@ -122,9 +160,18 @@ public class PlayingState extends BasicGameState {
 //			
 //		}
 		
-		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
+		g.drawString("hmove = " + hmove + 
+				", vmove = " + vmove + "\nhspeed = " + hspeed + 
+				", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
 		
-//		System.out.println(count + " blocks rendered"); // DEBUG
+		int drawY = 110;
+		for (EnemyCharacters e : monsters)
+		{
+			g.drawString("Monster #" + e.getID() + " position = " + e.getEnemyPosition(), 10, drawY);
+			drawY += 20;
+		}
+		
+		//		System.out.println(count + " blocks rendered"); // DEBUG
 		
 		/*
 		 * DEBUG LEVEL COLLISIONS
@@ -156,11 +203,12 @@ public class PlayingState extends BasicGameState {
 	
 	public void shift(Nex nx, int hspeed, int vspeed)
 	{
-//		for (Temp t : nx.temp)
-//		{
-//			t.setX(t.getX()-hspeed);
-//			t.setY(t.getY()-vspeed);
-//		}
+	
+		for (EnemyCharacters e : monsters)
+		{
+			e.setX(e.getX()-hspeed);
+			e.setY(e.getY()-vspeed);
+		}
 		
 		player1x += hspeed;
 		player1y += vspeed;
@@ -249,16 +297,6 @@ public class PlayingState extends BasicGameState {
 		
 		if(hmove || vmove)
 		{
-			// DEBUG
-//			System.out.println("Shifting");
-//			for(int i = 0; i < 40; i++){
-//				for(int j = 0; j < 40; j++){
-//					System.out.print(tileSet[i][j].getCollision());
-//				}
-//				System.out.println();
-//			}
-//			System.out.println("\n");
-			
 			row = (int)nx.player.getPlayerPosition().getX();
 			col = (int)nx.player.getPlayerPosition().getY();
 			
@@ -278,10 +316,167 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- World Panning ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
+		
+		
+		//------------------------------------------------------------------------
+				//Monsters follow path
+				//------------------------------------------------------------------------
+
+				for(Iterator<Node> n = dijkstraGraph.iterator(); n.hasNext();){
+					Node cycleNode = n.next();
+					
+					for(Iterator<EnemyCharacters> e = monsters.iterator(); e.hasNext();){
+					
+						EnemyCharacters enemy = e.next();			
+						int myX = (int) Math.floor(enemy.getX()/32); int myY = (int) Math.floor(enemy.getY()/32);
+						float vx, vy;
+						
+						if(enemy.health <= 0){
+							e.remove();
+						}
+						
+						//------------------------------------------------------------------------
+						//check for collisions between static tile characters and moving entity
+						//------------------------------------------------------------------------
+//						if(tileSet[cycleNode.x][cycleNode.y].getCollision() == 1 && tileSet[cycleNode.x][cycleNode.y].pc != null){
+//							int distX = cycleNode.x - myX;
+//							int distY = cycleNode.y - myY;
+//							double distFight = Math.sqrt(distX*distX + distY*distY);
+//							
+//							if(distFight < 1.1 && tileSet[cycleNode.x][cycleNode.y].getPlayerType() > 0){
+//								enemy.inCombat = true;
+//								enemy.attackingX = cycleNode.x; enemy.attackingY = cycleNode.y;
+//								attacking.add(enemy);
+//							} else if (distFight < .5 && tileSet[cycleNode.x][cycleNode.y].getPlayerType() == 0){
+//								enemy.inCombat = true;
+//								enemy.attackingX = cycleNode.x; enemy.attackingY = cycleNode.y;
+//								attacking.add(enemy);
+//							}
+//
+//							if (distFight > 1.1 && tileSet[cycleNode.x][cycleNode.y].getPlayerType() == 2 && attackCountdown < 0){
+//								if(distFight < 4){
+//									if(tileSet[cycleNode.x][cycleNode.y].rollAttack() > enemy.getAC()){
+//											int damage = tileSet[cycleNode.x][cycleNode.y].rollDamage();
+//											System.out.println("archer damage is " + damage);
+//											enemy.characterHit(damage);
+//											float archerTheta = (float) Math.toDegrees(Math.atan2(myX-cycleNode.x, myY-cycleNode.y));
+//										    if(archerTheta < 0){
+//										    	archerTheta += 360;
+//										    }
+//											projectiles.add(new Projectile(1, cycleNode.x*32, cycleNode.y *32, myX, myY, Vector.getVector(archerTheta+90, (float) .7), archerTheta));
+//									}
+//								}
+//							}
+//						}
+						 
+						//------------------------------------------------------------------------
+						//Check to find a vector for character to move. Uses dijkstra graph
+						//------------------------------------------------------------------------
+						if(cycleNode.x == myX && cycleNode.y == myY && enemy.inCombat == false){
+//							if((cycleNode.px - myX) == 0){
+//								vx = .0f;
+//							} else 
+//								if ((cycleNode.px - myX) > 0){
+//								vx = -.2f;
+//							} 
+//							else {
+//								vx = .2f;
+//							}
+//							
+//							if((cycleNode.py - myY) == 0){
+//								vy = .0f;
+//							} else 
+//								if ((cycleNode.py - myY) > 0){
+//								vy = -.2f;
+//							} 
+//							else {
+//								vy = .2f;
+//							}
+//							enemy.setVelocity(vx, vy);
+//							enemy.update(delta);
+						} else if (enemy.inCombat == true){
+							
+							//-------------------------------------------------------------
+							//If the enemy is in combat it will set the velocity to 0
+							//-------------------------------------------------------------
+							enemy.setVelocity(.0f, .0f);
+							enemy.update(delta);
+						}
+					}
+				}
+				
 	
 	}
 	
+	//this builds a new graph based on changes made to the map and will rerun dijkstras to produce a usable graph
+		public static void buildGraph(){
+
+			graph = new Graph();
+
+			for(Iterator<Node> i = graph.nodes.iterator(); i.hasNext();){
+				Node n = i.next();
+				for(Iterator<Edge> j = n.edges.iterator(); j.hasNext();){
+					Edge e = j.next();
+					e.weight = tileSet[e.myX][e.myY].getWeight();
+				}
+			}		
+			
+			
+			dijkstraGraph = Dijkstra.runDijkstra(graph, playerTileX, playerTileY);		
+
+		}
+		
+	//Finds a place to put a monster on the game board
+		public void generateMonsterLoc(){
+			
+			while(tileSet[monsterX][monsterY].getCollision() != 0)
+			{
+				Random r = new Random();
+				int xory = r.nextInt(2);
+				
+				if(xory == 0){
+					//on x axis
+					r = new Random();
+					int topOrBottom = r.nextInt(2);
+					int tileLoc = r.nextInt(37);
+					
+					if(tileLoc == 0)
+						tileLoc += 1;
+					
+					monsterY = tileLoc;
+					if(topOrBottom == 0){
+						//top of grid
+						monsterX = 1;
+					} else {
+						//bottom of grid
+						monsterX = 33;
+					}
+					
+				} else {
+					//on y axis
+					r = new Random();
+					int leftOrRight = r.nextInt(2);
+					int tileLoc = r.nextInt(37);
+					
+					if(tileLoc == 0)
+						tileLoc += 1;
+					
+					monsterX = tileLoc;
+					if(leftOrRight == 0){
+						//left of grid
+						monsterY = 1;
+					} else {
+						//right of grid
+						monsterY = 35;
+					}
+				}
+			}
+		}
+	
 	public static void initVars(){
+		
+		monsters = new ArrayList<EnemyCharacters>();
+		
 		//------------------------------------------------------------------------------
 		//cycle through collisions layer and mark any tiles with a collision as such
 		//------------------------------------------------------------------------------
@@ -299,14 +494,10 @@ public class PlayingState extends BasicGameState {
 			}
 		}
 		
-//		System.out.println("Initial map: 0 = open, 1 = collision");
-//		for(int i = 0; i < 40; i++){
-//			for(int j = 0; j < 40; j++){
-//				System.out.print(tileSet[i][j].getCollision());
-//			}
-//			System.out.println();
-//		}
+		playerTileX = 19;
+		playerTileY = 19;
 		
+		buildGraph();
 	}
 	
 	public static void updateP1(int x, int y){
