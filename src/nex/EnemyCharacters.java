@@ -16,7 +16,7 @@ public class EnemyCharacters extends Entity{
 //	private int armorClass;
 	
 	private Vector velocity;
-	private Vector position;
+	private Vector tilePosition, mapPosition;
 	private int ID;
 	private int enemySpeed = 5;
 	
@@ -56,14 +56,24 @@ public class EnemyCharacters extends Entity{
 		return velocity;
 	}
 
-	public void setEnemyPosition(Vector position)
+	public void setTilePosition(Vector tilePosition)
 	{
-		this.position = position;
+		this.tilePosition = tilePosition;
 	}
 	
-	public Vector getEnemyPosition()
+	public Vector getTilePosition()
 	{
-		return this.position;
+		return this.tilePosition;
+	}
+	
+	public void setMapPosition(Vector mapPosition)
+	{
+		this.mapPosition = mapPosition;
+	}
+	
+	public Vector getMapPosition()
+	{
+		return this.mapPosition;
 	}
 	
 	public void setID(int ID)
