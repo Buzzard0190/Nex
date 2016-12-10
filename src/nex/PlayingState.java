@@ -35,6 +35,9 @@ public class PlayingState extends BasicGameState {
 	int hspeed = 0, vspeed = 0;
 	float playerXPosition = 19;
 	float playerYPosition = 19;
+	static float otherPlayerX = Float.POSITIVE_INFINITY;
+	static float otherPlayerY = Float.POSITIVE_INFINITY;
+	static int playerNumber = 0, numberOfPlayers = 0;
 	public static int row = 0, col = 0;
 	
 	@Override
@@ -110,6 +113,10 @@ public class PlayingState extends BasicGameState {
 		
 		nx.player.render(g);
 		
+		if(numberOfPlayers == 2){
+			nx.otherPlayer.render(g);
+		}
+		
 //		count = 0;
 //		for (Temp t : nx.temp)
 //		{
@@ -122,7 +129,7 @@ public class PlayingState extends BasicGameState {
 //			
 //		}
 		
-		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
+		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
 		
 //		System.out.println(count + " blocks rendered"); // DEBUG
 		
@@ -274,6 +281,12 @@ public class PlayingState extends BasicGameState {
 		
 //		nx.player.setVelocity(new Vector(xVelocity, yVelocity));;
 //		nx.player.update(delta);
+		
+		/*--------------------------------------------------------------------------------------------------------*/
+		/*---------------------------------------- Update other Player -------------------------------------------*/
+		/*--------------------------------------------------------------------------------------------------------*/
+	
+		nx.otherPlayer.setPlayerPosition(new Vector(otherPlayerX,otherPlayerY));
 		
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- World Panning ---------------------------------------------*/
