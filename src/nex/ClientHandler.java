@@ -48,23 +48,23 @@ public class ClientHandler extends Thread {
 
 				
 			    
-			    out.write(PlayingState.row);
-			    out.write(PlayingState.col);
+			    out.writeInt(PlayingState.player1x);
+			    out.writeInt(PlayingState.player1y);
 			   
 			    PlayingState.numberOfPlayers = in.read();
 			    if(PlayingState.playerNumber == 1){
 			    
-			    	int p1x = in.read();
-				    int p1y = in.read();	    
-				    PlayingState.otherPlayerX = in.read();
-				    PlayingState.otherPlayerY = in.read();
+			    	int p1x = in.readInt();
+				    int p1y = in.readInt();	    
+				    PlayingState.otherPlayerX = in.readInt();
+				    PlayingState.otherPlayerY = in.readInt();
 			    
 			    } else {
 			    
-			    	PlayingState.otherPlayerX = in.read();
-				    PlayingState.otherPlayerY = in.read();
-				  	int p1x = in.read();
-				    int p1y = in.read();
+			    	PlayingState.otherPlayerX = in.readInt();
+				    PlayingState.otherPlayerY = in.readInt();
+				  	int p1x = in.readInt();
+				    int p1y = in.readInt();
 			    
 			    }
 			    

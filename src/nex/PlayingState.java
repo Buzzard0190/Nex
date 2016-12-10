@@ -35,8 +35,8 @@ public class PlayingState extends BasicGameState {
 	int hspeed = 0, vspeed = 0;
 	float playerXPosition = 19;
 	float playerYPosition = 19;
-	static float otherPlayerX = Float.POSITIVE_INFINITY;
-	static float otherPlayerY = Float.POSITIVE_INFINITY;
+	static int otherPlayerX = 0;
+	static int otherPlayerY = 0;
 	static int playerNumber = 0, numberOfPlayers = 0;
 	public static int row = 0, col = 0;
 	

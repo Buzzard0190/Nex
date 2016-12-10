@@ -59,20 +59,20 @@ public class ServHandler extends Thread {
 			while (true) {
 
 				if(playerSpot == 1){
-					 data.p1X = in.read();
-					 data.p1Y = in.read();
+					 data.p1X = in.readInt();
+					 data.p1Y = in.readInt();
 				} else {
-					 data.p2X = in.read();
-					 data.p2Y = in.read();
+					 data.p2X = in.readInt();
+					 data.p2Y = in.readInt();
 				}
                
 //                for (DataOutputStream writer : data.playerWriters) {
 //                	
                 	out.write(data.numberOfPlayers);
-                	out.write(data.p1X);
-                    out.write(data.p1Y);
-                    out.write(data.p2X);
-                    out.write(data.p2Y);
+                	out.writeInt(data.p1X);
+                    out.writeInt(data.p1Y);
+                    out.writeInt(data.p2X);
+                    out.writeInt(data.p2Y);
                 	
                     out.flush();
 
