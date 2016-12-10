@@ -10,8 +10,8 @@ import java.net.Socket;
 
 public class ClientHandler extends Thread {
 	
-	BufferedReader in;
-	PrintWriter out;
+	DataInputStream in;
+	DataOutputStream out;
 	
 	
 	public void run(){
@@ -21,14 +21,19 @@ public class ClientHandler extends Thread {
 		try {
 			
 			socket = new Socket("localhost", 1201);
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream(), true);
+			in = new DataInputStream(socket.getInputStream());
+		    out = new DataOutputStream(socket.getOutputStream());
 		
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+		try {
+			PlayingState.playerNumber = in.read();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
 		while (true) {
 			
@@ -41,18 +46,33 @@ public class ClientHandler extends Thread {
 //				int p1x = in.read();
 //				int p1y = in.read();
 
-				DataInputStream in = new DataInputStream(socket.getInputStream());
-			    DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+				
 			    
 			    out.write(PlayingState.row);
 			    out.write(PlayingState.col);
+			   
+			    PlayingState.numberOfPlayers = in.read();
+			    if(PlayingState.playerNumber == 1){
 			    
-			    int p1x = in.read();
-			    int p1y = in.read();
+			    	int p1x = in.read();
+				    int p1y = in.read();	    
+				    PlayingState.otherPlayerX = in.read();
+				    PlayingState.otherPlayerY = in.read();
+			    
+			    } else {
+			    
+			    	PlayingState.otherPlayerX = in.read();
+				    PlayingState.otherPlayerY = in.read();
+				  	int p1x = in.read();
+				    int p1y = in.read();
+			    
+			    }
+			    
+			    
 			    
 			    //System.out.println(p1x + ", " + p1y);
 			    
-				PlayingState.updateP1(p1x, p1y);
+				//PlayingState.updateP1(p1x, p1y);
 					
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -35,7 +35,7 @@ public class Nex extends StateBasedGame{
 
 	//----- Declare Objects -----//
 	
-	Player player;
+	Player player, otherPlayer;
 	List<Temp> temp;
 
 	// ---- Declare Arrays -----//
@@ -99,6 +99,8 @@ public class Nex extends StateBasedGame{
 		//----- Create Instances -----//
 		
 		player = new Player(ScreenWidth/2, ScreenHeight/2);
+		otherPlayer = new Player(ScreenWidth/2, ScreenHeight/2);
+
 	}
 	
 	public static void main(String[] args) {

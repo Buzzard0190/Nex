@@ -52,23 +52,31 @@ public class ServHandler extends Thread {
 				out.flush();
 				return;
 			}
-
+			data.numberOfPlayers++;
 			data.playerWriters.add(out);
-			
+			out.write(playerSpot);
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
 
-                data.p1X = in.read();
-                data.p1Y = in.read();
-//                System.out.println("Hellllooooooooooooooo");
-
-                for (DataOutputStream writer : data.playerWriters) {
+				if(playerSpot == 1){
+					 data.p1X = in.read();
+					 data.p1Y = in.read();
+				} else {
+					 data.p2X = in.read();
+					 data.p2Y = in.read();
+				}
+               
+//                for (DataOutputStream writer : data.playerWriters) {
+//                	
+                	out.write(data.numberOfPlayers);
+                	out.write(data.p1X);
+                    out.write(data.p1Y);
+                    out.write(data.p2X);
+                    out.write(data.p2Y);
                 	
-                	writer.write(data.p1X);
-                    writer.write(data.p1Y);
-                    writer.flush();
+                    out.flush();
 
-                }
+               // }
                 frame.updateFrame();
                 //System.out.println(data.p1X + "  " + data.p1Y);   
 			}
@@ -81,6 +89,14 @@ public class ServHandler extends Thread {
                 data.playerWriters.remove(out);
             }
             try {
+                if(playerSpot == 1){
+                	frame.p1Connect.setText("Not Connected");
+    				data.playerOne = false;
+                } else if (playerSpot == 2){
+                	frame.p2Connect.setText("Not Connected");
+    				data.playerTwo = false;
+                }
+                data.numberOfPlayers--;
                 userSocket.close();
             } catch (IOException e) {
             }
