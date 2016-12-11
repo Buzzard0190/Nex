@@ -28,12 +28,12 @@ public class Player extends Entity{
 		translate(velocity.scale(delta));
 	}
 	
-	public void setTilePosition(Vector position)
+	public void setPlayerPosition(Vector position)
 	{
 		this.position = position;
 	}
 	
-	public Vector getTilePosition()
+	public Vector getPlayerPosition()
 	{
 		return this.position;
 	}
