@@ -26,10 +26,10 @@ public class Node {
 		}
 			
 		//[1, -1]	NE
-		if(this.x+1 >= 0 && this.x+1 < 29 && this.y-1 >= 0 && this.y-1 < 25){
-			//System.out.println("Running NE");
-			edges.add(new Edge(this.x, this.y, 1, (-1)));
-		}
+//		if(this.x+1 >= 0 && this.x+1 < 29 && this.y-1 >= 0 && this.y-1 < 25){
+//			//System.out.println("Running NE");
+//			edges.add(new Edge(this.x, this.y, 1, (-1)));
+//		}
 		
 		//[1, 0] 	E
 		if(this.x+1 >= 0 && this.x+1 < 29 && this.y >= 0 && this.y < 25){
@@ -38,10 +38,10 @@ public class Node {
 		}
 		
 		//[1, 1] 	SE
-		if(this.x+1 >= 0 && this.x+1 < 29 && this.y+1 >= 0 && this.y+1 < 25){
-			//System.out.println("Running SE");
-			edges.add(new Edge(this.x, this.y, 1, 1));
-		}
+//		if(this.x+1 >= 0 && this.x+1 < 29 && this.y+1 >= 0 && this.y+1 < 25){
+//			//System.out.println("Running SE");
+//			edges.add(new Edge(this.x, this.y, 1, 1));
+//		}
 		
 		//[0, 1] 	S
 		if(this.x >= 0 && this.x < 29 && this.y+1 >= 0 && this.y+1 < 25){
@@ -50,10 +50,10 @@ public class Node {
 		}
 		
 		//[-1, 1]	SW
-		if(this.x-1 >= 0 && this.x-1 < 29 && this.y+1 >= 0 && this.y+1 < 25){
-			//System.out.println("Running SW");
-			edges.add(new Edge(this.x, this.y, (-1), 1));
-		}
+//		if(this.x-1 >= 0 && this.x-1 < 29 && this.y+1 >= 0 && this.y+1 < 25){
+//			//System.out.println("Running SW");
+//			edges.add(new Edge(this.x, this.y, (-1), 1));
+//		}
 		
 		//[-1, 0] 	W
 		if(this.x-1 >= 0 && this.x-1 < 29 && this.y >= 0 && this.y < 25){
@@ -62,10 +62,10 @@ public class Node {
 		}
 		
 		//[-1, -1] 	NW
-		if(this.x-1 >= 0 && this.x-1 < 29 && this.y-1 >= 0 && this.y-1 < 25){
-			//System.out.println("Running NW");
-			edges.add(new Edge(this.x, this.y, (-1), (-1)));
-		}
+//		if(this.x-1 >= 0 && this.x-1 < 29 && this.y-1 >= 0 && this.y-1 < 25){
+//			//System.out.println("Running NW");
+//			edges.add(new Edge(this.x, this.y, (-1), (-1)));
+//		}
 		
 	}
 
