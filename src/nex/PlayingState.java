@@ -286,7 +286,11 @@ public class PlayingState extends BasicGameState {
 		/*---------------------------------------- Update other Player -------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
 	
-		nx.otherPlayer.setPlayerPosition(new Vector(otherPlayerX,otherPlayerY));
+		float otherX = otherPlayerX - player1x + nx.ScreenWidth/2;
+		float otherY = otherPlayerY - player1y + nx.ScreenHeight/2;
+		
+		nx.otherPlayer.setPlayerPosition(new Vector(otherX, otherY));
+		nx.otherPlayer.setPosition(new Vector(otherX, otherY));
 		
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- World Panning ---------------------------------------------*/
