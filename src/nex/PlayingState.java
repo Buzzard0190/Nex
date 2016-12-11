@@ -67,6 +67,7 @@ public class PlayingState extends BasicGameState {
 	 * Debug booleans
 	 */
 	private boolean monsterDebug = true;
+	private boolean debugDijkstra = true;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -189,6 +190,14 @@ public class PlayingState extends BasicGameState {
 			{
 				g.drawString("Monster #" + e.getID() + " position = " + e.getTilePosition(), 10, drawY);
 				drawY += 20;
+			}
+		}
+		
+		if(debugDijkstra){
+			g.setColor(Color.white);
+			for(Iterator<Node> dijkstraNode = dijkstraGraph.iterator(); dijkstraNode.hasNext();){
+				Node printPath = dijkstraNode.next();
+				g.drawLine(printPath.x*65+33, printPath.y*65+33, printPath.px*65+33, printPath.py*65+33);
 			}
 		}
 		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
@@ -329,8 +338,8 @@ public class PlayingState extends BasicGameState {
 			tileSet[(int)playerXPosition][(int)playerYPosition].resetCollision();
 			shift(nx, hspeed, vspeed);
 			
-			// Perhaps?
-//			buildGraph();
+			// Perhaps? Yes!
+			buildGraph();
 		}
 
 		
@@ -349,6 +358,13 @@ public class PlayingState extends BasicGameState {
 				monsterDebug = true;
 		}
 		
+		if(input.isKeyPressed(Input.KEY_2))
+		{
+			if(debugDijkstra)
+				debugDijkstra = false;
+			else
+				debugDijkstra = true;
+		}
 		
 		//------------------------------------------------------------------------
 		//Monsters follow path
@@ -492,7 +508,7 @@ public class PlayingState extends BasicGameState {
 		}		
 		
 		
-		dijkstraGraph = Dijkstra.runDijkstra(graph, playerTileX, playerTileY);
+		dijkstraGraph = Dijkstra.runDijkstra(graph, row, col);
 
 		System.out.println(dijkstraGraph.size());
 		for (Node g : dijkstraGraph)
