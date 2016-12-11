@@ -358,6 +358,13 @@ public class PlayingState extends BasicGameState {
 				monsterDebug = true;
 		}
 		
+		if(input.isKeyPressed(Input.KEY_2))
+		{
+			if(debugDijkstra)
+				debugDijkstra = false;
+			else
+				debugDijkstra = true;
+		}
 		
 		//------------------------------------------------------------------------
 		//Monsters follow path
