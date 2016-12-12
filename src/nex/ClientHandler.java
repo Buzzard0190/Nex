@@ -16,11 +16,11 @@ public class ClientHandler extends Thread {
 	
 	public void run(){
 
-		String serverAddress = "localhost";
+//		String serverAddress = ConnectState.serverAddress;
 		Socket socket = null;
 		try {
 			
-			socket = new Socket("localhost", 1201);
+			socket = new Socket(ConnectState.serverAddress, 1201);
 			in = new DataInputStream(socket.getInputStream());
 		    out = new DataOutputStream(socket.getOutputStream());
 		
