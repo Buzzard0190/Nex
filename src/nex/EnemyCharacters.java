@@ -16,7 +16,7 @@ public class EnemyCharacters extends Entity{
 //	private int armorClass;
 	
 	private Vector velocity;
-	private Vector tilePosition, mapPosition;
+	private Vector tilePosition, mapPosition, futureTile;
 	private int ID;
 	private int enemySpeed = 5;
 	
@@ -24,15 +24,14 @@ public class EnemyCharacters extends Entity{
 
 		super(x, y);
 
-		if(type == 1){
+		if(type == 1) {
 			addImage(ResourceManager.getImage(Nex.BLOCK));
 			goblin = true;
 			health = 10;
 //			armorClass = 13;
 			velocity = new Vector(.0f, .0f);
 			inCombat = false;
-		} 
-		else if (type == 2){
+		} else if (type == 2) {
 //			addImage(ResourceManager.getImage(Game.SKELLY_RSC).getScaledCopy((float) .12));
 //			skeleton = true;
 //			health = 15;
@@ -63,6 +62,14 @@ public class EnemyCharacters extends Entity{
 	
 	public Vector getTilePosition()
 	{
+		return this.tilePosition;
+	}
+	
+	public void setFutureTile(int x, int y) {
+		this.tilePosition = new Vector(x,y);
+	}
+	
+	public Vector getFutureTile(){
 		return this.tilePosition;
 	}
 	
