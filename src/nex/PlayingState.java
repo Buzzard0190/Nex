@@ -191,7 +191,7 @@ public class PlayingState extends BasicGameState {
 			int drawY = 190;
 			for (EnemyCharacters e : monsters)
 			{
-				g.drawString("Monster #" + e.getID() + " position = " + e.getTilePosition(), 10, drawY);
+				g.drawString("Monster #" + e.getID() + " position = " + e.getPosition(), 10, drawY);
 				drawY += 20;
 			}
 		}
