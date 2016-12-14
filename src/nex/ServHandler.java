@@ -76,8 +76,15 @@ public class ServHandler extends Thread {
                     out.writeInt(data.p2Y);
                     
 //enemy test! up in here up in here
-                    out.writeInt(data.enemyX);
-                    out.writeInt(data.enemyY);
+                    
+//                    out.writeInt(data.enemyX);
+//                    out.writeInt(data.enemyY);
+                    
+                    for (ServerEnemyData e : ServerData.monsters)
+                    {
+                    	out.writeInt((int)e.getMapPosition().getX());
+	                    out.writeInt((int)e.getMapPosition().getY());
+                    }
     				
                 	
                     out.flush();

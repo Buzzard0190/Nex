@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
 import jig.Entity;
+import jig.Vector;
 
 public class ServerData {
 
@@ -29,7 +30,7 @@ public class ServerData {
 	static Graph graph;
     
     //Enemy Setup
-//	static ArrayList<EnemyCharacters> monsters = new ArrayList<EnemyCharacters>();
+	static ArrayList<ServerEnemyData> monsters = new ArrayList<ServerEnemyData>();
 	int enemyX = (15*65)-867+33;
 	int enemyY = (19*65)-967+33;
 	
@@ -45,10 +46,9 @@ public class ServerData {
 	
 	public ServerData(){
 		
-		////////change this!!!!!!!!!!
-//		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
-//		EnemyCharacters enemy = new EnemyCharacters(1, (15*65)-867+33, (19*65)-967+33);
-//		monsters.add(enemy);
+		ServerEnemyData enemy = new ServerEnemyData((15*65)-867+33, (19*65)-967+33);
+		enemy.setTilePosition(new Vector(15,19));
+		monsters.add(enemy);
 		
 		//--------------------------
 		//	Load map built in tiled
