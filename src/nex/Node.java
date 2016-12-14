@@ -20,7 +20,7 @@ public class Node {
 	public void getEdges(){
 		
 		//[0, -1] 	N
-		if(this.x >= 0 && this.x < 29 && this.y-1 >= 0 && this.y-1 < 25){
+		if(this.x >= 0 && this.x < 40 && this.y-1 >= 0 && this.y-1 < 40){
 			//System.out.println("Running N");
 			edges.add(new Edge(this.x, this.y, 0, (-1)));
 		}
@@ -32,7 +32,7 @@ public class Node {
 //		}
 		
 		//[1, 0] 	E
-		if(this.x+1 >= 0 && this.x+1 < 29 && this.y >= 0 && this.y < 25){
+		if(this.x+1 >= 0 && this.x+1 < 40 && this.y >= 0 && this.y < 40){
 			//System.out.println("Running E");
 			edges.add(new Edge(this.x, this.y, 1, 0));
 		}
@@ -44,7 +44,7 @@ public class Node {
 //		}
 		
 		//[0, 1] 	S
-		if(this.x >= 0 && this.x < 29 && this.y+1 >= 0 && this.y+1 < 25){
+		if(this.x >= 0 && this.x < 40 && this.y+1 >= 0 && this.y+1 < 40){
 			//System.out.println("Running S");
 			edges.add(new Edge(this.x, this.y, 0, 1));
 		}
@@ -56,7 +56,7 @@ public class Node {
 //		}
 		
 		//[-1, 0] 	W
-		if(this.x-1 >= 0 && this.x-1 < 29 && this.y >= 0 && this.y < 25){
+		if(this.x-1 >= 0 && this.x-1 < 40 && this.y >= 0 && this.y < 40){
 			//System.out.println("Running W");
 			edges.add(new Edge(this.x, this.y, (-1), 0));
 		}
