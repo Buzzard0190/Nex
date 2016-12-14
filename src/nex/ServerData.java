@@ -1,15 +1,8 @@
 package nex;
 
-import java.io.DataOutputStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.tiled.TiledMap;
-
-import jig.Entity;
 import jig.Vector;
 
 public class ServerData {
@@ -20,7 +13,7 @@ public class ServerData {
 	int p2X, p2Y;
 	int numberOfPlayers;
 	volatile boolean playerOne, playerTwo;
-    volatile HashSet<DataOutputStream> playerWriters;
+    //volatile HashSet<DataOutputStream> playerWriters;
     
 	/*
 	 * Graph setup
@@ -38,40 +31,24 @@ public class ServerData {
 	 * Map setup
 	 */
 	public int count = 0;
-	private static TiledMap map;
 	static Tile[][] tileSet;
-	int stoneLayer, collisionLayer;
 	public static int row = 0, col = 0;
 
+	
+	//INIT
 	
 	public ServerData(){
 		
 		ServerEnemyData enemy = new ServerEnemyData((15*65)-867+33, (19*65)-967+33);
 		enemy.setTilePosition(new Vector(15,19));
 		monsters.add(enemy);
-		
-		//--------------------------
-		//	Load map built in tiled
-		//--------------------------
-		
-		tileSet = new Tile[40][40];
-
-		try{
-			map = new TiledMap("nex/resource/sprites/tiled/Stone_Background.tmx");
-		} catch (SlickException e){
-			System.out.println("Slick Exception Error: Level 1 map failed to load.");
-		}
-		
-//		collisionLayer = map.getLayerIndex("Collision");
-
-//		tileSet[19][19].setCollision();
 
 		p1X = 0; p1Y = 0;
 		p2X = 0; p2Y = 0;
 		numberOfPlayers = 0;
 		playerOne = false;
 		playerTwo = false;
-		playerWriters = new HashSet<DataOutputStream>();
+		//playerWriters = new HashSet<DataOutputStream>();
 	}
 
 	
@@ -87,16 +64,10 @@ public class ServerData {
 				e.weight = tileSet[e.myX][e.myY].getWeight();
 			}
 		}		
-		
-		
 		dijkstraGraph = Dijkstra.runDijkstra(graph, (int) Math.floor(p1X/65), (int) Math.floor(p1Y/65));
-
-//		System.out.println(dijkstraGraph.size());
-//		for (Node g : dijkstraGraph)
-//		{
-//			System.out.println("x = " + g.x + ", y = " + g.y + ", dist = " + g.dist);
-//		}
 	}
-		
+	
+	
+	
 
 }
