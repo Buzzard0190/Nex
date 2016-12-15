@@ -22,6 +22,17 @@ public class PlayingState extends BasicGameState {
 	//-------------------- Variables --------------------//
 	//---------------------------------------------------//
 	
+	public static final int UP = 0;
+	public static final int DOWN = 1;
+	public static final int LEFT = 2;
+	public static final int RIGHT = 3;
+	
+	public static final int MOVING = 4;
+	public static final int ATK1 = 5;
+	public static final int ATK2 = 6;
+	public static final int IDLE = 7;
+	
+	
 	private float xVelocity = 0;
 	private float yVelocity = 0;
 	public int count = 0;
@@ -36,6 +47,11 @@ public class PlayingState extends BasicGameState {
 	float playerXPosition = 19;
 	float playerYPosition = 19;
 	public static int row = 0, col = 0;
+	
+	
+	private int mouseX, mouseY;
+	private int angle;
+	private int playerDir;
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -123,6 +139,10 @@ public class PlayingState extends BasicGameState {
 //		}
 		
 		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
+		g.drawString("mouseX = " + mouseX + " mouseY = " + mouseY, 500, 50);
+		g.drawString("angle = " + angle, 500, 65);
+		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
+		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
 		
 //		System.out.println(count + " blocks rendered"); // DEBUG
 		
@@ -174,8 +194,39 @@ public class PlayingState extends BasicGameState {
 
 		Nex nx = (Nex)game;
 		
+		// ----- Rotating player based on mouse position. -----//
+		mouseX = input.getMouseX();
+		mouseY = input.getMouseY();
+		
+		angle = (int)(Math.atan2((mouseY - nx.player.getY()), (mouseX - nx.player.getX())) * 180/Math.PI);
+		
+		// Converts angle to be 0 to 360 instead of -180 to 0 to 180. 
+		if(angle > 0)
+			angle = 360 - angle;
+		else
+			angle = -angle;
+		
+		playerDir = nx.player.getDir();
+		
+		if(nx.player.getStatus() == IDLE){
+			if (angle > 45 && angle <= 135 && playerDir != UP){
+				nx.player.changeIdleDir(UP);
+			}
+			else if (angle > 135 && angle <= 225 && playerDir != LEFT){
+				nx.player.changeIdleDir(LEFT);
+			}
+			else if (angle > 225 && angle <= 315 && playerDir != DOWN){
+				nx.player.changeIdleDir(DOWN);
+			}
+			else if (angle >= 0 && angle <= 45 || angle > 315 && angle <= 360 && playerDir != RIGHT){
+				nx.player.changeIdleDir(RIGHT);
+			}
+		}
+		
+			
+		
 		/*--------------------------------------------------------------------------------------------------------*/
-		/*------------------------------------ Update Objects ------------------------------------*/
+		/*------------------------------------------- Update Objects ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
 		
 		// dg.player.update(delta);
@@ -208,7 +259,7 @@ public class PlayingState extends BasicGameState {
 			col = (int)nx.player.getPlayerPosition().getY();
 		}
 		
-		
+		// Running LEFT
 		if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_D)
 				&& tileSet[row][col-1].getCollision() == 0) {	// Left Key
@@ -217,7 +268,10 @@ public class PlayingState extends BasicGameState {
 			playerXPosition = nx.player.getPlayerPosition().getX();
 			playerYPosition = nx.player.getPlayerPosition().getY();
 			nx.player.setPlayerPosition(new Vector(playerXPosition,playerYPosition-1));
+			
+			nx.player.runDir(LEFT);
 		}
+		// Running RIGHT
 		else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_A)
 				&& tileSet[row][col+1].getCollision() == 0) {
@@ -226,7 +280,10 @@ public class PlayingState extends BasicGameState {
 			playerXPosition = nx.player.getPlayerPosition().getX();
 			playerYPosition = nx.player.getPlayerPosition().getY();
 			nx.player.setPlayerPosition(new Vector(playerXPosition,playerYPosition+1));
+			
+			nx.player.runDir(RIGHT);
 		}
+		// Running UP
 		else if (input.isKeyDown(Input.KEY_W) && hmove == false 
 				&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
 				&& tileSet[row-1][col].getCollision() == 0) {
@@ -235,7 +292,10 @@ public class PlayingState extends BasicGameState {
 			playerXPosition = nx.player.getPlayerPosition().getX();
 			playerYPosition = nx.player.getPlayerPosition().getY();
 			nx.player.setPlayerPosition(new Vector(playerXPosition-1,playerYPosition));
+			
+			nx.player.runDir(UP);
 		}
+		// Running DOWN
 		else if (input.isKeyDown(Input.KEY_S) && hmove == false 
 				&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
 				&& tileSet[row+1][col].getCollision() == 0) {
@@ -244,11 +304,12 @@ public class PlayingState extends BasicGameState {
 			playerXPosition = nx.player.getPlayerPosition().getX();
 			playerYPosition = nx.player.getPlayerPosition().getY();
 			nx.player.setPlayerPosition(new Vector(playerXPosition+1,playerYPosition));
+			
+			nx.player.runDir(DOWN);
 		}
 
 		
-		if(hmove || vmove)
-		{
+		if(hmove || vmove){
 			// DEBUG
 //			System.out.println("Shifting");
 //			for(int i = 0; i < 40; i++){
@@ -259,6 +320,10 @@ public class PlayingState extends BasicGameState {
 //			}
 //			System.out.println("\n");
 			
+			/* XXX THIS MAY NEED TO BE IN THE WASD KEY PRESSES XXX */
+			if(nx.player.getStatus() != MOVING)
+				nx.player.setStatus(MOVING);
+			
 			row = (int)nx.player.getPlayerPosition().getX();
 			col = (int)nx.player.getPlayerPosition().getY();
 			
@@ -266,6 +331,17 @@ public class PlayingState extends BasicGameState {
 			tileSet[row][col].setCollision();
 			tileSet[(int)playerXPosition][(int)playerYPosition].resetCollision();
 			shift(nx, hspeed, vspeed);
+		}
+		
+		// Update player status to IDLE
+		if(!hmove && !vmove){
+			
+			if(nx.player.getStatus() == MOVING){
+				nx.player.stopRunning();
+			}
+			
+			nx.player.setStatus(IDLE);
+			
 		}
 		
 		//System.out.println("Player x: " + player1x + " ,y " + player1y);

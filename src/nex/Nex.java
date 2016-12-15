@@ -23,7 +23,15 @@ public class Nex extends StateBasedGame{
 	// public static final String STARTUP_BANNER_RSC = "platformer/resource/startup_banner.png";
 	// public static final String GAMEOVER_BANNER_RSC = "platformer/resource/gameover_banner.png";
 	
-	public static final String PLAYER = "nex/resource/sprites/player/player.png";
+	public static final String CLERIC_IDLE_UP = "nex/resource/sprites/player/Cleric_Idle_Up.png";
+	public static final String CLERIC_IDLE_DOWN = "nex/resource/sprites/player/Cleric_Idle_Down.png";
+	public static final String CLERIC_IDLE_RIGHT = "nex/resource/sprites/player/Cleric_Idle_Right.png";
+	public static final String CLERIC_IDLE_LEFT = "nex/resource/sprites/player/Cleric_Idle_Left.png";
+	
+	public static final String CLERIC_RUN = "nex/resource/sprites/player/Cleric_Walk.png";
+	
+	
+	
 	public static final String BLOCK = "nex/resource/sprites/player/block.png";
 	
 	//----- Sounds -----//
@@ -89,7 +97,12 @@ public class Nex extends StateBasedGame{
 		// ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		// ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		
-		ResourceManager.loadImage(PLAYER);
+		ResourceManager.loadImage(CLERIC_IDLE_UP);
+		ResourceManager.loadImage(CLERIC_IDLE_DOWN);
+		ResourceManager.loadImage(CLERIC_IDLE_LEFT);
+		ResourceManager.loadImage(CLERIC_IDLE_RIGHT);
+		ResourceManager.loadImage(CLERIC_RUN);
+		
 		ResourceManager.loadImage(BLOCK);
 		
 		//----- Sounds -----//
