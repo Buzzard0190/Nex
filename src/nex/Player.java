@@ -51,28 +51,61 @@ public class Player extends Entity{
 		
 		if(status == IDLE)
 			removeIdleImage();
-		else if (status == MOVING){
-			// do more complicated stuff
-		}
 		
 		if(status == IDLE){
 			switch(dir){
-			case UP:
-				addAnimation(clericRunUp);
-				direction = UP;
-				break;
-			case DOWN:
-				addAnimation(clericRunDown);
-				direction = DOWN;
-				break;
-			case LEFT:
-				addAnimation(clericRunLeft);
-				direction = LEFT;
-				break;
-			case RIGHT:
-				addAnimation(clericRunRight);
-				direction = RIGHT;
-				break;
+				case UP:
+					addAnimation(clericRunUp);
+					direction = UP;
+					break;
+				case DOWN:
+					addAnimation(clericRunDown);
+					direction = DOWN;
+					break;
+				case LEFT:
+					addAnimation(clericRunLeft);
+					direction = LEFT;
+					break;
+				case RIGHT:
+					addAnimation(clericRunRight);
+					direction = RIGHT;
+					break;
+			}
+		}
+		else if(status == MOVING){
+			switch(dir){
+			
+				case UP:
+					if(direction != UP){
+						addAnimation(clericRunUp);
+						removeAnim();
+						direction = UP;
+					}
+					break;
+					
+				case DOWN:
+					if(direction != DOWN){
+						addAnimation(clericRunDown);
+						removeAnim();
+						direction = DOWN;
+					}
+					break;
+					
+				case LEFT:
+					if(direction != LEFT){
+						addAnimation(clericRunLeft);
+						removeAnim();
+						direction = LEFT;
+					}
+					break;
+					
+				case RIGHT:
+					if(direction != RIGHT){
+						addAnimation(clericRunRight);
+						removeAnim();
+						direction = RIGHT;
+					}
+					break;
 			}
 		}
 		
