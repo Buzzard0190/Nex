@@ -3,10 +3,12 @@ package nex;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
@@ -66,6 +68,20 @@ public class PlayingState extends BasicGameState {
 	 */
 	private boolean monsterDebug = true;
 	private boolean debugDijkstra = true;
+	
+	/*
+	 * UI information
+	 */
+	private int otherPlayerHealth;
+	private int goldAcquired = 0;
+	private int otherGoldAcquired = 0;
+	private int currentExperience = 0;
+	private int currentLevel = 1;
+	private int otherPlayerCurrentLevel = 1;
+	private int currentFloor = 1;
+	private int otherCurrentFloor = 1;
+	private String playerDirection;
+	
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -177,19 +193,21 @@ public class PlayingState extends BasicGameState {
 //			
 //		}
 		
-		g.drawString("hmove = " + hmove + 
-				", vmove = " + vmove + "\nhspeed = " + hspeed + 
-				", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
+//		g.drawString("hmove = " + hmove + 
+//				", vmove = " + vmove + "\nhspeed = " + hspeed + 
+//				", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
+//		
+//		if(monsterDebug)
+//		{
+//			int drawY = 190;
+//			for (EnemyCharacters e : monsters)
+//			{
+//				g.drawString("Monster #" + e.getID() + " position = " + e.getPosition(), 10, drawY);
+//				drawY += 20;
+//			}
+//		}
 		
-		if(monsterDebug)
-		{
-			int drawY = 190;
-			for (EnemyCharacters e : monsters)
-			{
-				g.drawString("Monster #" + e.getID() + " position = " + e.getPosition(), 10, drawY);
-				drawY += 20;
-			}
-		}
+		
 		
 //		if(debugDijkstra){
 //			g.setColor(Color.white);
@@ -198,7 +216,7 @@ public class PlayingState extends BasicGameState {
 //				g.drawLine(printPath.x*65+33, printPath.y*65+33, printPath.px*65+33, printPath.py*65+33);
 //			}
 //		}
-		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
+//		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
 		
 		//		System.out.println(count + " blocks rendered"); // DEBUG
 		
@@ -228,6 +246,93 @@ public class PlayingState extends BasicGameState {
 //				}
 //			}
 //		}
+		
+		/*
+		 * Display UI information for the player
+		 */
+		
+		// Display the health	
+//		g.setColor(Color.yellow);
+		g.drawString("Health:", 10, 30);
+		g.setColor(Color.red);
+		g.fillRect(75, 35, nx.player.health, 10);
+		
+		//health bar outline
+		g.setColor(Color.white);
+		g.drawRect(75, 35, 120, 10);
+
+//		g.setColor(Color.white); // Default color
+		
+//		g.setColor(Color.yellow);
+		// How much gold has been acquired
+		g.drawString("Gold Acquired: " + goldAcquired, 10, 50);
+		
+		// Current level of the player
+		g.drawString("Player Level: " + currentLevel, 10, 70);
+		
+		// Current floor the player is on
+		g.drawString("Current floor: " + currentFloor, 10, 90);
+		
+		/*
+		 * Display UI for the other player
+		 */
+		if(otherPlayerX != 0 && otherPlayerY != 0)
+		{
+			// Display the health		
+			g.drawString("P2 Health:", nx.ScreenWidth-225, 30);
+			g.setColor(Color.red);
+			g.fillRect(nx.ScreenWidth-130, 35, nx.otherPlayer.health, 10);
+			
+			//health bar outline
+			g.setColor(Color.white);
+			g.drawRect(nx.ScreenWidth-130, 35, 120, 10);
+	
+	//		g.setColor(Color.white); // Default color
+			
+			// How much gold has been acquired
+			g.drawString("P2 Gold Acquired: " + otherGoldAcquired, nx.ScreenWidth-225, 50);
+			
+			// Current level of the player
+			g.drawString("Player 2 Level: " + otherPlayerCurrentLevel, nx.ScreenWidth-225, 70);
+			
+			// Current floor the player is on
+			g.drawString("P2 Current floor: " + otherCurrentFloor, nx.ScreenWidth-225, 90);
+			
+			float otherX = otherPlayerX - player1x + nx.ScreenWidth/2;
+			float otherY = otherPlayerY - player1y + nx.ScreenHeight/2;
+			
+//			Draw arrow pointing from player 1 to player 2
+//			g.scale(.5f, .5f);
+//			g.drawLine(50, nx.ScreenHeight-50, otherX, otherY);
+		
+			if(otherX < 0 || otherX > nx.ScreenWidth || otherY < 0 || otherY > nx.ScreenHeight)
+			{
+				if(nx.player.getX() > otherX) // Move right
+				{
+					g.drawRect(20, nx.ScreenHeight/2, 20, 20);
+					g.drawString("<", 23, nx.ScreenHeight/2+2);
+				}
+				if(nx.player.getX() < otherX) // Move left
+				{
+					g.drawRect(nx.ScreenWidth-40, nx.ScreenHeight/2, 20, 20);
+					g.drawString(">", nx.ScreenWidth-36, nx.ScreenHeight/2+2);
+				}
+				if(nx.player.getY() > otherY) // Move up
+				{
+					g.drawRect(nx.ScreenWidth/2-2, 20, 20, 20);
+					g.drawString("^", nx.ScreenWidth/2+3, 22);
+				}
+				if(nx.player.getY() < otherY) // Move down
+				{
+					g.drawRect(nx.ScreenWidth/2, nx.ScreenHeight-40, 20, 20);
+					g.drawString("v", nx.ScreenWidth/2+5, nx.ScreenHeight-40);
+				}
+			}
+			
+		}
+		
+		
+		
 	}
 	
 	public void shift(Nex nx, int hspeed, int vspeed)
