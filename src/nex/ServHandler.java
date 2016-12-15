@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.newdawn.slick.SlickException;
@@ -21,6 +22,7 @@ public class ServHandler extends Thread {
 	DataInputStream in;
 	int playerSpot = 0;
 	ServerMain frame;
+	int updateGraph;
 	
 	
 	public ServHandler(Socket passedSocket, ServerData d, ServerMain f) {	
@@ -56,31 +58,19 @@ public class ServHandler extends Thread {
 			//let the player know which spot he takes
 			out.write(playerSpot);
 			
-			List<Integer> tileSet2 = new ArrayList<Integer>();
 			
 			// collect collision information
 			if(playerSpot == 1) {
 				for(int i = 0; i < 40; i++){
 					for(int j = 0; j < 40; j++){
-//						ServerData.tileSet[j][i] = new Tile();
-//						tileSet2[j][i] = in.readInt();
 						int collision = in.read();
-						
-//						ServerData.tileSet2[j][i] = collision;
-						
-//						tileSet2.add(collision);
-						System.out.println(collision);
-//						System.out.println(ServerData.tileSet2[j][i]);
-						
-//						if(collision == 1) {
-////							ServerData.tileSet[j][i].setCollision();
-//						}
+						ServerData.tileSet1.add(collision);
 					}
 				}
 			}
 
-			
-			
+			ServerData.buildTileSet();
+
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
 
@@ -106,6 +96,7 @@ public class ServHandler extends Thread {
     		
                 out.flush();
                 frame.updateFrame();
+                ServerData.buildGraph();
 			}
 			
 		} catch (IOException e) {
