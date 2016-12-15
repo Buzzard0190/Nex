@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="65" tileheight="65" nextobjectid="1">
+ <tileset firstgid="1" name="Gound_Tile_Stone" tilewidth="65" tileheight="65" tilecount="1" columns="1">
+  <image source="../environment/Gound_Tile_Stone.png" width="65" height="65"/>
+ </tileset>
+ <tileset firstgid="2" name="Gound_Tile_Stone_Lines" tilewidth="65" tileheight="65" tilecount="1" columns="1">
+  <image source="../environment/Gound_Tile_Stone_Lines.png" width="65" height="65"/>
+ </tileset>
+ <layer name="Stone_Background" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3DAQkAAAwEofv+pddjKLhqqqqqqqqqjx7+ij1jABkAAA==
+  </data>
+ </layer>
+ <layer name="Collision" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3OsQkAMAzAsOT/p3uElxQk8O6dmT3eVf4af42/xl/jr/HX+Gv8Nf4af42/xl/jr/HX+Gv8Nf4af80vf5d7RRTsfgAZAAA=
+  </data>
+ </layer>
+ <layer name="Red_Line" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3DAQkAAAwEoeP7h16PoeCqqaqqqqqqPnohIG7EABkAAA==
+  </data>
+ </layer>
+</map>
