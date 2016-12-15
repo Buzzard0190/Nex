@@ -32,6 +32,7 @@ public class ServerData {
 	 */
 	public int count = 0;
 	static Tile[][] tileSet;
+	static int[][] tileSet2;
 	public static int row = 0, col = 0;
 
 	
