@@ -16,6 +16,7 @@ public class ClientHandler extends Thread {
 	
 	public void run(){
 
+		//setup socket and connect to server
 		String serverAddress = "localhost";
 		Socket socket = null;
 		try {
@@ -29,25 +30,32 @@ public class ClientHandler extends Thread {
 			e.printStackTrace();
 		}
 		
+		//gather whatever player number this player happens to be
 		try {
 			PlayingState.playerNumber = in.read();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		
+		//if its the first player send the current collision setup
+		if(PlayingState.playerNumber == 1){
+			for(int i = 0; i < 40; i++){
+				for(int j = 0; j < 40; j++){
+					try {
+						out.write(PlayingState.tileSet[j][i].getCollision());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		//write to server until connection is terminated
 		while (true) {
-			
-
+	
 			try {
-				//System.out.println(PlayingState.row + ", " + PlayingState.col);
-//				out.print(PlayingState.row);
-//				out.print(PlayingState.col);
-//				out.flush();
-//				int p1x = in.read();
-//				int p1y = in.read();
 
-				
-			    
 			    out.writeInt(PlayingState.player1x);
 			    out.writeInt(PlayingState.player1y);
 			   
@@ -72,30 +80,17 @@ public class ClientHandler extends Thread {
 				{
 			    	int somex = in.readInt();
 			    	int somey = in.readInt();
-			    	System.out.println("x: " + somex + " y: " + somey);
+//			    	System.out.println("x: " + somex + " y: " + somey);
 					e.setX(somex-PlayingState.offsetX);
 					e.setY(somey-PlayingState.offsetY);
 				}
-			    
-			    
-			    //System.out.println(p1x + ", " + p1y);
-			    
-				//PlayingState.updateP1(p1x, p1y);
+
 					
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-//            if (line.startsWith("PlayerNumber")) {
-//                //out.println(getName());
-//            	//set the players number
-//            } else if (line.startsWith("Error")) {
-//            	//error if there are too many players....
-//            	
-//            } else if (line.startsWith("MESSAGE")) {
-//                line.substring(8);
-//            }
+
         }
     
 	} 

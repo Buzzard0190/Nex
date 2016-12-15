@@ -1,10 +1,8 @@
 package nex;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
@@ -13,9 +11,6 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
-import jig.Entity;
-import jig.ResourceManager;
-import jig.Shape;
 import jig.Vector;
 
 public class PlayingState extends BasicGameState {
@@ -36,7 +31,7 @@ public class PlayingState extends BasicGameState {
 	 */
 	public int count = 0;
 	private static TiledMap map;
-	static Tile[][] tileSet;
+	volatile static Tile[][] tileSet;
 	int stoneLayer, collisionLayer;
 	public static int row = 0, col = 0;
 	

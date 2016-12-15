@@ -1,14 +1,17 @@
 package nex;
 
-import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.tiled.TiledMap;
+
 
 public class ServHandler extends Thread {
 	
@@ -19,8 +22,8 @@ public class ServHandler extends Thread {
 	DataInputStream in;
 	int playerSpot = 0;
 	ServerMain frame;
-
-	int testme = 0;
+	int updateGraph;
+	
 	
 	public ServHandler(Socket passedSocket, ServerData d, ServerMain f) {	
 		userSocket = passedSocket;					//assigns the user socket to the object
@@ -35,10 +38,6 @@ public class ServHandler extends Thread {
 		try {
 			in = new DataInputStream(userSocket.getInputStream());
 		    out = new DataOutputStream(userSocket.getOutputStream());
-		    
-//			out = new PrintWriter(userSocket.getOutputStream());
-//			in = new BufferedReader(new InputStreamReader(userSocket.getInputStream()));
-			
 			
 			if(!data.playerOne) {
 				data.playerOne = true;
@@ -54,8 +53,24 @@ public class ServHandler extends Thread {
 				return;
 			}
 			data.numberOfPlayers++;
-			data.playerWriters.add(out);
+			//data.playerWriters.add(out);
+			
+			//let the player know which spot he takes
 			out.write(playerSpot);
+			
+			
+			// collect collision information
+			if(playerSpot == 1) {
+				for(int i = 0; i < 40; i++){
+					for(int j = 0; j < 40; j++){
+						int collision = in.read();
+						ServerData.tileSet1.add(collision);
+					}
+				}
+			}
+
+			ServerData.buildTileSet();
+
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
 
@@ -67,32 +82,21 @@ public class ServHandler extends Thread {
 					 data.p2Y = in.readInt();
 				}
                
-//                for (DataOutputStream writer : data.playerWriters) {
-//                	
-                	out.write(data.numberOfPlayers);
-                	out.writeInt(data.p1X);
-                    out.writeInt(data.p1Y);
-                    out.writeInt(data.p2X);
-                    out.writeInt(data.p2Y);
+                out.write(data.numberOfPlayers);
+                out.writeInt(data.p1X);
+                out.writeInt(data.p1Y);
+                out.writeInt(data.p2X);
+                out.writeInt(data.p2Y);
+
                     
-//enemy test! up in here up in here
-                    
-//                    out.writeInt(data.enemyX);
-//                    out.writeInt(data.enemyY);
-                    
-                    for (ServerEnemyData e : ServerData.monsters)
-                    {
-                    	out.writeInt((int)e.getMapPosition().getX());
-	                    out.writeInt((int)e.getMapPosition().getY());
-                    }
-    				
-                	
-                    out.flush();
-                    
-                   
-               // }
+                for (ServerEnemyData e : ServerData.monsters) {
+                	out.writeInt((int)e.getMapPosition().getX());
+                	out.writeInt((int)e.getMapPosition().getY());
+             	}
+    		
+                out.flush();
                 frame.updateFrame();
-                //System.out.println(data.p1X + "  " + data.p1Y);   
+                ServerData.buildGraph();
 			}
 			
 		} catch (IOException e) {
@@ -100,7 +104,7 @@ public class ServHandler extends Thread {
 			e.printStackTrace();
 		} finally {
             if (out != null) {
-                data.playerWriters.remove(out);
+               // data.playerWriters.remove(out);
             }
             try {
                 if(playerSpot == 1){
@@ -118,6 +122,8 @@ public class ServHandler extends Thread {
 		
 	}	
 }
+
+
 
 
 //Developed ideas based on the information at http://cs.lmu.edu/~ray/notes/javanetexamples/
