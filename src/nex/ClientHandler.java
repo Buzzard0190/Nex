@@ -42,7 +42,6 @@ public class ClientHandler extends Thread {
 			for(int i = 0; i < 40; i++){
 				for(int j = 0; j < 40; j++){
 					try {
-						System.out.println(PlayingState.tileSet[j][i].getCollision());
 						out.write(PlayingState.tileSet[j][i].getCollision());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

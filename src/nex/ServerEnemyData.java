@@ -14,6 +14,7 @@ public class ServerEnemyData {
 	private Vector tilePosition, mapPosition, futureTile;
 	private int ID;
 	private int enemySpeed = 5;
+	static int directionMovement = 0;
 	
 	public ServerEnemyData(int x, int y){
 
