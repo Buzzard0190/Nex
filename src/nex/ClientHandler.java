@@ -38,19 +38,19 @@ public class ClientHandler extends Thread {
 		}
 		
 		//if its the first player send the current collision setup
-//		if(PlayingState.playerNumber == 1){
-//			for(int i = 0; i < 40; i++){
-//				for(int j = 0; j < 40; j++){
-//					try {
-//						System.out.println(PlayingState.tileSet[j][i].getCollision());
-//						out.write(PlayingState.tileSet[j][i].getCollision());
-//					} catch (IOException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		}
+		if(PlayingState.playerNumber == 1){
+			for(int i = 0; i < 40; i++){
+				for(int j = 0; j < 40; j++){
+					try {
+						System.out.println(PlayingState.tileSet[j][i].getCollision());
+						out.write(PlayingState.tileSet[j][i].getCollision());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 		
 		//write to server until connection is terminated
 		while (true) {
@@ -81,7 +81,7 @@ public class ClientHandler extends Thread {
 				{
 			    	int somex = in.readInt();
 			    	int somey = in.readInt();
-			    	System.out.println("x: " + somex + " y: " + somey);
+//			    	System.out.println("x: " + somex + " y: " + somey);
 					e.setX(somex-PlayingState.offsetX);
 					e.setY(somey-PlayingState.offsetY);
 				}
