@@ -9,13 +9,13 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.tiled.TiledMap;
 
 import jig.Entity;
 import jig.ResourceManager;
-import jig.Shape;
 import jig.Vector;
 
 public class PlayingState extends BasicGameState {
@@ -93,6 +93,24 @@ public class PlayingState extends BasicGameState {
 	 */
 	private boolean monsterDebug = false;
 	private boolean debugDijkstra = false;
+
+	
+	/*
+	 * UI information
+	 */
+	static public int goldAcquired = 0;
+	static public int currentExperience = 0;
+	static public int currentLevel = 1;
+	static public int currentFloor = 1;
+	
+	
+	static public int otherPlayerHealth;
+	static public int otherGoldAcquired = 0;
+	static public int otherPlayerCurrentLevel = 1;
+	static public int otherCurrentFloor = 1;
+	
+	private String playerDirection;
+	
 	
 	
 	// Used to rotate the player to the mouse.
@@ -224,27 +242,30 @@ public class PlayingState extends BasicGameState {
 		
 		nx.player.render(g);
 		
-		for (EnemyCharacters e : monsters) e.render(g);
+		for (EnemyCharacters e : monsters) {
+			if(e.aliveOrDead == 1){
+				e.render(g);
+			}
+		}
 		
 		if(numberOfPlayers == 2){
 			nx.otherPlayer.render(g);
 		}
+
 		
-//		count = 0;
-//		for (Temp t : nx.temp)
+//		g.drawString("hmove = " + hmove + 
+//				", vmove = " + vmove + "\nhspeed = " + hspeed + 
+//				", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
+//		
+//		if(monsterDebug)
 //		{
-//			if(t.getX() < nx.ScreenWidth+t.getCoarseGrainedWidth()/2 && t.getY() < nx.ScreenHeight+t.getCoarseGrainedHeight()/2
-//					&& t.getX() > 0-t.getCoarseGrainedWidth()/2 && t.getY() > 0-t.getCoarseGrainedHeight()/2)
+//			int drawY = 190;
+//			for (EnemyCharacters e : monsters)
 //			{
-//				t.render(g);
-//				count++; // DEBUG
+//				g.drawString("Monster #" + e.getID() + " position = " + e.getPosition(), 10, drawY);
+//				drawY += 20;
 //			}
-//			
 //		}
-		
-		g.drawString("hmove = " + hmove + 
-				", vmove = " + vmove + "\nhspeed = " + hspeed + 
-				", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition(), 10, 50);
 		
 		if(monsterDebug)
 		{
@@ -274,37 +295,98 @@ public class PlayingState extends BasicGameState {
 		
 		if(canInteract)
 			g.drawString("E: Interact", nx.player.getX() - 50, nx.player.getY() - 50);
-		
-		
+
 		
 		//		System.out.println(count + " blocks rendered"); // DEBUG
 		
+
+		
 		/*
-		 * DEBUG LEVEL COLLISIONS
+		 * Display UI information for the player
 		 */
 		
-//		for(int i = 0; i < 40; i++){
-//			for(int j = 0; j < 40; j++){
-//				//sets a grid
-//				if(tileSet[j][i].getCollision() == 1){
-//					debugString = "1";
-//				} else {
-//					debugString = "0";
-//				}
-////				if(false){
-////					g.setColor(Color.orange);
-////					g.drawString(debugString, j*32, i*32);
-////				}
-////				if(true){
-////					g.setColor(Color.black);
-////					g.drawRect(j*65, i*65, 65, 65);
-////				}
-//				if(true){
-//					g.setColor(Color.blue);
-//					g.drawString(String.valueOf(tileSet[j][i].getWeight()), j*65, i*65+65);
-//				}
-//			}
-//		}
+		// Display the health	
+//		g.setColor(Color.yellow);
+		g.drawString("Health:", 10, 30);
+		g.setColor(Color.red);
+		g.fillRect(75, 35, nx.player.health, 10);
+		
+		//health bar outline
+		g.setColor(Color.white);
+		g.drawRect(75, 35, 120, 10);
+
+//		g.setColor(Color.white); // Default color
+		
+//		g.setColor(Color.yellow);
+		// How much gold has been acquired
+		g.drawString("Gold Acquired: " + goldAcquired, 10, 50);
+		
+		// Current level of the player
+		g.drawString("Player Level: " + currentLevel, 10, 70);
+		
+		// Current floor the player is on
+		g.drawString("Current floor: " + currentFloor, 10, 90);
+		
+		/*
+		 * Display UI for the other player
+		 */
+		if(otherPlayerX != 0 && otherPlayerY != 0)
+		{
+			// Display the health		
+			g.drawString("P2 Health:", nx.ScreenWidth-225, 30);
+			g.setColor(Color.red);
+			g.fillRect(nx.ScreenWidth-130, 35, otherPlayerHealth, 10);
+			
+			//health bar outline
+			g.setColor(Color.white);
+			g.drawRect(nx.ScreenWidth-130, 35, 120, 10);
+	
+	//		g.setColor(Color.white); // Default color
+			
+			// How much gold has been acquired
+			g.drawString("P2 Gold Acquired: " + otherGoldAcquired, nx.ScreenWidth-225, 50);
+			
+			// Current level of the player
+			g.drawString("Player 2 Level: " + otherPlayerCurrentLevel, nx.ScreenWidth-225, 70);
+			
+			// Current floor the player is on
+			g.drawString("P2 Current floor: " + otherCurrentFloor, nx.ScreenWidth-225, 90);
+			
+			float otherX = otherPlayerX - player1x + nx.ScreenWidth/2;
+			float otherY = otherPlayerY - player1y + nx.ScreenHeight/2;
+			
+//			Draw arrow pointing from player 1 to player 2
+//			g.scale(.5f, .5f);
+//			g.drawLine(50, nx.ScreenHeight-50, otherX, otherY);
+		
+			if(otherX < 0 || otherX > nx.ScreenWidth || otherY < 0 || otherY > nx.ScreenHeight)
+			{
+				if(nx.player.getX() > otherX) // Move right
+				{
+					g.drawRect(20, nx.ScreenHeight/2, 20, 20);
+					g.drawString("<", 23, nx.ScreenHeight/2+2);
+				}
+				if(nx.player.getX() < otherX) // Move left
+				{
+					g.drawRect(nx.ScreenWidth-40, nx.ScreenHeight/2, 20, 20);
+					g.drawString(">", nx.ScreenWidth-36, nx.ScreenHeight/2+2);
+				}
+				if(nx.player.getY() > otherY) // Move up
+				{
+					g.drawRect(nx.ScreenWidth/2-2, 20, 20, 20);
+					g.drawString("^", nx.ScreenWidth/2+3, 22);
+				}
+				if(nx.player.getY() < otherY) // Move down
+				{
+					g.drawRect(nx.ScreenWidth/2, nx.ScreenHeight-40, 20, 20);
+					g.drawString("v", nx.ScreenWidth/2+5, nx.ScreenHeight-40);
+				}
+			}
+			
+		}
+		
+		
+		
 	}
 	
 	public void shift(Nex nx, int hspeed, int vspeed)
@@ -534,13 +616,7 @@ public class PlayingState extends BasicGameState {
 			tileSet[(int)playerXPosition][(int)playerYPosition].resetCollision();
 			shift(nx, hspeed, vspeed);
 			
-			// Perhaps? Yes!
-//			if(graphRefresh <= 0){
-//				buildGraph();
-//				graphRefresh = gRefreshRate;
-//			} else {
-//				graphRefresh -= delta;
-//			}
+
 		}
 
 		
@@ -573,78 +649,26 @@ public class PlayingState extends BasicGameState {
 				monsterDebug = true;
 		}
 		
-//		if(input.isKeyPressed(Input.KEY_2))
-//		{
-//			if(debugDijkstra)
-//				debugDijkstra = false;
-//			else
-//				debugDijkstra = true;
-//		}
+		if(input.isKeyPressed(Input.KEY_2))
+		{
+			Player.health--;
+		}
 		
-//		//------------------------------------------------------------------------
-//		//Monsters follow path
-//		//------------------------------------------------------------------------
-//
-//		for(Iterator<Node> n = dijkstraGraph.iterator(); n.hasNext();){
-//			Node cycleNode = n.next();
-//			
-//			for(Iterator<EnemyCharacters> e = monsters.iterator(); e.hasNext();){
-//			
-//				EnemyCharacters enemy = e.next();			
-//
-//				int myX = (int) enemy.getX();
-//				int myY = (int) enemy.getX();
-//				int futureX = (int) enemy.getFutureTile().getX()*65+33;
-//				int futureY = (int) enemy.getFutureTile().getY()*65+33;
-//				
-//
-//				System.out.println(myX);
-//				float vx, vy;
-//				
-//				if(enemy.health <= 0){
-//					e.remove();
-//				}
-//				 
-//				//------------------------------------------------------------------------
-//				//Check to find a vector for character to move. Uses dijkstra graph
-//				//------------------------------------------------------------------------
-//				if(cycleNode.x == myX && cycleNode.y == myY && enemy.inCombat == false){
-//					
-//					if((cycleNode.px - enemy.getTilePosition().getX()) == 0){
-//						vx = .0f;
-//					} else if ((cycleNode.px - enemy.getTilePosition().getX()) > 0){
-//						vx = .2f;
-//					} else {
-//						vx = -.2f;
-//					}
-//					
-//					
-//					if((cycleNode.py - enemy.getTilePosition().getY()) == 0){
-//						vy = .0f;
-//					} else if ((cycleNode.py - enemy.getTilePosition().getY()) > 0){
-//						vy = .2f;
-//					} else {
-//						vy = -.2f;
-//					}
-//					
-//					if(vx != 0){
-//						vy = 0;
-//					} else if(vy != 0){
-//						vx = 0;
-//					}
-//					
-//					enemy.setVelocity(vx, vy);
-//					enemy.update(delta);
-//				} else if (enemy.inCombat == true){
-//					
-//					//-------------------------------------------------------------
-//					//If the enemy is in combat it will set the velocity to 0
-//					//-------------------------------------------------------------
-//					enemy.setVelocity(.0f, .0f);
-//					enemy.update(delta);
-//				}
-//			}
-//		}
+		if(input.isKeyPressed(Input.KEY_3))
+		{
+			goldAcquired++;
+		}
+		
+		if(input.isKeyPressed(Input.KEY_4))
+		{
+			currentLevel++;
+		}
+		
+		if(input.isKeyPressed(Input.KEY_5))
+		{
+			currentFloor++;
+		}
+		
 				
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*---------------------------------------- Update other Player -------------------------------------------*/
@@ -655,173 +679,8 @@ public class PlayingState extends BasicGameState {
 		
 		nx.otherPlayer.setPlayerPosition(new Vector(otherX, otherY));
 		nx.otherPlayer.setPosition(new Vector(otherX, otherY));
-		
-		/*--------------------------------------------------------------------------------------------------------*/
-		/*-------------------------------------------- Enemy Movement --------------------------------------------*/
-		/*--------------------------------------------------------------------------------------------------------*/
-//		for (EnemyCharacters enemy : monsters)
-//		{
-//			
-////			enemy.setPosition(new Vector(enemy.getX(),enemy.getY()));
-//			
-//			int enemyX = (int) enemy.getWorldCoords().getX(); // gets pixel
-//			int enemyY = (int) enemy.getWorldCoords().getY(); // gets pixel
-//			
-//			int p1x = player1x;
-//			int p1y = player1y;
-//			
-//			int enemySpeed = 1;
-//			
-////			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-////					", p1x = " + p1x + ", p1y = " + p1y);
-//			
-//			if(!enemy.getMoving())
-//			{		
-//				int tileX = (int) enemy.getTilePosition().getX();
-//				int tileY = (int) enemy.getTilePosition().getY();
-//				
-//				System.out.println("tileX = " + tileX + ", tileY" + tileY);
-//				
-//				if (enemyX > p1x){ // Left
-//					System.out.println("Go Left");
-//					enemy.setDirectionMovement(1);
-//				}	
-//				else if (enemyX < p1x){ // Right
-//					System.out.println("Go Right");
-//					enemy.setDirectionMovement(2);
-//				} 
-//				else if(enemyY > p1y){ // Up
-//					System.out.println("Go Up");
-//					enemy.setDirectionMovement(3);
-//				} 
-//				else if (enemyY < p1y){ // Down
-//					System.out.println("Go Down");
-//					enemy.setDirectionMovement(4);
-//				}
-//				
-//				enemyX = (int) enemy.getPosition().getX();		//gets pixel
-//				enemyY = (int) enemy.getPosition().getY();		//gets pixel
-//				
-//				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				} 
-//				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				} 
-//				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				} 
-//				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				}
-//				else if(enemy.getDirectionMovement() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY)); // Don't move
-//				}
-//				
-//			}
-//			else if(enemy.getMoving() && enemy.getPixelCount() < 65)
-//			{
-//				enemyX = (int) enemy.getPosition().getX();		//gets pixel
-//				enemyY = (int) enemy.getPosition().getY();		//gets pixel
-//				
-//				int tileX = (int) enemy.getTilePosition().getX();
-//				int tileY = (int) enemy.getTilePosition().getY();
-//				
-//				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				} 
-//				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				} 
-//				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				} 
-//				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				}
-//				else if(enemy.getDirectionMovement() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY)); // Don't move
-//				}
-//				
-//			}
-//			else if(enemy.getPixelCount() == 65) // Hit the center of a tile
-//			{
-//				enemy.setMoving(false);
-//				enemy.setPixelCount(0);
-//				
-//				int tileX = (int) enemy.getTilePosition().getX();
-//				int tileY = (int) enemy.getTilePosition().getY();
-//				
-//				if(enemy.getDirectionMovement() == 1)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()-65, enemy.getWorldCoords().getY()));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX][tileY-1].setCollision();
-//					enemy.setTilePosition(new Vector(tileX, tileY-1));
-//				}
-//				else if (enemy.getDirectionMovement() == 2)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()+65, enemy.getWorldCoords().getY()));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX][tileY+1].setCollision();
-//					enemy.setTilePosition(new Vector(tileX, tileY+1));
-//				}
-//				else if(enemy.getDirectionMovement() == 3)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()-65));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX-1][tileY].setCollision();
-//					enemy.setTilePosition(new Vector(tileX-1, tileY));
-//				}
-//				else if (enemy.getDirectionMovement() == 4)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()+65));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX+1][tileY].setCollision();
-//					enemy.setTilePosition(new Vector(tileX+1, tileY));
-//				}
-//			}
-//			else if(enemy.getPixelCount() > 65)
-//			{
-//				System.out.println("Uh-oh");
-//			}
-//		}
-	}
-	
-	//this builds a new graph based on changes made to the map and will rerun dijkstras to produce a usable graph
-//	public static void buildGraph(){
-//
-//		graph = new Graph();
-//
-//		for(Iterator<Node> i = graph.nodes.iterator(); i.hasNext();){
-//			Node n = i.next();
-//			for(Iterator<Edge> j = n.edges.iterator(); j.hasNext();){
-//				Edge e = j.next();
-//				e.weight = tileSet[e.myX][e.myY].getWeight();
-//			}
-//		}		
-		
-		
-//		dijkstraGraph = Dijkstra.runDijkstra(graph, row, col);
 
-//		System.out.println(dijkstraGraph.size());
-//		for (Node g : dijkstraGraph)
-//		{
-//			System.out.println("x = " + g.x + ", y = " + g.y + ", dist = " + g.dist);
-//		}
-//	}
+	}
 		
 	//Finds a place to put a monster on the game board
 	public void generateMonsterLoc(){
