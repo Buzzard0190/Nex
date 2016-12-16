@@ -59,7 +59,7 @@ public class Nex extends StateBasedGame{
 
 	//----- Declare Objects -----//
 	
-	Player player;
+	Player player, otherPlayer;
 	Temp block;
 	List<Temp> temp;
 	List<Gate> GateArray;
