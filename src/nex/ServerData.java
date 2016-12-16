@@ -47,7 +47,7 @@ public class ServerData {
 	public ServerData(){
 		
 		int offset = 0;
-		for(int i = 0; i < 30; i++){
+		for(int i = 0; i < 2; i++){
 			Random r = new Random();
 			int monsterX = (r.nextInt(36)+2);
 			int monsterY = (r.nextInt(36)+2);
