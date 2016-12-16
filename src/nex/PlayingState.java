@@ -650,8 +650,26 @@ public class PlayingState extends BasicGameState {
 				wait++;
 		}
 		
+
 	}
 	
+
+	public void attemptAttack(final Vector attackPosition, final int damage){
+		
+		System.out.println("XXX attackPosition = " + attackPosition);
+		
+		for(EnemyCharacters e : monsters){
+			
+			System.out.println("Enemy " + e + " is at pos: " + e.getTilePosition());
+			
+			System.out.println("Check = " + (e.getTilePosition().getX() == attackPosition.getX()));
+			if((e.getTilePosition().getX() == attackPosition.getX()) && (e.getTilePosition().getY() == attackPosition.getY())){
+				System.out.println("Hit em");
+				e.doDamage(damage);
+			}
+		}
+		
+	}
 		
 	//Finds a place to put a monster on the game board
 	public void generateMonsterLoc(){

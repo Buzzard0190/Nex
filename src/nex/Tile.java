@@ -3,10 +3,11 @@ package nex;
 import jig.Vector;
 
 public class Tile {
+	
 	private boolean collision, bolt = false;
 	private int weight;	
 	private Vector position;
-	
+	Player p;
 	
 	public Tile(){
 		
@@ -37,5 +38,13 @@ public class Tile {
 	
 	public int getWeight(){
 		return weight;
+	}
+	
+	public int getHealth(){
+		return p.health;
+	}
+	
+	public int getShield(){
+		return p.shield;
 	}
 }

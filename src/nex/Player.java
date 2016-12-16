@@ -49,12 +49,13 @@ public class Player extends Entity{
 	
 	private Vector velocity;
 	private Vector position;
+	static int health, shield;
 	
 	private int direction;
 	private int status;
-	private int health;
 	private int character;
 	private int gold;
+	private int attackStrength;
 	
 	public Animation clericRunLeft, clericRunRight, clericRunUp, clericRunDown;
 	public Animation clericAtk1Left, clericAtk1Right, clericAtk1Up, clericAtk1Down;
@@ -72,7 +73,12 @@ public class Player extends Entity{
 		gold = 0;
 		character = CLERIC;	// THIS NEEDS TO BE CHANGED
 		
+		attackStrength = 2;	// CHANGE THIS BASED ON CHARACTER MAYBE
+		
 		addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+		
+		health = 120;
+		shield = 0;
 		
 		velocity = new Vector(0, 0);
 		
@@ -541,6 +547,7 @@ public class Player extends Entity{
 		}
 	}
 	
+	public int getAttackStrength() { return attackStrength; }
 	public int getHealth()	{ return health; }
 	
 	public int getDir() 	{ return direction; }
