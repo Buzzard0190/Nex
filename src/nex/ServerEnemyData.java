@@ -8,6 +8,7 @@ public class ServerEnemyData {
 	boolean skeleton, goblin, inCombat;
 	int futureX, futureY;
 	static int health, attackingX, attackingY, lastHit;
+	public int p1Attack = 0, p2Attack = 0;
 //	private int armorClass;
 	
 	private Vector velocity;
@@ -161,5 +162,13 @@ public class ServerEnemyData {
 	public int getDirectionMovement()
 	{
 		return this.directionMovement;
+	}
+	
+	public int getIsAttacking(){
+		if(p1Attack == 1 || p2Attack == 1){
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }

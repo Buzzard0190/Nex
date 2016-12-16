@@ -118,6 +118,12 @@ public class ServHandler extends Thread {
                 		out.writeInt(1);
                 	}
                 	out.writeInt(e.getDirectionMovement());
+                	if(playerSpot == 1){
+                    	e.p1Attack = in.readInt();
+                	} else {
+                    	e.p2Attack = in.readInt();
+                	}
+                	out.writeInt(e.getIsAttacking());
                 	out.writeInt((int)e.getMapPosition().getX());
                 	out.writeInt((int)e.getMapPosition().getY());
              	}

@@ -27,6 +27,7 @@ public class EnemyCharacters extends Entity{
 	private Vector worldCoords;
 	public int damage = 0;
 	public int aliveOrDead = 1;
+	public int attackOrIdle = 0;
 	public int movingDirection = 0;
 	
 	
