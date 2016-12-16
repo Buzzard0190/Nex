@@ -72,14 +72,17 @@ public class PlayingState extends BasicGameState {
 	/*
 	 * UI information
 	 */
-	private int otherPlayerHealth;
-	private int goldAcquired = 0;
-	private int otherGoldAcquired = 0;
-	private int currentExperience = 0;
-	private int currentLevel = 1;
-	private int otherPlayerCurrentLevel = 1;
-	private int currentFloor = 1;
-	private int otherCurrentFloor = 1;
+	static public int goldAcquired = 0;
+	static public int currentExperience = 0;
+	static public int currentLevel = 1;
+	static public int currentFloor = 1;
+	
+	
+	static public int otherPlayerHealth;
+	static public int otherGoldAcquired = 0;
+	static public int otherPlayerCurrentLevel = 1;
+	static public int otherCurrentFloor = 1;
+	
 	private String playerDirection;
 	
 	
@@ -281,7 +284,7 @@ public class PlayingState extends BasicGameState {
 			// Display the health		
 			g.drawString("P2 Health:", nx.ScreenWidth-225, 30);
 			g.setColor(Color.red);
-			g.fillRect(nx.ScreenWidth-130, 35, nx.otherPlayer.health, 10);
+			g.fillRect(nx.ScreenWidth-130, 35, otherPlayerHealth, 10);
 			
 			//health bar outline
 			g.setColor(Color.white);
@@ -466,13 +469,25 @@ public class PlayingState extends BasicGameState {
 				monsterDebug = true;
 		}
 		
-//		if(input.isKeyPressed(Input.KEY_2))
-//		{
-//			if(debugDijkstra)
-//				debugDijkstra = false;
-//			else
-//				debugDijkstra = true;
-//		}
+		if(input.isKeyPressed(Input.KEY_2))
+		{
+			Player.health--;
+		}
+		
+		if(input.isKeyPressed(Input.KEY_3))
+		{
+			goldAcquired++;
+		}
+		
+		if(input.isKeyPressed(Input.KEY_4))
+		{
+			currentLevel++;
+		}
+		
+		if(input.isKeyPressed(Input.KEY_5))
+		{
+			currentFloor++;
+		}
 		
 //		//------------------------------------------------------------------------
 //		//Monsters follow path

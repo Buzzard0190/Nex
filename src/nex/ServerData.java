@@ -11,6 +11,10 @@ public class ServerData {
 	static int p1X;
 	static int p1Y;
 	int p2X, p2Y;
+	static int p1Health, p2Health;
+	static int p1Level, p2Level;
+	static int p1Gold, p2Gold;
+	static int p1Floor, p2Floor;
 	int numberOfPlayers;
 	volatile boolean playerOne, playerTwo;
     //volatile HashSet<DataOutputStream> playerWriters;

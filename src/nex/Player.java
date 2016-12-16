@@ -8,7 +8,7 @@ public class Player extends Entity{
 	
 	private Vector velocity;
 	private Vector position;
-	int health, shield;
+	static int health, shield;
 	
 	public Player(final int x, final int y){
 		super(x, y);
