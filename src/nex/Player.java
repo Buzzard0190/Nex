@@ -349,7 +349,7 @@ public class Player extends Entity{
 			
 			removeIdleImage();
 			
-			ResourceManager.getSound(Nex.SWORD_HIT).play();
+//			ResourceManager.getSound(Nex.SWORD_HIT).play();
 			
 			// This needs to come after removeIdleImage()
 			status = ATK1;
@@ -368,6 +368,7 @@ public class Player extends Entity{
 							wizardAtk1.setLooping(false);
 						}
 						
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						if(character == CLERIC){
@@ -391,6 +392,7 @@ public class Player extends Entity{
 							addAnimation(wizardAtk1);
 							wizardAtk1.setLooping(false);
 						}
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						if(character == CLERIC){
@@ -414,6 +416,7 @@ public class Player extends Entity{
 							wizardAtk1.setLooping(false);
 						}
 						
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						if(character == CLERIC){
@@ -436,6 +439,7 @@ public class Player extends Entity{
 							addAnimation(wizardAtk1);
 							wizardAtk1.setLooping(false);
 						}
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						if(character == CLERIC){

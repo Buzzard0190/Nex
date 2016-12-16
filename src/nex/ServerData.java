@@ -269,6 +269,6 @@ public class ServerData {
 	}
 	
 	tileSet1.clear();
-}
+	}
 
 }
