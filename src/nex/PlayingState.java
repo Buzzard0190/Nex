@@ -325,6 +325,9 @@ public class PlayingState extends BasicGameState {
 		nx.block.setX(nx.block.getX()-hspeed);
 		nx.block.setY(nx.block.getY()-vspeed);
 		
+		offsetX += hspeed;
+		offsetY += vspeed;
+
 		player1x += hspeed;
 		player1y += vspeed;
 		
