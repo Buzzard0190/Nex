@@ -60,7 +60,12 @@ public class Player extends Entity{
 	public Animation clericRunLeft, clericRunRight, clericRunUp, clericRunDown;
 	public Animation clericAtk1Left, clericAtk1Right, clericAtk1Up, clericAtk1Down;
 	public Animation clericBlockLeft, clericBlockRight, clericBlockUp, clericBlockDown;
+	
+	public Animation wizardMove, wizardAtk1;
+	
 	public Animation death;
+	
+	
 	
 	/* ADD WHICH PLAYER THEY ARE PLAYING AS TO THE CONSTRUCTOR */
 	public Player(final int x, final int y){
@@ -71,11 +76,14 @@ public class Player extends Entity{
 		
 		health = 100;
 		gold = 0;
-		character = CLERIC;	// THIS NEEDS TO BE CHANGED
+		character = WIZARD;	// THIS NEEDS TO BE CHANGED
 		
 		attackStrength = 10;	// CHANGE THIS BASED ON CHARACTER MAYBE
 		
-		addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+		if(character == CLERIC)
+			addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+		else
+			addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_UP));
 		
 		health = 120;
 		shield = 0;
@@ -107,7 +115,6 @@ public class Player extends Entity{
 	
 	public void takeDamage(int damage){
 		
-		// Cleric gets hit while blocking.
 		/*
 		 * XXX CLERIC IS INVINCIBLE AS LONG AS HE HOLDS BLOCK, IS THIS OKAY LOL
 		 */
@@ -137,19 +144,31 @@ public class Player extends Entity{
 	public void animateDeath(){
 		switch(direction){
 			case UP:
-				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 3, 3, 3, true, 200, true);
+				if(character == CLERIC)
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 3, 3, 3, true, 200, true);
+				else
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_DEATH, 65, 65), 0, 3, 9, 3, true, 100, true);
 				break;
 				
 			case DOWN:
-				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 1, 3, 1, true, 200, true);
+				if(character == CLERIC)
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 1, 3, 1, true, 200, true);
+				else
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_DEATH, 65, 65), 0, 1, 9, 1, true, 100, true);
 				break;
 				
 			case LEFT:
-				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 2, 3, 2, true, 200, true);
+				if(character == CLERIC)
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 2, 3, 2, true, 200, true);
+				else
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_DEATH, 65, 65), 0, 2, 9, 2, true, 100, true);
 				break;
 				
 			case RIGHT:
-				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 0, 3, 0, true, 200, true);
+				if(character == CLERIC)
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 0, 3, 0, true, 200, true);
+				else
+					death = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_DEATH, 65, 65), 0, 0, 9, 0, true, 100, true);
 				break;
 			}
 		
@@ -266,34 +285,53 @@ public class Player extends Entity{
 		
 		switch(direction){
 			case UP:
-				if(clericAtk1Up.isStopped()){
+				if(character == CLERIC && clericAtk1Up.isStopped()){
 					removeAnimation(clericAtk1Up);
 					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					status = IDLE;
+				}
+				else if(character == WIZARD && wizardAtk1.isStopped()){
+					removeAnimation(wizardAtk1);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_UP));
 					status = IDLE;
 				}
 				break;
 				
 			case DOWN:
-				if(clericAtk1Down.isStopped()){
+				if(character == CLERIC && clericAtk1Down.isStopped()){
 					removeAnimation(clericAtk1Down);
 					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					status = IDLE;
+				}
+				else if(character == WIZARD && wizardAtk1.isStopped()){
+					removeAnimation(wizardAtk1);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_DOWN));
 					status = IDLE;
 				}
 				break;
 				
 			case LEFT:
-				if(clericAtk1Left.isStopped()){
+				if(character == CLERIC && clericAtk1Left.isStopped()){
 					removeAnimation(clericAtk1Left);
 					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
 					status = IDLE;
 				}
-
+				else if(character == WIZARD && wizardAtk1.isStopped()){
+					removeAnimation(wizardAtk1);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_LEFT));
+					status = IDLE;
+				}
 				break;
 				
 			case RIGHT:
-				if(clericAtk1Right.isStopped()){
+				if(character == CLERIC && clericAtk1Right.isStopped()){
 					removeAnimation(clericAtk1Right);
 					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					status = IDLE;
+				}
+				else if(character == WIZARD && wizardAtk1.isStopped()){
+					removeAnimation(wizardAtk1);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_RIGHT));
 					status = IDLE;
 				}
 
@@ -317,49 +355,92 @@ public class Player extends Entity{
 			switch(direction){
 				case UP:
 					if(whichAtk == 1){
-						clericAtk1Up = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 3, 3, 3, true, 100, true);
-						addAnimation(clericAtk1Up);
-						clericAtk1Up.setLooping(false);
+						if(character == CLERIC){
+							clericAtk1Up = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 3, 3, 3, true, 100, true);
+							addAnimation(clericAtk1Up);
+							clericAtk1Up.setLooping(false);
+						}
+						else{
+							wizardAtk1 = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_ATK1, 65, 65), 0, 3, 3, 3, true, 100, true);
+							addAnimation(wizardAtk1);
+							wizardAtk1.setLooping(false);
+						}
+						
 					}
 					else{
-						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_UP));
-						status = ATK2;
+						if(character == CLERIC){
+							addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_UP));
+							status = ATK2;
+						}
+						// Currently no ATK2 for wizard.
+						
 					}
 					break;
 					
 				case DOWN:
 					if(whichAtk == 1){
-						clericAtk1Down 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 1, 3, 1, true, 100, true);
-						addAnimation(clericAtk1Down);
-						clericAtk1Down.setLooping(false);
+						if(character == CLERIC){
+							clericAtk1Down 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 1, 3, 1, true, 100, true);
+							addAnimation(clericAtk1Down);
+							clericAtk1Down.setLooping(false);
+						}
+						else{
+							wizardAtk1 = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_ATK1, 65, 65), 0, 1, 3, 1, true, 100, true);
+							addAnimation(wizardAtk1);
+							wizardAtk1.setLooping(false);
+						}
 					}
 					else{
-						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_DOWN));
-						status = ATK2;
+						if(character == CLERIC){
+							addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_DOWN));
+							status = ATK2;
+						}
+						// Currently no ATK2 for wizard.
 					}
 					break;
 					
 				case LEFT:
 					if(whichAtk == 1){
-						clericAtk1Left 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 2, 3, 2, true, 100, true);
-						addAnimation(clericAtk1Left);
-						clericAtk1Left.setLooping(false);
+						if(character == CLERIC){
+							clericAtk1Left 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 2, 3, 2, true, 100, true);
+							addAnimation(clericAtk1Left);
+							clericAtk1Left.setLooping(false);
+						}
+						else{
+							wizardAtk1 = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_ATK1, 65, 65), 0, 2, 3, 2, true, 100, true);
+							addAnimation(wizardAtk1);
+							wizardAtk1.setLooping(false);
+						}
+						
 					}
 					else{
-						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_LEFT));
-						status = ATK2;
+						if(character == CLERIC){
+							addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_LEFT));
+							status = ATK2;
+						}
+						// Currently no ATK2 for wizard.
 					}
 					break;
 					
 				case RIGHT:
 					if(whichAtk == 1){
-						clericAtk1Right = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 0, 3, 0, true, 100, true);
-						addAnimation(clericAtk1Right);
-						clericAtk1Right.setLooping(false);
+						if(character == CLERIC){
+							clericAtk1Right = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 0, 3, 0, true, 100, true);
+							addAnimation(clericAtk1Right);
+							clericAtk1Right.setLooping(false);
+						}
+						else{
+							wizardAtk1 = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_ATK1, 65, 65), 0, 0, 3, 0, true, 100, true);
+							addAnimation(wizardAtk1);
+							wizardAtk1.setLooping(false);
+						}
 					}
 					else{
-						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_RIGHT));
-						status = ATK2;
+						if(character == CLERIC){
+							addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_RIGHT));
+							status = ATK2;
+						}
+						// Currently no ATK2 for wizard.
 					}
 					break;
 			
@@ -369,7 +450,7 @@ public class Player extends Entity{
 	}
 	
 	/*
-	 * Changes Cleric's running animation.
+	 * Changes player's running animation.
 	 */
 	public void runDir(final int dir){
 		
@@ -379,19 +460,46 @@ public class Player extends Entity{
 			
 			switch(dir){
 				case UP:
-					addAnimation(clericRunUp);
+					if(character == CLERIC)
+						addAnimation(clericRunUp);
+					else{
+						wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 3, 3, 3, true, 200, true);
+						addAnimation(wizardMove);
+						wizardMove.setLooping(true);
+					}
 					direction = UP;
 					break;
+					
 				case DOWN:
-					addAnimation(clericRunDown);
+					if(character == CLERIC)
+						addAnimation(clericRunDown);
+					else{
+						wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 1, 3, 1, true, 200, true);
+						addAnimation(wizardMove);
+						wizardMove.setLooping(true);
+					}
 					direction = DOWN;
 					break;
+					
 				case LEFT:
-					addAnimation(clericRunLeft);
+					if(character == CLERIC)
+						addAnimation(clericRunLeft);
+					else{
+						wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 2, 3, 2, true, 200, true);
+						addAnimation(wizardMove);
+						wizardMove.setLooping(true);
+					}
 					direction = LEFT;
 					break;
+					
 				case RIGHT:
-					addAnimation(clericRunRight);
+					if(character == CLERIC)
+						addAnimation(clericRunRight);
+					else{
+						wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 0, 3, 0, true, 200, true);
+						addAnimation(wizardMove);
+						wizardMove.setLooping(true);
+					}
 					direction = RIGHT;
 					break;
 			}
@@ -401,32 +509,67 @@ public class Player extends Entity{
 			
 				case UP:
 					if(direction != UP){
-						addAnimation(clericRunUp);
-						removeRunAnim();
+						if(character == CLERIC){
+							addAnimation(clericRunUp);
+							removeRunAnim();
+						}
+						else{
+							removeRunAnim();
+							wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 3, 3, 3, true, 200, true);
+							addAnimation(wizardMove);
+							wizardMove.setLooping(true);
+						}
 						direction = UP;
 					}
 					break;
 					
 				case DOWN:
 					if(direction != DOWN){
-						addAnimation(clericRunDown);
-						removeRunAnim();
+						if(character == CLERIC){
+							addAnimation(clericRunDown);
+							removeRunAnim();
+						}
+						else{
+							removeRunAnim();
+							wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 1, 3, 1, true, 200, true);
+							addAnimation(wizardMove);
+							wizardMove.setLooping(true);
+							
+						}
 						direction = DOWN;
 					}
 					break;
 					
 				case LEFT:
 					if(direction != LEFT){
-						addAnimation(clericRunLeft);
-						removeRunAnim();
+						if(character == CLERIC){
+							addAnimation(clericRunLeft);
+							removeRunAnim();
+						}
+						else{
+							removeRunAnim();
+							wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 2, 3, 2, true, 200, true);
+							addAnimation(wizardMove);
+							wizardMove.setLooping(true);
+							
+						}
 						direction = LEFT;
 					}
 					break;
 					
 				case RIGHT:
 					if(direction != RIGHT){
-						addAnimation(clericRunRight);
-						removeRunAnim();
+						if(character == CLERIC){
+							addAnimation(clericRunRight);
+							removeRunAnim();
+						}
+						else{
+							removeRunAnim();
+							wizardMove = new Animation(ResourceManager.getSpriteSheet(Nex.WIZARD_RUN, 65, 65), 0, 0, 3, 0, true, 200, true);
+							addAnimation(wizardMove);
+							wizardMove.setLooping(true);
+							
+						}
 						direction = RIGHT;
 					}
 					break;
@@ -436,7 +579,7 @@ public class Player extends Entity{
 	}
 	
 	/* 
-	 * Replaces cleric's running animations with idle pose.
+	 * Replaces player's running animations with idle pose.
 	 */
 	public void stopRunning(){
 		
@@ -444,28 +587,40 @@ public class Player extends Entity{
 		
 			case UP:
 				removeRunAnim();
-				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+				if(character == CLERIC)
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+				else
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_UP));
 				break;
 				
 			case DOWN:
 				removeRunAnim();
-				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+				if(character == CLERIC)
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+				else
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_DOWN));
 				break;
 				
 			case LEFT:
 				removeRunAnim();
-				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+				if(character == CLERIC)
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+				else
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_LEFT));
 				break;
 				
 			case RIGHT:
 				removeRunAnim();
-				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+				if(character == CLERIC)
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+				else
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_RIGHT));
 				break;
 			}
 	}
 	
 	/*
-	 * Removes cleric's running animation.
+	 * Removes player's running animation.
 	 */
 	private void removeRunAnim(){
 		
@@ -473,20 +628,36 @@ public class Player extends Entity{
 			
 			switch(direction){
 				case UP:
-					removeAnimation(clericRunUp);
+					if(character == CLERIC)
+						removeAnimation(clericRunUp);
+					else
+						removeAnimation(wizardMove);
 					break;
+					
 				case DOWN:
-					removeAnimation(clericRunDown);
+					if(character == CLERIC)
+						removeAnimation(clericRunDown);
+					else
+						removeAnimation(wizardMove);
 					break;
+					
 				case LEFT:
-					removeAnimation(clericRunLeft);
+					if(character == CLERIC)
+						removeAnimation(clericRunLeft);
+					else
+						removeAnimation(wizardMove);
 					break;
+					
 				case RIGHT:
-					removeAnimation(clericRunRight);
+					if(character == CLERIC)
+						removeAnimation(clericRunRight);
+					else
+						removeAnimation(wizardMove);
 					break;
 			}
 		}
 	}
+	
 	
 	/*
 	 * Rotates the player to face the mouse when idle.
@@ -500,19 +671,31 @@ public class Player extends Entity{
 			switch(dir){
 			
 				case DOWN:
-					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					if(character == CLERIC)
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					else
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_DOWN));
 					direction = DOWN;
 					break;
 				case UP:
-					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					if(character == CLERIC)
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					else
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_UP));
 					direction = UP;
 					break;
 				case LEFT:
-					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					if(character == CLERIC)
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					else
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_LEFT));
 					direction = LEFT;
 					break;
 				case RIGHT:
-					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					if(character == CLERIC)
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					else
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_RIGHT));
 					direction = RIGHT;
 					break;
 			}
@@ -530,20 +713,34 @@ public class Player extends Entity{
 			switch(direction){
 			
 				case DOWN:
-					removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					if(character == CLERIC)
+						removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					else
+						removeImage(ResourceManager.getImage(Nex.WIZARD_IDLE_DOWN));
 					break;
 				case UP:
-					removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					if(character == CLERIC)
+						removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					else
+						removeImage(ResourceManager.getImage(Nex.WIZARD_IDLE_UP));
 					break;
 				case LEFT:
-					removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					if(character == CLERIC)
+						removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					else
+						removeImage(ResourceManager.getImage(Nex.WIZARD_IDLE_LEFT));
 					break;
 				case RIGHT:
-					removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					if(character == CLERIC)
+						removeImage(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					else
+						removeImage(ResourceManager.getImage(Nex.WIZARD_IDLE_RIGHT));
 					break;
 			}
 		}
 	}
+	
+	public int getCharacter() { return character; }
 	
 	public int getAttackStrength() { return attackStrength; }
 	public int getHealth()	{ return health; }

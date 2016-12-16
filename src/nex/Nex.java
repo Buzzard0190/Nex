@@ -28,6 +28,11 @@ public class Nex extends StateBasedGame{
 	public static final String CLERIC_IDLE_RIGHT = "nex/resource/sprites/player/Cleric_Idle_Right.png";
 	public static final String CLERIC_IDLE_LEFT = "nex/resource/sprites/player/Cleric_Idle_Left.png";
 	
+	public static final String WIZARD_IDLE_UP = "nex/resource/sprites/player/Wizard_U.png";
+	public static final String WIZARD_IDLE_DOWN = "nex/resource/sprites/player/Wizard_D.png";
+	public static final String WIZARD_IDLE_RIGHT = "nex/resource/sprites/player/Wizard_R.png";
+	public static final String WIZARD_IDLE_LEFT = "nex/resource/sprites/player/Wizard_L.png";
+	
 	public static final String CLERIC_BLOCK_UP = "nex/resource/sprites/player/Cleric_Block_Up.png";
 	public static final String CLERIC_BLOCK_DOWN = "nex/resource/sprites/player/Cleric_Block_Down.png";
 	public static final String CLERIC_BLOCK_RIGHT = "nex/resource/sprites/player/Cleric_Block_Right.png";
@@ -57,6 +62,13 @@ public class Nex extends StateBasedGame{
 	public static final String CLERIC_BLOCK_ANIM = "nex/resource/sprites/player/Cleric_Block_Anim.png";
 	public static final String CLERIC_DEATH = "nex/resource/sprites/player/Cleric_Death.png";
 	
+	public static final String WIZARD_RUN = "nex/resource/sprites/player/Wizard_Move.png";
+	public static final String WIZARD_ATK1 = "nex/resource/sprites/player/Wizard_Ice_Atk.png";
+	public static final String WIZARD_DEATH = "nex/resource/sprites/player/Wizard_Death.png";
+	
+	public static final String ICE_ATK = "nex/resource/sprites/player/Ice_Atk.png";
+	
+	
 	public static final String GATE_VERT_ANIM = "nex/resource/sprites/environment/Gate_Anim.png";
 	public static final String GATE_HORI_ANIM = "nex/resource/sprites/environment/Gate_Anim_2.png";
 	
@@ -78,6 +90,7 @@ public class Nex extends StateBasedGame{
 	List<Temp> temp;
 	List<Gate> GateArray;
 	List<Chest> ChestArray;
+	List<IceAtk> IceArray;
 
 	// ---- Declare Arrays -----//
 	
@@ -105,6 +118,7 @@ public class Nex extends StateBasedGame{
 		//----- Create Arrays -----//
 		GateArray = new ArrayList<Gate>();
 		ChestArray = new ArrayList<Chest>();
+		IceArray = new ArrayList<IceAtk>();
 		
 		temp = new ArrayList<Temp>(50);
 		// blocks = new ArrayList<Block>(100);
@@ -139,6 +153,11 @@ public class Nex extends StateBasedGame{
 		ResourceManager.loadImage(CLERIC_IDLE_LEFT);
 		ResourceManager.loadImage(CLERIC_IDLE_RIGHT);
 		
+		ResourceManager.loadImage(WIZARD_IDLE_UP);
+		ResourceManager.loadImage(WIZARD_IDLE_DOWN);
+		ResourceManager.loadImage(WIZARD_IDLE_LEFT);
+		ResourceManager.loadImage(WIZARD_IDLE_RIGHT);
+		
 		ResourceManager.loadImage(CLERIC_BLOCK_UP);
 		ResourceManager.loadImage(CLERIC_BLOCK_DOWN);
 		ResourceManager.loadImage(CLERIC_BLOCK_LEFT);
@@ -168,6 +187,12 @@ public class Nex extends StateBasedGame{
 		ResourceManager.loadImage(CLERIC_ATK1);
 		ResourceManager.loadImage(CLERIC_BLOCK_ANIM);
 		ResourceManager.loadImage(CLERIC_DEATH);
+		
+		ResourceManager.loadImage(WIZARD_RUN);
+		ResourceManager.loadImage(WIZARD_ATK1);
+		ResourceManager.loadImage(WIZARD_DEATH);
+		
+		ResourceManager.loadImage(ICE_ATK);
 		
 		ResourceManager.loadImage(GATE_VERT_ANIM);
 		ResourceManager.loadImage(GATE_HORI_ANIM);
