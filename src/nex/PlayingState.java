@@ -72,14 +72,17 @@ public class PlayingState extends BasicGameState {
 	/*
 	 * UI information
 	 */
-	private int otherPlayerHealth;
-	private int goldAcquired = 0;
-	private int otherGoldAcquired = 0;
-	private int currentExperience = 0;
-	private int currentLevel = 1;
-	private int otherPlayerCurrentLevel = 1;
-	private int currentFloor = 1;
-	private int otherCurrentFloor = 1;
+	static public int goldAcquired = 0;
+	static public int currentExperience = 0;
+	static public int currentLevel = 1;
+	static public int currentFloor = 1;
+	
+	
+	static public int otherPlayerHealth;
+	static public int otherGoldAcquired = 0;
+	static public int otherPlayerCurrentLevel = 1;
+	static public int otherCurrentFloor = 1;
+	
 	private String playerDirection;
 	
 	

@@ -87,9 +87,19 @@ public class ServHandler extends Thread {
 				if(playerSpot == 1){
 					 data.p1X = in.readInt();
 					 data.p1Y = in.readInt();
+					 data.p1Health = in.readInt();
+					 data.p1Gold = in.readInt();
+					 
+					 out.writeInt(data.p2Health);
+					 out.writeInt(data.p2Gold);
 				} else {
 					 data.p2X = in.readInt();
 					 data.p2Y = in.readInt();
+					 data.p2Health = in.readInt();
+					 data.p2Gold = in.readInt();
+
+					 out.writeInt(data.p1Health);
+					 out.writeInt(data.p1Gold);
 				}
                
                 out.write(data.numberOfPlayers);
