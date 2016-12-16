@@ -98,6 +98,7 @@ public class ServHandler extends Thread {
                 frame.updateFrame();
 //                ServerData.buildGraph();
                 //ServerData.updateEnemies();
+                ServerData.updateEnemies();
 			}
 			
 		} catch (IOException e) {

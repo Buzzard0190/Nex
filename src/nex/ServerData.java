@@ -11,8 +11,8 @@ public class ServerData {
 	
 	static int p1X;
 	static int p1Y;
-	int p2X, p2Y;
-	int numberOfPlayers;
+	static int p2X, p2Y;
+	static int numberOfPlayers;
 	volatile boolean playerOne, playerTwo;
     //volatile HashSet<DataOutputStream> playerWriters;
     
@@ -40,6 +40,7 @@ public class ServerData {
 	public ServerData(){
 		
 		ServerEnemyData enemy = new ServerEnemyData((15*65)-867+33, (19*65)-967+33);
+		ServerEnemyData enemy = new ServerEnemyData((19*65)+22, (19*65)+57);
 		enemy.setTilePosition(new Vector(15,19));
 		monsters.add(enemy);
 
@@ -73,6 +74,21 @@ public class ServerData {
 		dijkstraGraph = Dijkstra.runDijkstra(graph, xValue, yValue);
 		updateEnemies();
 	}
+//	public static void buildGraph(){
+//
+//		graph = new Graph();
+//
+//		for(Iterator<Node> i = graph.nodes.iterator(); i.hasNext();){
+//			Node n = i.next();
+//			for(Iterator<Edge> j = n.edges.iterator(); j.hasNext();){
+//				Edge e = j.next();
+//				e.weight = tileSet[e.myX][e.myY].getWeight();
+//			}
+//		}	
+//		int xValue = (int) Math.floor((p1X+368)/65); int yValue = (int) Math.floor((p1Y+268)/65);
+//		dijkstraGraph = Dijkstra.runDijkstra(graph, xValue, yValue);
+//		updateEnemies();
+//	}
 	
 	public static void updateEnemies(){
 		
@@ -162,6 +178,7 @@ public class ServerData {
 
 		}
 		
+
 		for(Iterator<ServerEnemyData> e = monsters.iterator(); e.hasNext();){
 			ServerEnemyData enemy = e.next();
 			int enemyX = (int) enemy.getMapPosition().getX()+466;		//gets pixel
@@ -204,23 +221,79 @@ public class ServerData {
 //			System.out.println("");
 //		}
 //		System.out.println("after");
-	}
-	
-	
-	public static void buildTileSet(){
-		
-		for(int i = 0; i < 40; i++){
-			for(int j = 0; j < 40; j++){		
-				tileSet[j][i] = new Tile();
-				if(tileSet1.get(((40*i)+j)) == 1){
-					tileSet[j][i].setCollision();
-					tileSet[j][i].setWeight(100);
+			System.out.println("enemy position x: " + myX + " y: " + myY);
+				
+			int xDist = Math.abs(myX - p1X);
+			int yDist = Math.abs(myY - p1Y);
+
+			int p1Dist = (int) Math.sqrt(xDist*xDist + yDist*yDist);
+			
+			xDist = Math.abs(myX - p2X);
+			yDist = Math.abs(myY - p2Y);
+			
+			int p2Dist = (int) Math.sqrt(xDist*xDist + yDist*yDist);
+			
+			if(p1Dist > p2Dist && numberOfPlayers > 1){
+				//attack player 2
+				
+				if((myX - p2X) == 0 && (myY - p2Y) < 0){
+					enemy.setMapPosition(new Vector(myX,myY-1));
+				} else if((myX - p2X) == 0 && (myY - p2Y) >= 0){	//south
+					enemy.setMapPosition(new Vector(myX,myY+1));
+				} else if((myX - p2X) >= 0 && (myY - p2Y) == 0){ //east
+					enemy.setMapPosition(new Vector(myX+1,myY));
+				} else {
+					enemy.setMapPosition(new Vector(myX-1,myY));
 				}
+					
+			} else {
+				//attack player 1
+				
+				//North
+//				if((myX - p1X) == 0 && (myY - p1Y) < 0){
+//					enemy.setMapPosition(new Vector(myX,myY-1));
+//				} else if((myX - p1X) == 0 && (myY - p1Y) >= 0){	//south
+//					enemy.setMapPosition(new Vector(myX,myY+1));
+//				} else if((myX - p1X) >= 0 && (myY - p1Y) == 0){ //east
+//					enemy.setMapPosition(new Vector(myX+1,myY));
+//				} else if((myX - p1X) < 0 && (myY - p1Y) == 0){
+//					enemy.setMapPosition(new Vector(myX-1,myY));
+//				}
 			}
-		}
+			
+					
+		}			
+
 		
-		tileSet1.clear();
+
+			
+//			if(enemy.directionMovement == 1){
+//				enemy.setMapPosition(new Vector(myX,myY-1));
+//			} else if(enemy.directionMovement == 2){
+//				enemy.setMapPosition(new Vector(myX+1,myY));
+//			} else if(enemy.directionMovement == 3){
+//				enemy.setMapPosition(new Vector(myX,myY+1));
+//			} else if(enemy.directionMovement == 4){
+//				enemy.setMapPosition(new Vector(myX-1,myY));
+//			}
+		
 	}
+	
+	
+//	public static void buildTileSet(){
+//		
+//		for(int i = 0; i < 40; i++){
+//			for(int j = 0; j < 40; j++){		
+//				tileSet[j][i] = new Tile();
+//				if(tileSet1.get(((40*i)+j)) == 1){
+//					tileSet[j][i].setCollision();
+//					tileSet[j][i].setWeight(100);
+//				}
+//			}
+//		}
+//		
+//		tileSet1.clear();
+//	}
 	
 	
 
