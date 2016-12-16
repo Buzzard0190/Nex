@@ -7,7 +7,7 @@ public class ServerEnemyData {
 
 	boolean skeleton, goblin, inCombat;
 	int futureX, futureY;
-	static int health, attackingX, attackingY, lastHit;
+	public int health, attackingX, attackingY, lastHit;
 	public int p1Attack = 0, p2Attack = 0;
 //	private int armorClass;
 	
@@ -170,5 +170,9 @@ public class ServerEnemyData {
 		} else {
 			return 0;
 		}
+	}
+	
+	public void doDamage(int damage){
+		this.health -= damage;
 	}
 }

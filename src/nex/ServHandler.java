@@ -111,7 +111,7 @@ public class ServHandler extends Thread {
                     
                 for (ServerEnemyData e : ServerData.monsters) {
                 	int damage = in.readInt();
-                	e.health -= damage;
+                	e.doDamage(damage);
                 	if(e.health <= 0){
                 		out.writeInt(0);
                 	} else {
