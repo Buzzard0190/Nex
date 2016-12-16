@@ -71,10 +71,7 @@ public class ServHandler extends Thread {
 				ServerData.buildTileSet();
 			}
 
-<<<<<<< HEAD
-=======
 			int delta = 0;
->>>>>>> branch 'issue5' of https://github.com/Buzzard0190/Nex.git
 
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
@@ -103,13 +100,14 @@ public class ServHandler extends Thread {
                 out.flush();
                 frame.updateFrame();
                 
-                if(delta == 50)
+                if(delta < 0)
                 {
                 	ServerData.updateEnemies();
-                	delta = 0;
+                	delta = 100;
                 }
-                else
-                	delta++;
+                else{
+                	delta--;
+                }
 			}
 			
 		} catch (IOException e) {
