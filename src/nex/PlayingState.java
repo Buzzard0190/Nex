@@ -177,17 +177,17 @@ public class PlayingState extends BasicGameState {
 			
 			initVars();
 		
-			// Player starting position
-			if(numberOfPlayers == 1)
-			{
-				nx.player = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 0);
-				nx.otherPlayer = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 1);
-			}
-			else if(numberOfPlayers == 2)
-			{
-				nx.player = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 0);
-				nx.otherPlayer = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 1);
-			}
+//			// Player starting position
+//			if(numberOfPlayers == 1)
+//			{
+//				nx.player = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 0);
+//				nx.otherPlayer = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 1);
+//			}
+//			else if(numberOfPlayers == 2)
+//			{
+//				nx.player = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 0);
+//				nx.otherPlayer = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 1);
+//			}
 			
 //			nx.player.updatePlayer();
 //			nx.otherPlayer.updatePlayer();
@@ -255,6 +255,15 @@ public class PlayingState extends BasicGameState {
 		nx.ChestArray.add(new Chest(400 + (65 * 19) + 33, 300 - ( 65 * 13), LEFT));
 		
 		ResourceManager.getSound(Nex.BACKGROUND).loop();
+		
+		if(flag){
+			if(playerNumber == 2){
+				nx.player.updatePlayer(playerNumber-2);
+				flag = !flag;
+				nx.otherPlayer.updatePlayer(playerNumber - 1);
+			}
+			
+		}
 	}
 	
 	@Override
@@ -395,7 +404,7 @@ public class PlayingState extends BasicGameState {
 		if(numberOfPlayers == 2)
 		{
 			// Display the health		
-			g.drawString("P2 Health:", nx.ScreenWidth-225, 30);
+			g.drawString("OP Health:", nx.ScreenWidth-225, 30);
 			g.setColor(Color.red);
 			g.fillRect(nx.ScreenWidth-130, 35, otherPlayerHealth, 10);
 			
@@ -406,13 +415,13 @@ public class PlayingState extends BasicGameState {
 	//		g.setColor(Color.white); // Default color
 			
 			// How much gold has been acquired
-			g.drawString("P2 Gold Acquired: " + otherGoldAcquired, nx.ScreenWidth-225, 50);
+			g.drawString("OP Gold Acquired: " + otherGoldAcquired, nx.ScreenWidth-225, 50);
 			
 			// Current level of the player
-			g.drawString("Player 2 Level: " + otherPlayerCurrentLevel, nx.ScreenWidth-225, 70);
+			g.drawString("OP Level: " + otherPlayerCurrentLevel, nx.ScreenWidth-225, 70);
 			
 			// Current floor the player is on
-			g.drawString("P2 Current floor: " + otherCurrentFloor, nx.ScreenWidth-225, 90);
+			g.drawString("OP Current floor: " + otherCurrentFloor, nx.ScreenWidth-225, 90);
 			
 			float otherX = otherPlayerX - player1x + nx.ScreenWidth/2;
 			float otherY = otherPlayerY - player1y + nx.ScreenHeight/2;
@@ -496,9 +505,18 @@ public class PlayingState extends BasicGameState {
 		
 		if(flag){
 			if(playerNumber == 2){
-				nx.player.updatePlayer(playerNumber);
+				nx.player.updatePlayer(playerNumber-2);
 				flag = !flag;
-				nx.otherPlayer.updatePlayer(playerNumber + 2);
+				nx.otherPlayer.updatePlayer(playerNumber - 1);
+			}
+			else if (playerNumber == 1)
+			{
+				nx.player.updatePlayer(playerNumber- 1);
+				flag = !flag;
+				nx.otherPlayer.updatePlayer(playerNumber);
+			}
+			else{
+				System.out.println(playerNumber);
 			}
 			
 		}

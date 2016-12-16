@@ -105,7 +105,7 @@ public class Player extends Entity{
 	public void updatePlayer(int num)
 	{
 		System.out.println("playerNumber =" + num);
-		if(num == 1)
+		if(num == 0)
 		{
 			character = CLERIC;
 		}
