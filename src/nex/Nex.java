@@ -153,6 +153,8 @@ public class Nex extends StateBasedGame{
 		
 		player = new Player(ScreenWidth/2, ScreenHeight/2);
 		block = new Temp(400, 400);
+		otherPlayer = new Player(ScreenWidth/2, ScreenHeight/2);
+
 	}
 	
 	public static void main(String[] args) {
