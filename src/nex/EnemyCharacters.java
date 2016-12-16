@@ -26,9 +26,13 @@ public class EnemyCharacters extends Entity{
 	private int pixelCount = 0;
 	private Vector worldCoords;
 	
+	private int damage;
+	
 	public EnemyCharacters(int type, int x, int y){
 
 		super(x, y);
+		
+		damage = 0;
 		
 		if(type == 1) {
 			addImage(ResourceManager.getImage(Nex.BLOCK));
@@ -47,60 +51,40 @@ public class EnemyCharacters extends Entity{
 		}
 	}
 	
-	public void setVelocity(float vx, float vy) {
-		velocity = new Vector(vx, vy);
-	}
-	
-	
 	public void update(final int delta) {
 		translate(velocity.scale(delta));
-	}
+		
 
-	public Vector getVelocity() {
-		// TODO Auto-generated method stub
-		return velocity;
+		
 	}
+	
+	public void doDamage( int damage ) { 
+		this.damage = damage;
+		// send damage to server.
+		System.out.println("Ouch! Nigga...");
+		
+	}
+	
+	public void setVelocity(float vx, float vy) { velocity = new Vector(vx, vy); }
+	
+	public Vector getVelocity() { return velocity; }
 
-	public void setTilePosition(Vector tilePosition)
-	{
-		this.tilePosition = tilePosition;
-	}
+	public void setTilePosition(Vector tilePosition) { this.tilePosition = tilePosition; }
 	
-	public Vector getTilePosition()
-	{
-		return this.tilePosition;
-	}
+	public Vector getTilePosition() { return this.tilePosition; }
 	
-	public void setWorldCoords(Vector worldCoords)
-	{
-		this.worldCoords = worldCoords;
-	}
+	public void setWorldCoords(Vector worldCoords) { this.worldCoords = worldCoords; }
 	
-	public Vector getWorldCoords()
-	{
-		return this.worldCoords;
-	}
+	public Vector getWorldCoords(){ return this.worldCoords; }
 	
-	public void setPixelCount(int pixelCount)
-	{
-		this.pixelCount = pixelCount;
-	}
+	public void setPixelCount(int pixelCount){ this.pixelCount = pixelCount; }
 	
-	public int getPixelCount()
-	{
-		return this.pixelCount;
-	}
+	public int getPixelCount() { return this.pixelCount; }
 	
-	public void setMoving(boolean moving)
-	{
-		this.moving = moving;
-	}
+	public void setMoving(boolean moving) { this.moving = moving; }
 	
-	public boolean getMoving()
-	{
-		return this.moving;
-	}
-	
+	public boolean getMoving() { return this.moving; }
+
 	public void sethmove(boolean hmove)
 	{
 		this.hmove = hmove;

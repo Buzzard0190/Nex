@@ -168,7 +168,7 @@ public class PlayingState extends BasicGameState {
 			
 				//-----
 				int offset = 0;
-				for(int i = 0; i < 30; i++){
+				for(int i = 0; i < 2; i++){
 					int monsterX = 15;
 					int monsterY = 15;
 					
@@ -294,6 +294,8 @@ public class PlayingState extends BasicGameState {
 		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
 		g.drawString("Player Health = " + nx.player.getHealth(), 500, 110);
 		g.drawString("Player Gold = " + nx.player.getGold(), 500, 125);
+		g.drawString("Player Tile X = " + nx.player.getPlayerPosition().getX() + " Player tile Y = " + nx.player.getPlayerPosition().getY(), 400, 140);
+		
 		
 		if(canInteract)
 			g.drawString("E: Interact", nx.player.getX() - 50, nx.player.getY() - 50);
@@ -404,6 +406,9 @@ public class PlayingState extends BasicGameState {
 		
 		nx.player.update(delta);
 		
+//		for(EnemyCharacters e : monsters){
+//			e.update(delta);
+//		}
 		
 	
 		/*--------------------------------------------------------------------------------------------------------*/
@@ -547,7 +552,34 @@ public class PlayingState extends BasicGameState {
 		
 		// Left Mouse = Atk1
 		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			
 			nx.player.attack(1);
+			
+			// XXX x = vertical, y = horizontal
+			
+			// check direction
+			if(nx.player.getStatus() == ATK1){
+				switch(nx.player.getDir()){
+					case UP:
+						attemptAttack(new Vector(nx.player.getPlayerPosition().getX() - 1, nx.player.getPlayerPosition().getY()), nx.player.getAttackStrength());
+						break;
+						
+					case DOWN:
+						attemptAttack(new Vector(nx.player.getPlayerPosition().getX() + 1, nx.player.getPlayerPosition().getY()), nx.player.getAttackStrength());
+						break;
+						
+					case LEFT:
+						attemptAttack(new Vector(nx.player.getPlayerPosition().getX(), nx.player.getPlayerPosition().getY() - 1), nx.player.getAttackStrength());
+						break;
+						
+					case RIGHT:
+						attemptAttack(new Vector(nx.player.getPlayerPosition().getX(), nx.player.getPlayerPosition().getY() + 1), nx.player.getAttackStrength());
+						break;
+			
+				}
+			}
+			
+			
 		}
 		// Right Mouse = Atk2
 		else if(input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)){
@@ -866,6 +898,23 @@ public class PlayingState extends BasicGameState {
 //			System.out.println("x = " + g.x + ", y = " + g.y + ", dist = " + g.dist);
 //		}
 //	}
+	
+	public void attemptAttack(final Vector attackPosition, final int damage){
+		
+		System.out.println("XXX attackPosition = " + attackPosition);
+		
+		for(EnemyCharacters e : monsters){
+			
+			System.out.println("Enemy " + e + " is at pos: " + e.getTilePosition());
+			
+			System.out.println("Check = " + (e.getTilePosition().getX() == attackPosition.getX()));
+			if((e.getTilePosition().getX() == attackPosition.getX()) && (e.getTilePosition().getY() == attackPosition.getY())){
+				System.out.println("Hit em");
+				e.doDamage(damage);
+			}
+		}
+		
+	}
 		
 	//Finds a place to put a monster on the game board
 	public void generateMonsterLoc(){
