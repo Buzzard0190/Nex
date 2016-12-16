@@ -31,7 +31,8 @@ public class PlayingState extends BasicGameState {
 	public static final int ATK1 = 5;
 	public static final int ATK2 = 6;
 	public static final int IDLE = 7;
-	
+	public static final int BLOCKING 	= 8;	// This is to stop the blocking animation when the cleric is hit.	
+	public static final int DEAD 		= 9;
 	
 	private float xVelocity = 0;
 	private float yVelocity = 0;
@@ -151,6 +152,7 @@ public class PlayingState extends BasicGameState {
 		g.drawString("angle = " + angle, 500, 65);
 		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
 		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
+		g.drawString("Player Health = " + nx.player.getHealth(), 500, 110);
 		
 		
 		
@@ -278,59 +280,57 @@ public class PlayingState extends BasicGameState {
 			col = (int)nx.player.getPlayerPosition().getY();
 		}
 		
-		// Running LEFT
-		if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
-				&& vmove == false && !input.isKeyDown(Input.KEY_D)
-				&& tileSet[row][col-1].getCollision() == 0 
-				&& (playerStatus == MOVING || playerStatus == IDLE)) 
-				{	// Left Key
-			hmove = true;
-			hspeed = -player1Speed;
-			playerXPosition = nx.player.getPlayerPosition().getX();
-			playerYPosition = nx.player.getPlayerPosition().getY();
-			nx.player.setPlayerPosition(new Vector(playerXPosition,playerYPosition-1));
-			
-			nx.player.runDir(LEFT);
+		if(playerStatus != DEAD && (playerStatus == MOVING || playerStatus == IDLE)){
+			// Running LEFT
+			if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
+					&& vmove == false && !input.isKeyDown(Input.KEY_D)
+					&& tileSet[row][col-1].getCollision() == 0) {	// Left Key
+				hmove = true;
+				hspeed = -player1Speed;
+				playerXPosition = nx.player.getPlayerPosition().getX();
+				playerYPosition = nx.player.getPlayerPosition().getY();
+				nx.player.setPlayerPosition(new Vector(playerXPosition,playerYPosition-1));
+				
+				nx.player.runDir(LEFT);
+			}
+			// Running RIGHT
+			else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
+					&& vmove == false && !input.isKeyDown(Input.KEY_A)
+					&& tileSet[row][col+1].getCollision() == 0) {
+				hmove = true;
+				hspeed = player1Speed;
+				playerXPosition = nx.player.getPlayerPosition().getX();
+				playerYPosition = nx.player.getPlayerPosition().getY();
+				nx.player.setPlayerPosition(new Vector(playerXPosition,playerYPosition+1));
+				
+				nx.player.runDir(RIGHT);
+			}
+			// Running UP
+			else if (input.isKeyDown(Input.KEY_W) && hmove == false 
+					&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
+					&& tileSet[row-1][col].getCollision() == 0) {
+				vmove = true;
+				vspeed = -player1Speed;
+				playerXPosition = nx.player.getPlayerPosition().getX();
+				playerYPosition = nx.player.getPlayerPosition().getY();
+				nx.player.setPlayerPosition(new Vector(playerXPosition-1,playerYPosition));
+				
+				nx.player.runDir(UP);
+			}
+			// Running DOWN
+			else if (input.isKeyDown(Input.KEY_S) && hmove == false 
+					&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
+					&& tileSet[row+1][col].getCollision() == 0) {
+				vmove = true;
+				vspeed = player1Speed;
+				playerXPosition = nx.player.getPlayerPosition().getX();
+				playerYPosition = nx.player.getPlayerPosition().getY();
+				nx.player.setPlayerPosition(new Vector(playerXPosition+1,playerYPosition));
+				
+				nx.player.runDir(DOWN);
+			}
 		}
-		// Running RIGHT
-		else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
-				&& vmove == false && !input.isKeyDown(Input.KEY_A)
-				&& tileSet[row][col+1].getCollision() == 0
-				&& (playerStatus == MOVING || playerStatus == IDLE)) {
-			hmove = true;
-			hspeed = player1Speed;
-			playerXPosition = nx.player.getPlayerPosition().getX();
-			playerYPosition = nx.player.getPlayerPosition().getY();
-			nx.player.setPlayerPosition(new Vector(playerXPosition,playerYPosition+1));
-			
-			nx.player.runDir(RIGHT);
-		}
-		// Running UP
-		else if (input.isKeyDown(Input.KEY_W) && hmove == false 
-				&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
-				&& tileSet[row-1][col].getCollision() == 0
-				&& (playerStatus == MOVING || playerStatus == IDLE)) {
-			vmove = true;
-			vspeed = -player1Speed;
-			playerXPosition = nx.player.getPlayerPosition().getX();
-			playerYPosition = nx.player.getPlayerPosition().getY();
-			nx.player.setPlayerPosition(new Vector(playerXPosition-1,playerYPosition));
-			
-			nx.player.runDir(UP);
-		}
-		// Running DOWN
-		else if (input.isKeyDown(Input.KEY_S) && hmove == false 
-				&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
-				&& tileSet[row+1][col].getCollision() == 0
-				&& (playerStatus == MOVING || playerStatus == IDLE)) {
-			vmove = true;
-			vspeed = player1Speed;
-			playerXPosition = nx.player.getPlayerPosition().getX();
-			playerYPosition = nx.player.getPlayerPosition().getY();
-			nx.player.setPlayerPosition(new Vector(playerXPosition+1,playerYPosition));
-			
-			nx.player.runDir(DOWN);
-		}
+
 		
 		
 		// Left Mouse = Atk1
@@ -345,9 +345,15 @@ public class PlayingState extends BasicGameState {
 		if(!input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON) && nx.player.getStatus() == ATK2){
 			nx.player.removeAtk2();
 		}
-
 		
-		if(hmove || vmove){
+		// DEBUG: Giving the player damage.
+		if(input.isKeyPressed(Input.KEY_1)){
+			nx.player.takeDamage(100);
+		}
+
+		System.out.println("3: Status = " + nx.player.getStatus());
+		
+		if((hmove || vmove) && nx.player.getStatus() != DEAD){
 			// DEBUG
 //			System.out.println("Shifting");
 //			for(int i = 0; i < 40; i++){
@@ -371,6 +377,8 @@ public class PlayingState extends BasicGameState {
 			shift(nx, hspeed, vspeed);
 		}
 		
+		System.out.println("4: Status = " + nx.player.getStatus());
+		
 		// Update player status to IDLE if they are not moving.
 		if(!hmove && !vmove){
 			
@@ -379,7 +387,7 @@ public class PlayingState extends BasicGameState {
 			}
 			
 			
-			if(nx.player.getStatus() != ATK1 && nx.player.getStatus() != ATK2)
+			if(nx.player.getStatus() != ATK1 && nx.player.getStatus() != ATK2 && nx.player.getStatus() != BLOCKING && nx.player.getStatus() != DEAD)
 				nx.player.setStatus(IDLE);
 			
 		}

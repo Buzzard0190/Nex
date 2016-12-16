@@ -38,21 +38,34 @@ public class Player extends Entity{
 	public static final int ATK1 		= 5;
 	public static final int ATK2 		= 6;
 	public static final int IDLE 		= 7;
+	public static final int BLOCKING 	= 8;	// This is to stop the blocking animation when the cleric is hit.
+	public static final int DEAD 		= 9;	
+	
+	public static final int WIZARD 		= 0;
+	public static final int CLERIC 		= 1;
 	
 	private Vector velocity;
 	private Vector position;
 	
 	private int direction;
 	private int status;
+	private int health;
+	private int character;
 	
 	public Animation clericRunLeft, clericRunRight, clericRunUp, clericRunDown;
 	public Animation clericAtk1Left, clericAtk1Right, clericAtk1Up, clericAtk1Down;
+	public Animation clericBlockLeft, clericBlockRight, clericBlockUp, clericBlockDown;
+	public Animation death;
 	
+	/* ADD WHICH PLAYER THEY ARE PLAYING AS TO THE CONSTRUCTOR */
 	public Player(final int x, final int y){
 		super(x, y);
 		
 		direction = UP;
 		status = IDLE;
+		
+		health = 100;
+		character = CLERIC;	// THIS NEEDS TO BE CHANGED
 		
 		addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
 		
@@ -73,8 +86,141 @@ public class Player extends Entity{
 			removeAtk1();
 			
 		}
+		
+		if(character == CLERIC && status == BLOCKING){
+			System.out.println("Try to remove blocking animation.");
+			removeBlockAnim();
+		}
 	}
 	
+	
+	public void takeDamage(int damage){
+		
+		// Cleric gets hit while blocking.
+		/*
+		 * XXX CLERIC IS INVINCIBLE AS LONG AS HE HOLDS BLOCK, IS THIS OKAY LOL
+		 */
+		if(character == CLERIC && (status == ATK2 || status == BLOCKING)){	
+			animateBlock();
+			status = BLOCKING;
+		}
+		// Player takes damage/dies
+		else{
+			health -= damage;
+			
+			if(health <= 0 && status != DEAD){
+				// do death things
+				removeIdleImage();
+				
+				
+				System.out.println("1: Status = " + status);
+				
+				removeRunAnim();
+				animateDeath();
+				status = DEAD;
+				System.out.println("2: Status = " + status);
+				
+			}
+		}
+	}
+	
+	public void animateDeath(){
+		switch(direction){
+			case UP:
+				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 3, 3, 3, true, 200, true);
+				break;
+				
+			case DOWN:
+				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 1, 3, 1, true, 200, true);
+				break;
+				
+			case LEFT:
+				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 2, 3, 2, true, 200, true);
+				break;
+				
+			case RIGHT:
+				death = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_DEATH, 65, 65), 0, 0, 3, 0, true, 200, true);
+				break;
+			}
+		
+		addAnimation(death);
+		death.setLooping(false);
+	}
+	
+	/*
+	 * Removes the blocking animation after it stops.
+	 */
+	public void removeBlockAnim(){
+		switch(direction){
+			case UP:
+				if(clericBlockUp.isStopped()){
+					removeAnimation(clericBlockUp);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					status = IDLE;
+				}
+				break;
+				
+			case DOWN:
+				if(clericBlockDown.isStopped()){
+					removeAnimation(clericBlockDown);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					status = IDLE;
+				}
+				break;
+				
+			case LEFT:
+				if(clericBlockLeft.isStopped()){
+					removeAnimation(clericBlockLeft);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					status = IDLE;
+				}
+				break;
+				
+			case RIGHT:
+				if(clericBlockRight.isStopped()){
+					removeAnimation(clericBlockRight);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					status = IDLE;
+				}
+				break;
+		}
+	}
+	
+	public void animateBlock(){
+		
+		if(status == ATK2){
+			
+			switch(direction){
+				case UP:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_UP));
+					clericBlockUp = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_BLOCK_ANIM, 65, 65), 0, 3, 1, 3, true, 100, true);
+					addAnimation(clericBlockUp);
+					clericBlockUp.setLooping(false);
+					break;
+					
+				case DOWN:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_DOWN));
+					clericBlockDown = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_BLOCK_ANIM, 65, 65), 0, 1, 1, 1, true, 100, true);
+					addAnimation(clericBlockDown);
+					clericBlockDown.setLooping(false);
+					break;
+					
+				case LEFT:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_LEFT));
+					clericBlockLeft = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_BLOCK_ANIM, 65, 65), 0, 2, 1, 2, true, 100, true);
+					addAnimation(clericBlockLeft);
+					clericBlockLeft.setLooping(false);
+					break;
+					
+				case RIGHT:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_RIGHT));
+					clericBlockRight = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_BLOCK_ANIM, 65, 65), 0, 0, 1, 0, true, 100, true);
+					addAnimation(clericBlockRight);
+					clericBlockRight.setLooping(false);
+					break;
+				}
+		}
+	}
 	
 	public void removeAtk2(){
 		if(status == ATK2){
@@ -246,7 +392,7 @@ public class Player extends Entity{
 				case UP:
 					if(direction != UP){
 						addAnimation(clericRunUp);
-						removeAnim();
+						removeRunAnim();
 						direction = UP;
 					}
 					break;
@@ -254,7 +400,7 @@ public class Player extends Entity{
 				case DOWN:
 					if(direction != DOWN){
 						addAnimation(clericRunDown);
-						removeAnim();
+						removeRunAnim();
 						direction = DOWN;
 					}
 					break;
@@ -262,7 +408,7 @@ public class Player extends Entity{
 				case LEFT:
 					if(direction != LEFT){
 						addAnimation(clericRunLeft);
-						removeAnim();
+						removeRunAnim();
 						direction = LEFT;
 					}
 					break;
@@ -270,7 +416,7 @@ public class Player extends Entity{
 				case RIGHT:
 					if(direction != RIGHT){
 						addAnimation(clericRunRight);
-						removeAnim();
+						removeRunAnim();
 						direction = RIGHT;
 					}
 					break;
@@ -287,22 +433,22 @@ public class Player extends Entity{
 		switch(direction){
 		
 			case UP:
-				removeAnim();
+				removeRunAnim();
 				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
 				break;
 				
 			case DOWN:
-				removeAnim();
+				removeRunAnim();
 				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
 				break;
 				
 			case LEFT:
-				removeAnim();
+				removeRunAnim();
 				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
 				break;
 				
 			case RIGHT:
-				removeAnim();
+				removeRunAnim();
 				addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
 				break;
 			}
@@ -311,7 +457,7 @@ public class Player extends Entity{
 	/*
 	 * Removes cleric's running animation.
 	 */
-	private void removeAnim(){
+	private void removeRunAnim(){
 		
 		if(status == MOVING){
 			
@@ -388,6 +534,8 @@ public class Player extends Entity{
 			}
 		}
 	}
+	
+	public int getHealth()	{ return health; }
 	
 	public int getDir() 	{ return direction; }
 	public int getStatus() 	{ return status; }

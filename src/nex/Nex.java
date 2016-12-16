@@ -36,6 +36,8 @@ public class Nex extends StateBasedGame{
 	//----- Animations -----//
 	public static final String CLERIC_RUN = "nex/resource/sprites/player/Cleric_Walk.png";
 	public static final String CLERIC_ATK1 = "nex/resource/sprites/player/Cleric_Atk.png";
+	public static final String CLERIC_BLOCK_ANIM = "nex/resource/sprites/player/Cleric_Block_Anim.png";
+	public static final String CLERIC_DEATH = "nex/resource/sprites/player/Cleric_Death.png";
 	
 	
 	
@@ -120,6 +122,8 @@ public class Nex extends StateBasedGame{
 		//----- Animations ----//
 		ResourceManager.loadImage(CLERIC_RUN);
 		ResourceManager.loadImage(CLERIC_ATK1);
+		ResourceManager.loadImage(CLERIC_BLOCK_ANIM);
+		ResourceManager.loadImage(CLERIC_DEATH);
 		
 		
 		
