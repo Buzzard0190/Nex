@@ -28,7 +28,14 @@ public class Nex extends StateBasedGame{
 	public static final String CLERIC_IDLE_RIGHT = "nex/resource/sprites/player/Cleric_Idle_Right.png";
 	public static final String CLERIC_IDLE_LEFT = "nex/resource/sprites/player/Cleric_Idle_Left.png";
 	
+	public static final String CLERIC_BLOCK_UP = "nex/resource/sprites/player/Cleric_Block_Up.png";
+	public static final String CLERIC_BLOCK_DOWN = "nex/resource/sprites/player/Cleric_Block_Down.png";
+	public static final String CLERIC_BLOCK_RIGHT = "nex/resource/sprites/player/Cleric_Block_Right.png";
+	public static final String CLERIC_BLOCK_LEFT = "nex/resource/sprites/player/Cleric_Block_Left.png";
+	
+	//----- Animations -----//
 	public static final String CLERIC_RUN = "nex/resource/sprites/player/Cleric_Walk.png";
+	public static final String CLERIC_ATK1 = "nex/resource/sprites/player/Cleric_Atk.png";
 	
 	
 	
@@ -44,6 +51,7 @@ public class Nex extends StateBasedGame{
 	//----- Declare Objects -----//
 	
 	Player player;
+	Temp block;
 	List<Temp> temp;
 
 	// ---- Declare Arrays -----//
@@ -97,13 +105,23 @@ public class Nex extends StateBasedGame{
 		// ResourceManager.loadImage(STARTUP_BANNER_RSC);
 		// ResourceManager.loadImage(GAMEOVER_BANNER_RSC);
 		
+		ResourceManager.loadImage(BLOCK);
+		
 		ResourceManager.loadImage(CLERIC_IDLE_UP);
 		ResourceManager.loadImage(CLERIC_IDLE_DOWN);
 		ResourceManager.loadImage(CLERIC_IDLE_LEFT);
 		ResourceManager.loadImage(CLERIC_IDLE_RIGHT);
-		ResourceManager.loadImage(CLERIC_RUN);
 		
-		ResourceManager.loadImage(BLOCK);
+		ResourceManager.loadImage(CLERIC_BLOCK_UP);
+		ResourceManager.loadImage(CLERIC_BLOCK_DOWN);
+		ResourceManager.loadImage(CLERIC_BLOCK_LEFT);
+		ResourceManager.loadImage(CLERIC_BLOCK_RIGHT);
+		
+		//----- Animations ----//
+		ResourceManager.loadImage(CLERIC_RUN);
+		ResourceManager.loadImage(CLERIC_ATK1);
+		
+		
 		
 		//----- Sounds -----//
 		
@@ -112,6 +130,7 @@ public class Nex extends StateBasedGame{
 		//----- Create Instances -----//
 		
 		player = new Player(ScreenWidth/2, ScreenHeight/2);
+		block = new Temp(400, 400);
 	}
 	
 	public static void main(String[] args) {

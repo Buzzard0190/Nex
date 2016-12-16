@@ -1,22 +1,43 @@
 package nex;
 
 import org.newdawn.slick.Animation;
-
 import jig.Entity;
 import jig.ResourceManager;
 import jig.Vector;
 
+/*
+ * if(status == IDLE){
+			switch(direction){
+			case UP:
+				
+				break;
+				
+			case DOWN:
+				
+				break;
+				
+			case LEFT:
+
+				break;
+				
+			case RIGHT:
+
+				break;
+			}
+		}
+ */
+
 public class Player extends Entity{
 	
-	public static final int UP = 0;
-	public static final int DOWN = 1;
-	public static final int LEFT = 2;
-	public static final int RIGHT = 3;
+	public static final int UP 		= 0;
+	public static final int DOWN 	= 1;
+	public static final int LEFT 	= 2;
+	public static final int RIGHT 	= 3;
 	
-	public static final int MOVING = 4;
-	public static final int ATK1 = 5;
-	public static final int ATK2 = 6;
-	public static final int IDLE = 7;
+	public static final int MOVING 		= 4;
+	public static final int ATK1 		= 5;
+	public static final int ATK2 		= 6;
+	public static final int IDLE 		= 7;
 	
 	private Vector velocity;
 	private Vector position;
@@ -25,6 +46,7 @@ public class Player extends Entity{
 	private int status;
 	
 	public Animation clericRunLeft, clericRunRight, clericRunUp, clericRunDown;
+	public Animation clericAtk1Left, clericAtk1Right, clericAtk1Up, clericAtk1Down;
 	
 	public Player(final int x, final int y){
 		super(x, y);
@@ -40,19 +62,165 @@ public class Player extends Entity{
 		clericRunDown 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_RUN, 65, 65), 0, 1, 3, 1, true, 100, true);
 		clericRunLeft 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_RUN, 65, 65), 0, 2, 3, 2, true, 100, true);
 		clericRunUp 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_RUN, 65, 65), 0, 3, 3, 3, true, 100, true);
+		
 	}
 	
 	
 	public void update(final int delta) { 
-		translate(velocity.scale(delta)); 
+		
+		if(status == ATK1){
+			
+			removeAtk1();
+			
+		}
+	}
+	
+	
+	public void removeAtk2(){
+		if(status == ATK2){
+			switch(direction){
+				case UP:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_UP));
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					status = IDLE;
+					break;
+					
+				case DOWN:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_DOWN));
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					status = IDLE;
+					break;
+					
+				case LEFT:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_LEFT));
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					status = IDLE;
+					break;
+					
+				case RIGHT:
+					removeImage(ResourceManager.getImage(Nex.CLERIC_BLOCK_RIGHT));
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					status = IDLE;
+					break;
+			}
+		}
+	}
+	
+	public void removeAtk1(){
+		
+		switch(direction){
+			case UP:
+				if(clericAtk1Up.isStopped()){
+					removeAnimation(clericAtk1Up);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+					status = IDLE;
+				}
+				break;
+				
+			case DOWN:
+				if(clericAtk1Down.isStopped()){
+					removeAnimation(clericAtk1Down);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_DOWN));
+					status = IDLE;
+				}
+				break;
+				
+			case LEFT:
+				if(clericAtk1Left.isStopped()){
+					removeAnimation(clericAtk1Left);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_LEFT));
+					status = IDLE;
+				}
+
+				break;
+				
+			case RIGHT:
+				if(clericAtk1Right.isStopped()){
+					removeAnimation(clericAtk1Right);
+					addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_RIGHT));
+					status = IDLE;
+				}
+
+				break;
+		}
 	}
 
-	public void runDir(final int dir){
-		
-		if(status == IDLE)
-			removeIdleImage();
+	/*
+	 * @param whichAtk
+	 * 		Which attack to execute. 1 or 2 which corresponds to left mouse click and right mouse click.
+	 */
+	public void attack(int whichAtk){
 		
 		if(status == IDLE){
+			
+			removeIdleImage();
+			
+			// This needs to come after removeIdleImage()
+			status = ATK1;
+			
+			switch(direction){
+				case UP:
+					if(whichAtk == 1){
+						clericAtk1Up = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 3, 3, 3, true, 100, true);
+						addAnimation(clericAtk1Up);
+						clericAtk1Up.setLooping(false);
+					}
+					else{
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_UP));
+						status = ATK2;
+					}
+					break;
+					
+				case DOWN:
+					if(whichAtk == 1){
+						clericAtk1Down 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 1, 3, 1, true, 100, true);
+						addAnimation(clericAtk1Down);
+						clericAtk1Down.setLooping(false);
+					}
+					else{
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_DOWN));
+						status = ATK2;
+					}
+					break;
+					
+				case LEFT:
+					if(whichAtk == 1){
+						clericAtk1Left 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 2, 3, 2, true, 100, true);
+						addAnimation(clericAtk1Left);
+						clericAtk1Left.setLooping(false);
+					}
+					else{
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_LEFT));
+						status = ATK2;
+					}
+					break;
+					
+				case RIGHT:
+					if(whichAtk == 1){
+						clericAtk1Right = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 0, 3, 0, true, 100, true);
+						addAnimation(clericAtk1Right);
+						clericAtk1Right.setLooping(false);
+					}
+					else{
+						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_RIGHT));
+						status = ATK2;
+					}
+					break;
+			
+			}
+			
+		}
+	}
+	
+	/*
+	 * Changes Cleric's running animation.
+	 */
+	public void runDir(final int dir){
+		
+		if(status == IDLE){
+			
+			removeIdleImage();
+			
 			switch(dir){
 				case UP:
 					addAnimation(clericRunUp);
@@ -111,7 +279,9 @@ public class Player extends Entity{
 		
 	}
 	
-	// Remove running animations.
+	/* 
+	 * Replaces cleric's running animations with idle pose.
+	 */
 	public void stopRunning(){
 		
 		switch(direction){
@@ -138,6 +308,9 @@ public class Player extends Entity{
 			}
 	}
 	
+	/*
+	 * Removes cleric's running animation.
+	 */
 	private void removeAnim(){
 		
 		if(status == MOVING){
@@ -160,13 +333,13 @@ public class Player extends Entity{
 	}
 	
 	/*
-	 * Rotates the player when idle.
+	 * Rotates the player to face the mouse when idle.
 	 */
 	public void changeIdleDir(final int dir){
 		
-		removeIdleImage();
-		
 		if(status == IDLE){
+			
+			removeIdleImage();
 			
 			switch(dir){
 			

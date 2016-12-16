@@ -49,9 +49,13 @@ public class PlayingState extends BasicGameState {
 	public static int row = 0, col = 0;
 	
 	
+	// Used to rotate the player to the mouse.
 	private int mouseX, mouseY;
 	private int angle;
 	private int playerDir;
+	
+	private int playerStatus;
+	
 	
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
@@ -110,6 +114,7 @@ public class PlayingState extends BasicGameState {
 		
 		map.render(-player1x,-player1y,stoneLayer);
 		map.render(-player1x,-player1y,collisionLayer);
+		
 //		map.render(-hspeed,-vspeed,stoneLayer);
 		
 //		System.out.println(map.getTileId(20, 20, map.getLayerIndex("Stone_Background")));
@@ -125,6 +130,9 @@ public class PlayingState extends BasicGameState {
 //		}
 		
 		nx.player.render(g);
+		
+		// DEBUG
+		nx.block.render(g);
 		
 //		count = 0;
 //		for (Temp t : nx.temp)
@@ -143,6 +151,8 @@ public class PlayingState extends BasicGameState {
 		g.drawString("angle = " + angle, 500, 65);
 		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
 		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
+		
+		
 		
 //		System.out.println(count + " blocks rendered"); // DEBUG
 		
@@ -181,6 +191,10 @@ public class PlayingState extends BasicGameState {
 //			t.setX(t.getX()-hspeed);
 //			t.setY(t.getY()-vspeed);
 //		}
+		
+		// Debug
+		nx.block.setX(nx.block.getX()-hspeed);
+		nx.block.setY(nx.block.getY()-vspeed);
 		
 		player1x += hspeed;
 		player1y += vspeed;
@@ -229,7 +243,9 @@ public class PlayingState extends BasicGameState {
 		/*------------------------------------------- Update Objects ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
 		
-		// dg.player.update(delta);
+		nx.player.update(delta);
+		
+		
 	
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*--------------------------------------------- Collisions -----------------------------------------------*/
@@ -241,6 +257,9 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- Moving Player ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
+		// Used to reduce the number of calls to getStatus().
+		playerStatus = nx.player.getStatus();
+		
 		if(Math.abs(player1x) % 65 == 22 || Math.abs(player1x) % 65 == 43)
 		{
 			hmove = false;
@@ -262,7 +281,9 @@ public class PlayingState extends BasicGameState {
 		// Running LEFT
 		if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_D)
-				&& tileSet[row][col-1].getCollision() == 0) {	// Left Key
+				&& tileSet[row][col-1].getCollision() == 0 
+				&& (playerStatus == MOVING || playerStatus == IDLE)) 
+				{	// Left Key
 			hmove = true;
 			hspeed = -player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -274,7 +295,8 @@ public class PlayingState extends BasicGameState {
 		// Running RIGHT
 		else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
 				&& vmove == false && !input.isKeyDown(Input.KEY_A)
-				&& tileSet[row][col+1].getCollision() == 0) {
+				&& tileSet[row][col+1].getCollision() == 0
+				&& (playerStatus == MOVING || playerStatus == IDLE)) {
 			hmove = true;
 			hspeed = player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -286,7 +308,8 @@ public class PlayingState extends BasicGameState {
 		// Running UP
 		else if (input.isKeyDown(Input.KEY_W) && hmove == false 
 				&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
-				&& tileSet[row-1][col].getCollision() == 0) {
+				&& tileSet[row-1][col].getCollision() == 0
+				&& (playerStatus == MOVING || playerStatus == IDLE)) {
 			vmove = true;
 			vspeed = -player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -298,7 +321,8 @@ public class PlayingState extends BasicGameState {
 		// Running DOWN
 		else if (input.isKeyDown(Input.KEY_S) && hmove == false 
 				&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
-				&& tileSet[row+1][col].getCollision() == 0) {
+				&& tileSet[row+1][col].getCollision() == 0
+				&& (playerStatus == MOVING || playerStatus == IDLE)) {
 			vmove = true;
 			vspeed = player1Speed;
 			playerXPosition = nx.player.getPlayerPosition().getX();
@@ -306,6 +330,20 @@ public class PlayingState extends BasicGameState {
 			nx.player.setPlayerPosition(new Vector(playerXPosition+1,playerYPosition));
 			
 			nx.player.runDir(DOWN);
+		}
+		
+		
+		// Left Mouse = Atk1
+		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
+			nx.player.attack(1);
+		}
+		// Right Mouse = Atk2
+		else if(input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)){
+				nx.player.attack(2);
+		}
+		
+		if(!input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON) && nx.player.getStatus() == ATK2){
+			nx.player.removeAtk2();
 		}
 
 		
@@ -333,14 +371,16 @@ public class PlayingState extends BasicGameState {
 			shift(nx, hspeed, vspeed);
 		}
 		
-		// Update player status to IDLE
+		// Update player status to IDLE if they are not moving.
 		if(!hmove && !vmove){
 			
 			if(nx.player.getStatus() == MOVING){
 				nx.player.stopRunning();
 			}
 			
-			nx.player.setStatus(IDLE);
+			
+			if(nx.player.getStatus() != ATK1 && nx.player.getStatus() != ATK2)
+				nx.player.setStatus(IDLE);
 			
 		}
 		
