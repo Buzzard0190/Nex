@@ -1,0 +1,9 @@
+## Resolved Issues ##
+1.0 Basic Skeleton
+
+
+## Open Issues ##
+
+2.0 Move player on a grid.
+
+3.0 Shift world.

@@ -1,0 +1,12 @@
+## Resolved Issues ##
+
+1. Basic Skeleton
+2. Screen Scrolling and Grid Based Movement
+3. Networking
+4. Sprite Additions
+5. Pathfinding 
+6. UI
+
+## Open Issues ##
+
+7. Random Map Generation
