@@ -74,11 +74,14 @@ public class Nex extends StateBasedGame{
 	
 	
 	public static final String BLOCK = "nex/resource/sprites/player/block.png";
-	
+	public static final String GAMEOVER = "nex/resource/sprites/banners/gameover.png";
 	
 	//----- Sounds -----//
 	
-	// public static final String Z_GRUNT_RSC = "platformer/resource/zombie_grunt.wav";
+	 public static final String BACKGROUND = "nex/resource/sprites/sounds/background.wav";
+	 public static final String MAGE_ATTACK = "nex/resource/sprites/sounds/mage_attack.wav";
+	 public static final String OPEN_CHEST = "nex/resource/sprites/sounds/open_chest.wav";
+	 public static final String SWORD_HIT = "nex/resource/sprites/sounds/sword_hit.wav";
 
 	public final int ScreenWidth; 
 	public final int ScreenHeight;
@@ -134,7 +137,7 @@ public class Nex extends StateBasedGame{
 		// addState(new StartUpState());
 		addState(new ConnectState());
 		addState(new PlayingState());
-		
+		addState(new GameOverState());
 		// addState(new GameOverState());
 		
 		//------------------------------------------------//
@@ -197,9 +200,15 @@ public class Nex extends StateBasedGame{
 		ResourceManager.loadImage(GATE_VERT_ANIM);
 		ResourceManager.loadImage(GATE_HORI_ANIM);
 		
+		ResourceManager.loadImage(GAMEOVER);
+
+		
 		//----- Sounds -----//
 		
-		// ResourceManager.loadSound(Z_GRUNT_RSC);	
+		 ResourceManager.loadSound(BACKGROUND);	
+		 ResourceManager.loadSound(MAGE_ATTACK);	
+		 ResourceManager.loadSound(OPEN_CHEST);	
+		 ResourceManager.loadSound(SWORD_HIT);	
 		
 		//----- Create Instances -----//
 		

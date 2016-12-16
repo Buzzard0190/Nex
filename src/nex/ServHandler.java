@@ -76,6 +76,17 @@ public class ServHandler extends Thread {
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
 
+				if(playerSpot == 1) {
+					for(int i = 0; i < 40; i++){
+						for(int j = 0; j < 40; j++){
+							int collision = in.read();
+//							System.out.println(collision);
+							ServerData.tileSet1.add(collision);
+						}
+					}
+					ServerData.buildTileSet();
+				}
+				
 				if(playerSpot == 1){
 					 data.p1X = in.readInt();
 					 data.p1Y = in.readInt();
@@ -111,13 +122,19 @@ public class ServHandler extends Thread {
                     
                 for (ServerEnemyData e : ServerData.monsters) {
                 	int damage = in.readInt();
-                	e.health -= damage;
+                	e.doDamage(damage);
                 	if(e.health <= 0){
                 		out.writeInt(0);
                 	} else {
                 		out.writeInt(1);
                 	}
                 	out.writeInt(e.getDirectionMovement());
+                	if(playerSpot == 1){
+                    	e.p1Attack = in.readInt();
+                	} else {
+                    	e.p2Attack = in.readInt();
+                	}
+                	out.writeInt(e.getIsAttacking());
                 	out.writeInt((int)e.getMapPosition().getX());
                 	out.writeInt((int)e.getMapPosition().getY());
              	}
