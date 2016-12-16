@@ -68,22 +68,26 @@ public class Player extends Entity{
 	
 	
 	/* ADD WHICH PLAYER THEY ARE PLAYING AS TO THE CONSTRUCTOR */
-	public Player(final int x, final int y){
+	public Player(final int x, final int y, int type){
 		super(x, y);
 		
 		direction = UP;
 		status = IDLE;
 		
 		health = 100;
-		gold = 0;
-		character = WIZARD;	// THIS NEEDS TO BE CHANGED
+		gold = 0;	// THIS NEEDS TO BE CHANGED
 		
 		attackStrength = 10;	// CHANGE THIS BASED ON CHARACTER MAYBE
 		
-		if(character == CLERIC)
+		if(type == 0){
 			addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
-		else
+			character = CLERIC;
+		}
+		else if(type == 1)
+		{
 			addImageWithBoundingBox(ResourceManager.getImage(Nex.WIZARD_IDLE_UP));
+			character = WIZARD;
+		}
 		
 		health = 120;
 		shield = 0;
@@ -97,6 +101,19 @@ public class Player extends Entity{
 		
 	}
 	
+	
+	public void updatePlayer(int num)
+	{
+		System.out.println("playerNumber =" + num);
+		if(num == 1)
+		{
+			character = CLERIC;
+		}
+		else
+		{
+			character = WIZARD;
+		}
+	}
 	
 	public void update(final int delta) { 
 		

@@ -212,9 +212,9 @@ public class Nex extends StateBasedGame{
 		
 		//----- Create Instances -----//
 		
-		player = new Player(ScreenWidth/2, ScreenHeight/2);
+		player = new Player(ScreenWidth/2, ScreenHeight/2, 0);
 		block = new Temp(400, 400);
-		otherPlayer = new Player(ScreenWidth/2, ScreenHeight/2);
+		otherPlayer = new Player(ScreenWidth/2, ScreenHeight/2, 1);
 
 	}
 	

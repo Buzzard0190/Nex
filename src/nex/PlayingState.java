@@ -97,6 +97,8 @@ public class PlayingState extends BasicGameState {
 	static int playerTileX;
 	static int playerTileY;
 	
+	private boolean flag = true;
+	
 	/*
 	 * Enemy setup
 	 */
@@ -176,6 +178,20 @@ public class PlayingState extends BasicGameState {
 			initVars();
 		
 			// Player starting position
+			if(numberOfPlayers == 1)
+			{
+				nx.player = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 0);
+				nx.otherPlayer = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 1);
+			}
+			else if(numberOfPlayers == 2)
+			{
+				nx.player = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 0);
+				nx.otherPlayer = new Player(nx.ScreenWidth/2, nx.ScreenHeight/2, 1);
+			}
+			
+//			nx.player.updatePlayer();
+//			nx.otherPlayer.updatePlayer();
+			
 			nx.player.setPlayerPosition(new Vector(19,19));
 			tileSet[19][19].setCollision();
 			
@@ -477,6 +493,15 @@ public class PlayingState extends BasicGameState {
 		Input input = container.getInput();		// For key presses
 
 		Nex nx = (Nex)game;
+		
+		if(flag){
+			if(playerNumber == 2){
+				nx.player.updatePlayer(playerNumber);
+				flag = !flag;
+				nx.otherPlayer.updatePlayer(playerNumber + 2);
+			}
+			
+		}
 		
 		// ----- Rotating player based on mouse position. -----//
 		mouseX = input.getMouseX();

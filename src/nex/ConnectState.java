@@ -122,6 +122,7 @@ public class ConnectState extends BasicGameState {
 			
 			connected = true;
 			System.out.println("Success");
+//			nx.player.updatePlayer();
 			nx.enterState(Nex.PLAYINGSTATE);
 		}
 		else
