@@ -73,7 +73,7 @@ public class Player extends Entity{
 		gold = 0;
 		character = CLERIC;	// THIS NEEDS TO BE CHANGED
 		
-		attackStrength = 2;	// CHANGE THIS BASED ON CHARACTER MAYBE
+		attackStrength = 10;	// CHANGE THIS BASED ON CHARACTER MAYBE
 		
 		addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
 		

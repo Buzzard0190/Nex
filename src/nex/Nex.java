@@ -172,8 +172,6 @@ public class Nex extends StateBasedGame{
 		ResourceManager.loadImage(GATE_VERT_ANIM);
 		ResourceManager.loadImage(GATE_HORI_ANIM);
 		
-		
-		
 		//----- Sounds -----//
 		
 		// ResourceManager.loadSound(Z_GRUNT_RSC);	

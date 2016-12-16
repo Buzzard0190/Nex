@@ -60,6 +60,8 @@ public class EnemyCharacters extends Entity{
 		
 	}
 	
+	public int checkDamage() { return damage; }
+	
 	public void doDamage( int damage ) { 
 		this.damage = damage;
 		// send damage to server.
