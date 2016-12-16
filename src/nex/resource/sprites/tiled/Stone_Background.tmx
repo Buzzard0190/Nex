@@ -6,6 +6,15 @@
  <tileset firstgid="2" name="Gound_Tile_Stone_Lines" tilewidth="65" tileheight="65" tilecount="1" columns="1">
   <image source="../environment/Gound_Tile_Stone_Lines.png" width="65" height="65"/>
  </tileset>
+ <tileset firstgid="3" name="Walls" tilewidth="65" tileheight="65" tilecount="180" columns="6">
+  <image source="../environment/Walls_VertOri.png" width="390" height="1950"/>
+ </tileset>
+ <tileset firstgid="183" name="Pillars" tilewidth="65" tileheight="65" tilecount="15" columns="5">
+  <image source="../environment/Pillar.png" width="325" height="195"/>
+ </tileset>
+ <tileset firstgid="198" name="Barrels" tilewidth="65" tileheight="65" tilecount="4" columns="2">
+  <image source="../environment/Barrel_NoShadows.png" width="130" height="130"/>
+ </tileset>
  <layer name="Stone_Background" width="40" height="40">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+3DAQkAAAwEofv+pddjKLhqqqqqqqqqjx7+ij1jABkAAA==
@@ -13,12 +22,12 @@
  </layer>
  <layer name="Collision" width="40" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3OsQkAMAzAsOT/p3uElxQk8O6dmT3eVf4af42/xl/jr/HX+Gv8Nf4af42/xl/jr/HX+Gv8Nf4af80vf5d7RRTsfgAZAAA=
+   H4sIAAAAAAAAC+1YsQrCMBC9IbOTm4tDh87+gKtgBSd/wEno0NkfcO3g7A+4FhWpq/pZ3kGEcNAMjZgX6IMHTbikj0vvJemSiHJmxTTMwraNw8r2H1VMoeKM6svVuMoTa9R7V8w1c0K42DDPsUV4MCPs/I2Y29giPJD1nccW4YHk7xBbhAcpfH/I9bsn7PxJfSDrOxF2faD7n9Tv4H/9kUL9IvufrC9y/sRfkPWNKdxfrszbD7R0IdRfWuZD9d0D53SBvL4CZH1T+o8/v3qOk/0t1P9839qT+Q6YG93/RB/y+QB9/0W/f6Dvbymc/5DP9yn4C7I+9P8bKdx/0fePoX77Q+pjxyyZNbNhZpYL57m2Md922RHX2Fh3XKbYdPTVaj5pX5gfi1CYjAAZAAA=
   </data>
  </layer>
- <layer name="Red_Line" width="40" height="40">
+ <layer name="Gate_Collision" width="40" height="40">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3DAQkAAAwEoeP7h16PoeCqqaqqqqqqPnohIG7EABkAAA==
+   H4sIAAAAAAAAC+3OQQkAAAgEsOsfzFxG8CWCbAmWAAAA7KvrwMAPAAB+ab3MQHsAGQAA
   </data>
  </layer>
 </map>
