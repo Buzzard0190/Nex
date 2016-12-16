@@ -33,9 +33,23 @@ public class Nex extends StateBasedGame{
 	public static final String CLERIC_BLOCK_RIGHT = "nex/resource/sprites/player/Cleric_Block_Right.png";
 	public static final String CLERIC_BLOCK_LEFT = "nex/resource/sprites/player/Cleric_Block_Left.png";
 	
-	
 	public static final String GATE_VERT = "nex/resource/sprites/environment/Gate_Vert.png";
 	public static final String GATE_HORI = "nex/resource/sprites/environment/Gate_Hori.png";
+	
+	public static final String CHEST_CLOSED_U = "nex/resource/sprites/environment/Chest_Closed_U.png";
+	public static final String CHEST_CLOSED_D = "nex/resource/sprites/environment/Chest_Closed_D.png";
+	public static final String CHEST_CLOSED_R = "nex/resource/sprites/environment/Chest_Closed_R.png";
+	public static final String CHEST_CLOSED_L = "nex/resource/sprites/environment/Chest_Closed_L.png";
+	
+	public static final String CHEST_OPEN_U = "nex/resource/sprites/environment/Chest_Open_U.png";
+	public static final String CHEST_OPEN_D = "nex/resource/sprites/environment/Chest_Open_D.png";
+	public static final String CHEST_OPEN_R = "nex/resource/sprites/environment/Chest_Open_R.png";
+	public static final String CHEST_OPEN_L = "nex/resource/sprites/environment/Chest_Open_L.png";
+	
+	public static final String CHEST_EMPTY_U = "nex/resource/sprites/environment/Chest_Empty_U.png";
+	public static final String CHEST_EMPTY_D = "nex/resource/sprites/environment/Chest_Empty_D.png";
+	public static final String CHEST_EMPTY_R = "nex/resource/sprites/environment/Chest_Empty_R.png";
+	public static final String CHEST_EMPTY_L = "nex/resource/sprites/environment/Chest_Empty_L.png";
 	
 	//----- Animations -----//
 	public static final String CLERIC_RUN = "nex/resource/sprites/player/Cleric_Walk.png";
@@ -63,6 +77,7 @@ public class Nex extends StateBasedGame{
 	Temp block;
 	List<Temp> temp;
 	List<Gate> GateArray;
+	List<Chest> ChestArray;
 
 	// ---- Declare Arrays -----//
 	
@@ -88,8 +103,8 @@ public class Nex extends StateBasedGame{
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 		
 		//----- Create Arrays -----//
-		
 		GateArray = new ArrayList<Gate>();
+		ChestArray = new ArrayList<Chest>();
 		
 		temp = new ArrayList<Temp>(50);
 		// blocks = new ArrayList<Block>(100);
@@ -132,6 +147,20 @@ public class Nex extends StateBasedGame{
 		ResourceManager.loadImage(GATE_VERT);
 		ResourceManager.loadImage(GATE_HORI);
 		
+		ResourceManager.loadImage(CHEST_CLOSED_U);
+		ResourceManager.loadImage(CHEST_CLOSED_D);
+		ResourceManager.loadImage(CHEST_CLOSED_R);
+		ResourceManager.loadImage(CHEST_CLOSED_L);
+		
+		ResourceManager.loadImage(CHEST_OPEN_U);
+		ResourceManager.loadImage(CHEST_OPEN_D);
+		ResourceManager.loadImage(CHEST_OPEN_R);
+		ResourceManager.loadImage(CHEST_OPEN_L);
+		
+		ResourceManager.loadImage(CHEST_EMPTY_U);
+		ResourceManager.loadImage(CHEST_EMPTY_D);
+		ResourceManager.loadImage(CHEST_EMPTY_L);
+		ResourceManager.loadImage(CHEST_EMPTY_R);
 		
 		
 		//----- Animations ----//

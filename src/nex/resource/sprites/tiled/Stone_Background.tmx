@@ -30,4 +30,9 @@
    H4sIAAAAAAAAC+3OQQkAAAgEsOsfzFxG8CWCbAmWAAAA7KvrwMAPAAB+ab3MQHsAGQAA
   </data>
  </layer>
+ <layer name="Chest_Collision" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3QsQkAQAjAQPefzLHsv3wQEe8mCIkAALgrpwOWer/5+Mc3AACAPgUUeloHABkAAA==
+  </data>
+ </layer>
 </map>
