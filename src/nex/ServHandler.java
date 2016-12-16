@@ -67,9 +67,9 @@ public class ServHandler extends Thread {
 						ServerData.tileSet1.add(collision);
 					}
 				}
+				ServerData.buildTileSet();
 			}
 
-//			ServerData.buildTileSet();
 
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
