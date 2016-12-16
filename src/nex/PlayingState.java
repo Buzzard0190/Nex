@@ -62,23 +62,19 @@ public class PlayingState extends BasicGameState {
 	public int count = 0;
 	
 	private static TiledMap map;
-<<<<<<< HEAD
 	static Tile[][] tileSet, tileSetGates, tileSetChests;
 	int stoneLayer, collisionLayer, gateLayer, chestLayer;
 	
-	static int player1x = 867, player1y = 967, player1Speed = 5;
-=======
-	volatile static Tile[][] tileSet;
-	static Tile[][] tileSetGates;
-	int stoneLayer, collisionLayer, gateLayer;
+
+//	volatile static Tile[][] tileSet;
+//	static Tile[][] tileSetGates;
+
 	public static int row = 0, col = 0;
 	
 	/*
 	 * Player setup
 	 */
-//	static int player1x = 867, player1y = 967, player1Speed = 5;
 	static int player1x = 19*65+33, player1y = 19*65+33, player1Speed = 5;
->>>>>>> a74d49e705b7faa79230c107b349aafc12b96afc
 	boolean playerCollision = false;
 	String debugString;
 	boolean hmove = false, vmove = false;
@@ -951,8 +947,7 @@ public class PlayingState extends BasicGameState {
 				}
 			}
 		}
-		
-<<<<<<< HEAD
+
 		for(int i = 0; i < 40; i++){
 			for(int j = 0; j < 40; j++){
 				if(map.getTileId(i, j, map.getLayerIndex("Chest_Collision")) > 0){
@@ -973,10 +968,8 @@ public class PlayingState extends BasicGameState {
 //			}
 //			System.out.println();
 //		}
-=======
 		playerTileX = 19;
 		playerTileY = 19;
->>>>>>> a74d49e705b7faa79230c107b349aafc12b96afc
 		
 //		buildGraph();
 	}
