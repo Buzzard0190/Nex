@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="65" tileheight="65" nextobjectid="1">
+ <tileset firstgid="1" name="Gound_Tile_Stone" tilewidth="65" tileheight="65" tilecount="1" columns="1">
+  <image source="../environment/Gound_Tile_Stone.png" width="65" height="65"/>
+ </tileset>
+ <tileset firstgid="2" name="Gound_Tile_Stone_Lines" tilewidth="65" tileheight="65" tilecount="1" columns="1">
+  <image source="../environment/Gound_Tile_Stone_Lines.png" width="65" height="65"/>
+ </tileset>
+ <tileset firstgid="3" name="Walls" tilewidth="65" tileheight="65" tilecount="180" columns="6">
+  <image source="../environment/Walls_VertOri.png" width="390" height="1950"/>
+ </tileset>
+ <tileset firstgid="183" name="Pillars" tilewidth="65" tileheight="65" tilecount="15" columns="5">
+  <image source="../environment/Pillar.png" width="325" height="195"/>
+ </tileset>
+ <tileset firstgid="198" name="Barrels" tilewidth="65" tileheight="65" tilecount="4" columns="2">
+  <image source="../environment/Barrel_NoShadows.png" width="130" height="130"/>
+ </tileset>
+ <layer name="Stone_Background" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3DAQkAAAwEofv+pddjKLhqqqqqqqqqjx7+ij1jABkAAA==
+  </data>
+ </layer>
+ <layer name="Collision" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+1YsQrCMBAN2NkfcFKqdPYHXAUrOPkDTkKHzv6Aawdnf8C1qIiu6md5wRTKYQqX2OMiPnjQpHfJo8ldLp0ppRJgDoyAqWlHNeamf4dsUmQXob4E+XUabCM07xy4APYUH6hzLYGHNoRYQNU3dvDxAXWuLnDVhhALXNZ30oYQC1y+37YNIRb84v6THL8bBx8fuMSHZH17xRsffeAQcYBs4tq7keLNf1To+OXMf1Rw5z8quOOXCu76hQq9vpK/n84vkvV9o746Ac9f0PIJWp9vfrkCb6jv4jlmBen7LwR9HPn54einzzff/Ne01+7Ap8fYIayv5PpA+vnLff+gIoTzTXr9J7m+DyG/SNbH/X+DCu77LxUhnB//+HWHjo81MAMWwFK9/39oTmvPhbGp2pnFrjS2db8YsbT0FWg83T4CX2S+B9EAGQAA
+  </data>
+ </layer>
+ <layer name="Gate_Collision" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3DMQ0AAAgDsPk3hi3eGYCrTZoAABemAgAAAPBrASa5RlMAGQAA
+  </data>
+ </layer>
+ <layer name="Chest_Collision" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3TsQkAMAhFQfcfTDJW+hRChBCEu/JX8sAIKnm5A/4DmGX9PmCos5uOPboBAAC8swE/UuRjABkAAA==
+  </data>
+ </layer>
+</map>
