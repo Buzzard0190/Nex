@@ -47,7 +47,6 @@ public class ServerData {
 			int monsterY = (r.nextInt(36)+2);
 //			int monsterX = 15+offset;
 //			int monsterY = 15;
-			System.out.println("x " + monsterX + " y " + monsterY);
 			
 			ServerEnemyData enemy = new ServerEnemyData((monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
 			enemy.setTilePosition(new Vector(monsterX, monsterY));
