@@ -88,11 +88,14 @@ public class ClientHandler extends Thread {
 			    			    
 			    for (EnemyCharacters e : PlayingState.monsters)
 				{
+			    	out.writeInt(e.damage);
+			    	e.aliveOrDead = in.readInt();
+			    	e.movingDirection = in.readInt();
 			    	int somex = in.readInt();
 			    	int somey = in.readInt();
-			    	System.out.println("x: " + somex + " y: " + somey);
+			    	//System.out.println("x: " + somex + " y: " + somey);
 					e.setX(somex-PlayingState.offsetX);
-					e.setY(somey-PlayingState.offsetY);
+					e.setY(somey-PlayingState.offsetY);					
 				}
 
 					

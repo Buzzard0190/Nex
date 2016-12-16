@@ -106,19 +106,19 @@ public class ServerData {
 				
 				if(p1Dist > p2Dist && numberOfPlayers > 1){
 					if (enemyX > p2X){ // Left
-						System.out.println("Go Left");
+//						System.out.println("Go Left");
 						enemy.setDirectionMovement(1);
 					}	
 					else if (enemyX < p2X){ // Right
-						System.out.println("Go Right");
+//						System.out.println("Go Right");
 						enemy.setDirectionMovement(2);
 					} 
 					else if(enemyY > p2Y){ // Up
-						System.out.println("Go Up");
+//						System.out.println("Go Up");
 						enemy.setDirectionMovement(3);
 					} 
 					else if (enemyY < p2Y){ // Down
-						System.out.println("Go Down");
+//						System.out.println("Go Down");
 						enemy.setDirectionMovement(4);
 					}
 					
@@ -127,19 +127,19 @@ public class ServerData {
 					}
 				} else {
 					if (enemyX > p1x){ // Left
-						System.out.println("Go Left");
+//						System.out.println("Go Left");
 						enemy.setDirectionMovement(1);
 					}	
 					else if (enemyX < p1x){ // Right
-						System.out.println("Go Right");
+//						System.out.println("Go Right");
 						enemy.setDirectionMovement(2);
 					} 
 					else if(enemyY > p1y){ // Up
-						System.out.println("Go Up");
+//						System.out.println("Go Up");
 						enemy.setDirectionMovement(3);
 					} 
 					else if (enemyY < p1y){ // Down
-						System.out.println("Go Down");
+//						System.out.println("Go Down");
 						enemy.setDirectionMovement(4);
 					}
 					if(p1Dist > 700){
@@ -147,6 +147,12 @@ public class ServerData {
 					}
 				}
 				
+				Random r = new Random();
+				int randoChance = r.nextInt(100);
+				if(randoChance < 10){
+					int randoDirection = r.nextInt(5);
+					enemy.setDirectionMovement(randoDirection);
+				}
 				
 				enemyX = (int) enemy.getMapPosition().getX();		//gets pixel
 				enemyY = (int) enemy.getMapPosition().getY();		//gets pixel

@@ -110,7 +110,14 @@ public class ServHandler extends Thread {
 
                     
                 for (ServerEnemyData e : ServerData.monsters) {
-//                	System.out.println("x: " + e.getMapPosition().getX() + " y: " + e.getMapPosition().getY());
+                	int damage = in.readInt();
+                	e.health -= damage;
+                	if(e.health <= 0){
+                		out.writeInt(0);
+                	} else {
+                		out.writeInt(1);
+                	}
+                	out.writeInt(e.getDirectionMovement());
                 	out.writeInt((int)e.getMapPosition().getX());
                 	out.writeInt((int)e.getMapPosition().getY());
              	}
@@ -121,7 +128,7 @@ public class ServHandler extends Thread {
                 if(delta < 0)
                 {
                 	ServerData.updateEnemies();
-                	delta = 20;
+                	delta = 5;
                 }
                 else{
                 	delta--;
