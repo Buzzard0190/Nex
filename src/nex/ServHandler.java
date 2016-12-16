@@ -69,7 +69,7 @@ public class ServHandler extends Thread {
 				}
 			}
 
-			ServerData.buildTileSet();
+//			ServerData.buildTileSet();
 
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
@@ -96,7 +96,7 @@ public class ServHandler extends Thread {
     		
                 out.flush();
                 frame.updateFrame();
-                ServerData.buildGraph();
+                ServerData.updateEnemies();
 			}
 			
 		} catch (IOException e) {
