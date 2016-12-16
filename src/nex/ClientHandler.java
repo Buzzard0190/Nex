@@ -95,6 +95,7 @@ public class ClientHandler extends Thread {
 			    	e.damage = 0;
 			    	e.aliveOrDead = in.readInt();
 			    	e.movingDirection = in.readInt();
+			    	
 			    	out.writeInt(e.attackOrIdle);
 			    	e.attackOrIdle = in.readInt();
 			    	int somex = in.readInt();

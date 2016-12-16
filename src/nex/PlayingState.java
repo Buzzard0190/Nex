@@ -41,6 +41,10 @@ public class PlayingState extends BasicGameState {
 	public static final int BLOCKING 	= 8;	// This is to stop the blocking animation when the cleric is hit.	
 	public static final int DEAD 		= 9;
 	
+	// Player character
+	public static final int WIZARD 		= 0;
+	public static final int CLERIC 		= 1;
+	
 	// Gate orientation
 	public static final int VERT = 0;
 	public static final int HORI = 1;
@@ -162,7 +166,7 @@ public class PlayingState extends BasicGameState {
 			
 			stoneLayer = map.getLayerIndex("Stone_Background");
 //			stoneLayer = map.getLayerIndex("Red_Line");
-//			collisionLayer = map.getLayerIndex("Collision");
+			collisionLayer = map.getLayerIndex("Collision");
 			gateLayer = map.getLayerIndex("Gate_Collision");
 			chestLayer = map.getLayerIndex("Chest_Collision");
 			
@@ -216,15 +220,23 @@ public class PlayingState extends BasicGameState {
 		Nex nx = (Nex)game;
 		
 		// Add gates
-		nx.GateArray.add(new Gate(400 + (65*20), 300, VERT, new Vector(39, 19)));
-		nx.GateArray.add(new Gate(400 + (65*20), 300+65, VERT, new Vector(39, 20)));
-		nx.GateArray.add(new Gate(400 + (65*20), 300+(65*2), VERT, new Vector(39, 21)));
+//		nx.GateArray.add(new Gate(400 + (65*20), 300, VERT, new Vector(39, 19)));
+//		nx.GateArray.add(new Gate(400 + (65*20), 300+65, VERT, new Vector(39, 20)));
+//		nx.GateArray.add(new Gate(400 + (65*20), 300+(65*2), VERT, new Vector(39, 21)));
+		
+		nx.GateArray.add(new Gate(400 + (65*14), 300-(65*8), HORI, new Vector(33, 11)));
+		nx.GateArray.add(new Gate(400 + (65*15), 300-(65*8), HORI, new Vector(34, 11)));
+		nx.GateArray.add(new Gate(400 + (65*16), 300-(65*8), HORI, new Vector(35, 11)));
 		
 		// Add chests
 		nx.ChestArray.add(new Chest(400, 300 - 33, UP));
 		nx.ChestArray.add(new Chest(400, 300 - (33 + 65 * 5), DOWN));
 		nx.ChestArray.add(new Chest(400 - (65 * 2) - 33, 300 - (65 * 3), RIGHT));
 		nx.ChestArray.add(new Chest(400 + (65 * 2) + 33, 300 - (65 * 3), LEFT));
+		
+		nx.ChestArray.add(new Chest(400 + (65 * 13), 300 - (33 + 65 * 18), DOWN));
+		nx.ChestArray.add(new Chest(400 + (65 * 19), 300 - (33 + 65 * 18), DOWN));
+		nx.ChestArray.add(new Chest(400 + (65 * 19) + 33, 300 - ( 65 * 13), LEFT));
 		
 		ResourceManager.getSound(Nex.BACKGROUND).loop();
 	}
@@ -264,6 +276,10 @@ public class PlayingState extends BasicGameState {
 		}
 		
 		for (Chest c : nx.ChestArray){
+			c.render(g);
+		}
+		
+		for(IceAtk c : nx.IceArray){
 			c.render(g);
 		}
 		
@@ -437,6 +453,12 @@ public class PlayingState extends BasicGameState {
 			c.setX(c.getX()-hspeed);
 			c.setY(c.getY()-vspeed);
 		}
+		
+		for (IceAtk c : nx.IceArray){
+			c.setX(c.getX()-hspeed);
+			c.setY(c.getY()-vspeed);
+		}
+		
 		// Debug
 		nx.block.setX(nx.block.getX()-hspeed);
 		nx.block.setY(nx.block.getY()-vspeed);
@@ -511,7 +533,7 @@ public class PlayingState extends BasicGameState {
 		gatePointer = null; chestPointer = null;
 		
 		for(Gate gt : nx.GateArray){
-			if(Math.abs(gt.getX() - nx.player.getX()) <= 100 && (Math.abs(gt.getY() - nx.player.getY()) <= 100) && gt.isActive()){
+			if(Math.abs(gt.getX() - nx.player.getX()) <= 100 && (Math.abs(gt.getY() - nx.player.getY()) <= 100) && gt.isActive() && nx.player.getStatus() != DEAD){
 				gatePointer = gt;
 				canInteract = true;
 			}
@@ -519,7 +541,7 @@ public class PlayingState extends BasicGameState {
 		}
 		
 		for(Chest c : nx.ChestArray){
-			if(Math.abs(c.getX() - nx.player.getX()) <= 100 && (Math.abs(c.getY() - nx.player.getY()) <= 100) && c.getStatus() != EMPTY){
+			if(Math.abs(c.getX() - nx.player.getX()) <= 100 && (Math.abs(c.getY() - nx.player.getY()) <= 100) && c.getStatus() != EMPTY && nx.player.getStatus() != DEAD){
 				chestPointer = c;
 				canInteract = true;
 			}
@@ -640,9 +662,29 @@ public class PlayingState extends BasicGameState {
 		// Left Mouse = Atk1
 		if(input.isMousePressed(Input.MOUSE_LEFT_BUTTON)){
 			
-			nx.player.attack(1);
 			
-			// XXX x = vertical, y = horizontal
+			if(nx.player.getCharacter() == WIZARD && nx.player.getStatus() == IDLE){
+				switch(nx.player.getDir()){
+				case UP:
+					nx.IceArray.add(new IceAtk((int)nx.player.getX(), (int)(nx.player.getY() - 65)));
+					break;
+					
+				case DOWN:
+					nx.IceArray.add(new IceAtk((int)nx.player.getX(), (int)(nx.player.getY() + 65)));
+					break;
+					
+				case LEFT:
+					nx.IceArray.add(new IceAtk((int)nx.player.getX() - 65, (int)(nx.player.getY())));
+					break;
+					
+				case RIGHT:
+					nx.IceArray.add(new IceAtk((int)nx.player.getX() + 65, (int)(nx.player.getY())));
+					break;
+					
+				}
+			}
+			
+			nx.player.attack(1);
 			
 			// check direction
 			if(nx.player.getStatus() == ATK1){
@@ -669,7 +711,7 @@ public class PlayingState extends BasicGameState {
 			
 		}
 		// Right Mouse = Atk2
-		else if(input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON)){
+		else if(input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON) && nx.player.getCharacter() == CLERIC){
 				nx.player.attack(2);
 		}
 		
@@ -760,6 +802,13 @@ public class PlayingState extends BasicGameState {
 		
 		nx.otherPlayer.setPlayerPosition(new Vector(otherX, otherY));
 		nx.otherPlayer.setPosition(new Vector(otherX, otherY));
+		
+		// Remove ice atks
+		for (Iterator<IceAtk> i = nx.IceArray.iterator(); i.hasNext();) {
+			if (!i.next().isActive()) {
+				i.remove();
+			}
+		}
 		
 		if(nx.player.getStatus() == 9)
 		{
