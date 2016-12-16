@@ -54,6 +54,7 @@ public class Player extends Entity{
 	private int direction;
 	private int status;
 	private int character;
+	private int gold;
 	
 	public Animation clericRunLeft, clericRunRight, clericRunUp, clericRunDown;
 	public Animation clericAtk1Left, clericAtk1Right, clericAtk1Up, clericAtk1Down;
@@ -68,6 +69,7 @@ public class Player extends Entity{
 		status = IDLE;
 		
 		health = 100;
+		gold = 0;
 		character = CLERIC;	// THIS NEEDS TO BE CHANGED
 		
 		addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
@@ -552,4 +554,7 @@ public class Player extends Entity{
 	
 	public void setPlayerPosition(Vector position)	{ this.position = position; }
 	public Vector getPlayerPosition()				{ return this.position; }
+	
+	public int getGold() { return gold; }
+	public void addGold( final int gold ) { this.gold += gold; }
 }

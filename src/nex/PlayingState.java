@@ -42,6 +42,11 @@ public class PlayingState extends BasicGameState {
 	public static final int VERT = 0;
 	public static final int HORI = 1;
 	
+	// Chest Status
+	public static final int CLOSED 	= 0;
+	public static final int OPEN 	= 1;
+	public static final int EMPTY 	= 2;
+	
 	private float xVelocity = 0; 
 	private float yVelocity = 0;
 	/*
@@ -55,16 +60,20 @@ public class PlayingState extends BasicGameState {
 	 * Map setup
 	 */
 	public int count = 0;
+	
 	private static TiledMap map;
-	volatile static Tile[][] tileSet;
-	static Tile[][] tileSetGates;
-	int stoneLayer, collisionLayer, gateLayer;
+	static Tile[][] tileSet, tileSetGates, tileSetChests;
+	int stoneLayer, collisionLayer, gateLayer, chestLayer;
+	
+
+//	volatile static Tile[][] tileSet;
+//	static Tile[][] tileSetGates;
+
 	public static int row = 0, col = 0;
 	
 	/*
 	 * Player setup
 	 */
-//	static int player1x = 867, player1y = 967, player1Speed = 5;
 	static int player1x = 19*65+33, player1y = 19*65+33, player1Speed = 5;
 	boolean playerCollision = false;
 	String debugString;
@@ -123,6 +132,7 @@ public class PlayingState extends BasicGameState {
 	
 	// Pointers to hold objects that can be interacted with when the player is close enough.
 	Gate gatePointer;
+	Chest chestPointer;
 	
 	
 	@Override
@@ -137,6 +147,7 @@ public class PlayingState extends BasicGameState {
 			
 			tileSet = new Tile[40][40];
 			tileSetGates = new Tile[40][40];
+			tileSetChests = new Tile[40][40];
 
 			try{
 				map = new TiledMap("nex/resource/sprites/tiled/Stone_Background.tmx");
@@ -148,6 +159,7 @@ public class PlayingState extends BasicGameState {
 //			stoneLayer = map.getLayerIndex("Red_Line");
 //			collisionLayer = map.getLayerIndex("Collision");
 			gateLayer = map.getLayerIndex("Gate_Collision");
+			chestLayer = map.getLayerIndex("Chest_Collision");
 			
 			//System.out.println(stoneLayer);
 			System.out.println(collisionLayer);			
@@ -203,6 +215,12 @@ public class PlayingState extends BasicGameState {
 		nx.GateArray.add(new Gate(400 + (65*20), 300+65, VERT, new Vector(39, 20)));
 		nx.GateArray.add(new Gate(400 + (65*20), 300+(65*2), VERT, new Vector(39, 21)));
 		
+		// Add chests
+		nx.ChestArray.add(new Chest(400, 300 - 33, UP));
+		nx.ChestArray.add(new Chest(400, 300 - (33 + 65 * 5), DOWN));
+		nx.ChestArray.add(new Chest(400 - (65 * 2) - 33, 300 - (65 * 3), RIGHT));
+		nx.ChestArray.add(new Chest(400 + (65 * 2) + 33, 300 - (65 * 3), LEFT));
+		
 		// ResourceManager.getSound(Nex.MUSIC_RSC).loop();
 	}
 	
@@ -238,6 +256,10 @@ public class PlayingState extends BasicGameState {
 		
 		for (Gate gt : nx.GateArray){
 			gt.render(g);
+		}
+		
+		for (Chest c : nx.ChestArray){
+			c.render(g);
 		}
 		
 		nx.player.render(g);
@@ -292,6 +314,7 @@ public class PlayingState extends BasicGameState {
 		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
 		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
 		g.drawString("Player Health = " + nx.player.getHealth(), 500, 110);
+		g.drawString("Player Gold = " + nx.player.getGold(), 500, 125);
 		
 		if(canInteract)
 			g.drawString("E: Interact", nx.player.getX() - 50, nx.player.getY() - 50);
@@ -403,6 +426,10 @@ public class PlayingState extends BasicGameState {
 			gt.setY(gt.getY()-vspeed);
 		}
 		
+		for (Chest c : nx.ChestArray){
+			c.setX(c.getX()-hspeed);
+			c.setY(c.getY()-vspeed);
+		}
 		// Debug
 		nx.block.setX(nx.block.getX()-hspeed);
 		nx.block.setY(nx.block.getY()-vspeed);
@@ -471,13 +498,21 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		
 		canInteract = false;
-		gatePointer = null;
+		gatePointer = null; chestPointer = null;
+		
 		for(Gate gt : nx.GateArray){
 			if(Math.abs(gt.getX() - nx.player.getX()) <= 100 && (Math.abs(gt.getY() - nx.player.getY()) <= 100) && gt.isActive()){
 				gatePointer = gt;
 				canInteract = true;
 			}
 					
+		}
+		
+		for(Chest c : nx.ChestArray){
+			if(Math.abs(c.getX() - nx.player.getX()) <= 100 && (Math.abs(c.getY() - nx.player.getY()) <= 100) && c.getStatus() != EMPTY){
+				chestPointer = c;
+				canInteract = true;
+			}
 		}
 		
 		
@@ -512,7 +547,8 @@ public class PlayingState extends BasicGameState {
 			if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
 					&& vmove == false && !input.isKeyDown(Input.KEY_D)
 					&& tileSet[row][col-1].getCollision() == 0
-					&& tileSetGates[row][col-1].getCollision() == 0) {	// Left Key
+					&& tileSetGates[row][col-1].getCollision() == 0
+					&& tileSetChests[row][col-1].getCollision() == 0) {	// Left Key
 				hmove = true;
 				hspeed = -player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -525,7 +561,8 @@ public class PlayingState extends BasicGameState {
 			else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
 					&& vmove == false && !input.isKeyDown(Input.KEY_A)
 					&& tileSet[row][col+1].getCollision() == 0
-					&& tileSetGates[row][col+1].getCollision() == 0) {
+					&& tileSetGates[row][col+1].getCollision() == 0
+					&& tileSetChests[row][col+1].getCollision() == 0) {
 				hmove = true;
 				hspeed = player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -538,7 +575,8 @@ public class PlayingState extends BasicGameState {
 			else if (input.isKeyDown(Input.KEY_W) && hmove == false 
 					&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
 					&& tileSet[row-1][col].getCollision() == 0
-					&& tileSetGates[row-1][col].getCollision() == 0) {
+					&& tileSetGates[row-1][col].getCollision() == 0
+					&& tileSetChests[row-1][col].getCollision() == 0) {
 				vmove = true;
 				vspeed = -player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -551,7 +589,8 @@ public class PlayingState extends BasicGameState {
 			else if (input.isKeyDown(Input.KEY_S) && hmove == false 
 					&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
 					&& tileSet[row+1][col].getCollision() == 0
-					&& tileSetGates[row+1][col].getCollision() == 0) {
+					&& tileSetGates[row+1][col].getCollision() == 0
+					&& tileSetChests[row+1][col].getCollision() == 0) {
 				vmove = true;
 				vspeed = player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -579,6 +618,11 @@ public class PlayingState extends BasicGameState {
 				gatePointer.gateAnim();
 				// Remove gate collisions of nearby gates when interacted with.
 				tileSetGates[(int) gatePointer.getTileLocation().getY()][(int) gatePointer.getTileLocation().getX()].resetCollision();
+			}
+			
+			// Interact with chests.
+			if(chestPointer != null){
+				nx.player.addGold(chestPointer.interact());
 			}
 		}
 		
@@ -762,7 +806,27 @@ public class PlayingState extends BasicGameState {
 				}
 			}
 		}
+
+		for(int i = 0; i < 40; i++){
+			for(int j = 0; j < 40; j++){
+				if(map.getTileId(i, j, map.getLayerIndex("Chest_Collision")) > 0){
+					tileSetChests[j][i] = new Tile();
+					tileSetChests[j][i].setCollision();
+					tileSetChests[j][i].setWeight(100);
+				} else {
+					tileSetChests[j][i] = new Tile();
+					tileSetChests[j][i].setWeight(1);
+				}
+			}
+		}
 		
+//		System.out.println("Initial map: 0 = open, 1 = collision");
+//		for(int i = 0; i < 40; i++){
+//			for(int j = 0; j < 40; j++){
+//				System.out.print(tileSet[i][j].getCollision());
+//			}
+//			System.out.println();
+//		}
 		playerTileX = 19;
 		playerTileY = 19;
 		
