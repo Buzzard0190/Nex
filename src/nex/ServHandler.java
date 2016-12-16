@@ -64,12 +64,17 @@ public class ServHandler extends Thread {
 				for(int i = 0; i < 40; i++){
 					for(int j = 0; j < 40; j++){
 						int collision = in.read();
+//						System.out.println(collision);
 						ServerData.tileSet1.add(collision);
 					}
 				}
 				ServerData.buildTileSet();
 			}
 
+<<<<<<< HEAD
+=======
+			int delta = 0;
+>>>>>>> branch 'issue5' of https://github.com/Buzzard0190/Nex.git
 
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
@@ -89,16 +94,22 @@ public class ServHandler extends Thread {
                 out.writeInt(data.p2Y);
 
                     
-//                for (ServerEnemyData e : ServerData.monsters) {
-//                	out.writeInt((int)e.getMapPosition().getX());
-//                	out.writeInt((int)e.getMapPosition().getY());
-//             	}
+                for (ServerEnemyData e : ServerData.monsters) {
+//                	System.out.println("x: " + e.getMapPosition().getX() + " y: " + e.getMapPosition().getY());
+                	out.writeInt((int)e.getMapPosition().getX());
+                	out.writeInt((int)e.getMapPosition().getY());
+             	}
     		
                 out.flush();
                 frame.updateFrame();
-//                ServerData.buildGraph();
-                //ServerData.updateEnemies();
-                ServerData.updateEnemies();
+                
+                if(delta == 50)
+                {
+                	ServerData.updateEnemies();
+                	delta = 0;
+                }
+                else
+                	delta++;
 			}
 			
 		} catch (IOException e) {
