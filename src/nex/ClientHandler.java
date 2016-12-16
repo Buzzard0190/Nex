@@ -58,7 +58,16 @@ public class ClientHandler extends Thread {
 
 			    out.writeInt(PlayingState.player1x);
 			    out.writeInt(PlayingState.player1y);
+
+			    out.writeInt(Player.health);
+			    out.writeInt(PlayingState.goldAcquired);
+			    out.writeInt(PlayingState.currentLevel);
+			    out.writeInt(PlayingState.currentFloor);
 			    
+			    PlayingState.otherPlayerHealth = in.readInt();
+			    PlayingState.otherGoldAcquired = in.readInt();
+			    PlayingState.otherPlayerCurrentLevel = in.readInt();
+			    PlayingState.otherCurrentFloor = in.readInt();
 			   
 			    PlayingState.numberOfPlayers = in.read();
 			    if(PlayingState.playerNumber == 1){
@@ -76,15 +85,17 @@ public class ClientHandler extends Thread {
 				    int p1y = in.readInt();
 			    
 			    }
-			    
+			    			    
 			    for (EnemyCharacters e : PlayingState.monsters)
 				{
+			    	out.writeInt(e.damage);
+			    	e.aliveOrDead = in.readInt();
+			    	e.movingDirection = in.readInt();
 			    	int somex = in.readInt();
 			    	int somey = in.readInt();
-//			    	System.out.println("x: " + somex + " y: " + somey);
 			    	//System.out.println("x: " + somex + " y: " + somey);
 					e.setX(somex-PlayingState.offsetX);
-					e.setY(somey-PlayingState.offsetY);
+					e.setY(somey-PlayingState.offsetY);					
 				}
 
 					
