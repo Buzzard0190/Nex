@@ -279,7 +279,7 @@ public class PlayingState extends BasicGameState {
 		/*
 		 * Display UI for the other player
 		 */
-		if(otherPlayerX != 0 && otherPlayerY != 0)
+		if(numberOfPlayers == 2)
 		{
 			// Display the health		
 			g.drawString("P2 Health:", nx.ScreenWidth-225, 30);
