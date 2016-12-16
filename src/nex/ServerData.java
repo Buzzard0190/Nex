@@ -39,9 +39,12 @@ public class ServerData {
 	
 	public ServerData(){
 		
-		ServerEnemyData enemy = new ServerEnemyData((15*65)-867+33, (19*65)-967+33);
-		ServerEnemyData enemy = new ServerEnemyData((19*65)+22, (19*65)+57);
-		enemy.setTilePosition(new Vector(15,19));
+		int monsterX = 15;
+		int monsterY = 15;
+		
+		ServerEnemyData enemy = new ServerEnemyData((monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
+		enemy.setTilePosition(new Vector(monsterX, monsterY));
+		enemy.setWorldCoords(new Vector((monsterX*65)+33, (monsterY*65)+33));
 		monsters.add(enemy);
 
 		p1X = 0; p1Y = 0;
@@ -51,250 +54,163 @@ public class ServerData {
 		playerTwo = false;
 		tileSet = new Tile[40][40];
 	}
-
-	
-	//this builds a new graph based on changes made to the map and will rerun dijkstras to produce a usable graph
-	public static void buildGraph(){
-
-		graph = new Graph();
-
-		for(Iterator<Node> i = graph.nodes.iterator(); i.hasNext();){
-			Node n = i.next();
-			for(Iterator<Edge> j = n.edges.iterator(); j.hasNext();){
-				Edge e = j.next();
-				e.weight = tileSet[e.myX][e.myY].getWeight();
-			}
-		}	
-
-		int xValue = (int) Math.floor((p1X+368)/65); 
-		int yValue = (int) Math.floor((p1Y+268)/65);
-		
-//		System.out.println("xValue = " + xValue + ", yValue = " + yValue); // DEBUG
-		
-		dijkstraGraph = Dijkstra.runDijkstra(graph, xValue, yValue);
-		updateEnemies();
-	}
-//	public static void buildGraph(){
-//
-//		graph = new Graph();
-//
-//		for(Iterator<Node> i = graph.nodes.iterator(); i.hasNext();){
-//			Node n = i.next();
-//			for(Iterator<Edge> j = n.edges.iterator(); j.hasNext();){
-//				Edge e = j.next();
-//				e.weight = tileSet[e.myX][e.myY].getWeight();
-//			}
-//		}	
-//		int xValue = (int) Math.floor((p1X+368)/65); int yValue = (int) Math.floor((p1Y+268)/65);
-//		dijkstraGraph = Dijkstra.runDijkstra(graph, xValue, yValue);
-//		updateEnemies();
-//	}
 	
 	public static void updateEnemies(){
 		
-		
-//		for(Iterator<Node> n = dijkstraGraph.iterator(); n.hasNext();){
-//			Node cycleNode = n.next();
-//			for(Iterator<ServerEnemyData> e = monsters.iterator(); e.hasNext();){
-//				ServerEnemyData enemy = e.next();
-//				int enemyX = (int) enemy.getMapPosition().getX()+867; // gets pixel
-//				int enemyY = (int) enemy.getMapPosition().getY()+967; // gets pixel
-//				int xCenter = (cycleNode.x*65)+33;
-//				int yCenter = (cycleNode.y*65)+33;
-//				
-//				System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-//						", xCenter = " + xCenter + ", yCenter = " + yCenter);
-//				
-//				// Checks to make sure the enemy is centered in the tile
-//				if(xCenter == enemyX && yCenter == enemyY){
-//					if((cycleNode.px*65+33)-enemyX == 0 && (cycleNode.py*65+33)-enemyY > 0){ // North
-//						System.out.println("Go North");
-//						enemy.directionMovement = 1;
-//					} 
-//					else if ((cycleNode.px*65+33)-enemyX == 0 && (cycleNode.py*65+33)-enemyY < 0){ // South
-//						System.out.println("Go South");
-//
-//						enemy.directionMovement = 3;
-//					} 
-//					else if ((cycleNode.px*65+33)-enemyX > 0 && (cycleNode.py*65+33)-enemyY == 0){ // East
-//						System.out.println("Go East");
-//
-//						enemy.directionMovement = 2;
-//					} 
-//					else if ((cycleNode.px*65+33)-enemyX < 0 && (cycleNode.py*65+33)-enemyY == 0){ // West
-//						System.out.println("Go West");
-//
-//						enemy.directionMovement = 4;
-//					}									
-//				}			
-//			}
-//		}
-		
-		for(Iterator<ServerEnemyData> e = monsters.iterator(); e.hasNext();){
-			ServerEnemyData enemy = e.next();
+		for (ServerEnemyData enemy : monsters)
+		{
 			
-			int enemyX = (int) enemy.getMapPosition().getX()+466; // gets pixel
-			int enemyY = (int) enemy.getMapPosition().getY()+666; // gets pixel
+//			enemy.setPosition(new Vector(enemy.getX(),enemy.getY()));
+			
+			int enemyX = (int) enemy.getWorldCoords().getX(); // gets pixel
+			int enemyY = (int) enemy.getWorldCoords().getY(); // gets pixel
 			
 			int p1x = p1X;
 			int p1y = p1Y;
 			
-//			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-//					", p1x = " + p1x + ", p1y = " + p1y);
+			int enemySpeed = 1;
 			
-			// Move left or right
-			if(Math.abs(enemyX) % 65 == 22 || Math.abs(enemyX) % 65 == 43)
-			{
-//				System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-//						", p1x = " + p1x + ", p1y = " + p1y);
-				if (enemyX < p1x){ // East
-					System.out.println("Go East");
-	
-					enemy.directionMovement = 2;
-				} 
-				else if (enemyX > p1x){ // West
-					System.out.println("Go West");
-	
-					enemy.directionMovement = 4;
-				}		
-			}
+			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
+					", p1x = " + p1x + ", p1y = " + p1y);
 			
-			// Move up or down
-			else if(Math.abs(enemyY) % 65 == 57 || Math.abs(enemyY) % 65 == 8)
-			{
-//				System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-//						", p1x = " + p1x + ", p1y = " + p1y);
-				if(enemyY > p1y){ // North
-					System.out.println("Go North");
-					
-					enemy.directionMovement = 1;
-				} 
-				else if (enemyY < p1y){ // South
-					System.out.println("Go South");
-	
-					enemy.directionMovement = 3;
-				} 
-			}
-
-		}
-		
-
-		for(Iterator<ServerEnemyData> e = monsters.iterator(); e.hasNext();){
-			ServerEnemyData enemy = e.next();
-			int enemyX = (int) enemy.getMapPosition().getX()+466;		//gets pixel
-			int enemyY = (int) enemy.getMapPosition().getY()+666;		//gets pixel
+			if(!enemy.getMoving())
+			{		
+				int tileX = (int) enemy.getTilePosition().getX();
+				int tileY = (int) enemy.getTilePosition().getY();
 			
-			if(enemy.directionMovement == 1){
-				enemy.setMapPosition(new Vector(enemyX,enemyY-1)); // North
-			} 
-			else if(enemy.directionMovement == 3){
-				enemy.setMapPosition(new Vector(enemyX,enemyY+1)); // South
-			} 
-			else if(enemy.directionMovement == 2){
-				enemy.setMapPosition(new Vector(enemyX+1,enemyY)); // East
-			} 
-			else if(enemy.directionMovement == 4){
-				enemy.setMapPosition(new Vector(enemyX-1,enemyY)); // West
-			}
-		}
-//		System.out.println("before");
-//		int print = 0;
-//		for(int i = 0; i < 40; i++){
-//			for(int j = 0; j < 40; j++){		
-//				Node n = dijkstraGraph.get(print);
-//				
-//				if( (int) Math.floor((p1X/65)+303) == i &&  (int) Math.floor((p1Y/65)+203) == j){
-//					System.out.print("O");
-//				} else if(n.x == n.px && n.y > n.py){
-//					System.out.print("^");
-//				} else if (n.x == n.px && n.y < n.py){
-//					System.out.print("v");
-//				} else if (n.x > n.px && n.y == n.py){
-//					System.out.print("<");
-//				} else if (n.x < n.px && n.y == n.py){
-//					System.out.print(">");
-//				} else {
-//					System.out.print("E");
-//				}
-//				print++;
-//			}
-//			System.out.println("");
-//		}
-//		System.out.println("after");
-			System.out.println("enemy position x: " + myX + " y: " + myY);
 				
-			int xDist = Math.abs(myX - p1X);
-			int yDist = Math.abs(myY - p1Y);
-
-			int p1Dist = (int) Math.sqrt(xDist*xDist + yDist*yDist);
-			
-			xDist = Math.abs(myX - p2X);
-			yDist = Math.abs(myY - p2Y);
-			
-			int p2Dist = (int) Math.sqrt(xDist*xDist + yDist*yDist);
-			
-			if(p1Dist > p2Dist && numberOfPlayers > 1){
-				//attack player 2
-				
-				if((myX - p2X) == 0 && (myY - p2Y) < 0){
-					enemy.setMapPosition(new Vector(myX,myY-1));
-				} else if((myX - p2X) == 0 && (myY - p2Y) >= 0){	//south
-					enemy.setMapPosition(new Vector(myX,myY+1));
-				} else if((myX - p2X) >= 0 && (myY - p2Y) == 0){ //east
-					enemy.setMapPosition(new Vector(myX+1,myY));
-				} else {
-					enemy.setMapPosition(new Vector(myX-1,myY));
+				if (enemyX > p1x){ // Left
+					System.out.println("Go Left");
+					enemy.setDirectionMovement(1);
+				}	
+				else if (enemyX < p1x){ // Right
+					System.out.println("Go Right");
+					enemy.setDirectionMovement(2);
+				} 
+				else if(enemyY > p1y){ // Up
+					System.out.println("Go Up");
+					enemy.setDirectionMovement(3);
+				} 
+				else if (enemyY < p1y){ // Down
+					System.out.println("Go Down");
+					enemy.setDirectionMovement(4);
 				}
-					
-			} else {
-				//attack player 1
 				
-				//North
-//				if((myX - p1X) == 0 && (myY - p1Y) < 0){
-//					enemy.setMapPosition(new Vector(myX,myY-1));
-//				} else if((myX - p1X) == 0 && (myY - p1Y) >= 0){	//south
-//					enemy.setMapPosition(new Vector(myX,myY+1));
-//				} else if((myX - p1X) >= 0 && (myY - p1Y) == 0){ //east
-//					enemy.setMapPosition(new Vector(myX+1,myY));
-//				} else if((myX - p1X) < 0 && (myY - p1Y) == 0){
-//					enemy.setMapPosition(new Vector(myX-1,myY));
-//				}
+				enemyX = (int) enemy.getMapPosition().getX();		//gets pixel
+				enemyY = (int) enemy.getMapPosition().getY();		//gets pixel
+				
+				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				} 
+				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				} 
+				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				} 
+				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				}
+				else if(enemy.getDirectionMovement() == 0){
+					enemy.setMapPosition(new Vector(enemyX,enemyY)); // Don't move
+				}
+				
 			}
-			
-					
-		}			
+			else if(enemy.getMoving() && enemy.getPixelCount() < 65)
+			{
+				enemyX = (int) enemy.getMapPosition().getX();		//gets pixel
+				enemyY = (int) enemy.getMapPosition().getY();		//gets pixel
+				
+				int tileX = (int) enemy.getTilePosition().getX();
+				int tileY = (int) enemy.getTilePosition().getY();
+				
+				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				} 
+				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				} 
+				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				} 
+				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
+					enemy.setMapPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				}
+				else if(enemy.getDirectionMovement() == 0){
+					enemy.setMapPosition(new Vector(enemyX,enemyY)); // Don't move
+				}
+				
+			}
+			else if(enemy.getPixelCount() == 65) // Hit the center of a tile
+			{
+				enemy.setMoving(false);
+				enemy.setPixelCount(0);
+				
+				int tileX = (int) enemy.getTilePosition().getX();
+				int tileY = (int) enemy.getTilePosition().getY();
+				
+				if(enemy.getDirectionMovement() == 1)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()-65, enemy.getWorldCoords().getY()));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX][tileY-1].setCollision();
+					enemy.setTilePosition(new Vector(tileX, tileY-1));
+				}
+				else if (enemy.getDirectionMovement() == 2)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()+65, enemy.getWorldCoords().getY()));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX][tileY+1].setCollision();
+					enemy.setTilePosition(new Vector(tileX, tileY+1));
+				}
+				else if(enemy.getDirectionMovement() == 3)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()-65));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX-1][tileY].setCollision();
+					enemy.setTilePosition(new Vector(tileX-1, tileY));
+				}
+				else if (enemy.getDirectionMovement() == 4)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()+65));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX+1][tileY].setCollision();
+					enemy.setTilePosition(new Vector(tileX+1, tileY));
+				}
+			}
+			else if(enemy.getPixelCount() > 65)
+			{
+				System.out.println("Uh-oh");
+			}
+		}	
 
-		
-
-			
-//			if(enemy.directionMovement == 1){
-//				enemy.setMapPosition(new Vector(myX,myY-1));
-//			} else if(enemy.directionMovement == 2){
-//				enemy.setMapPosition(new Vector(myX+1,myY));
-//			} else if(enemy.directionMovement == 3){
-//				enemy.setMapPosition(new Vector(myX,myY+1));
-//			} else if(enemy.directionMovement == 4){
-//				enemy.setMapPosition(new Vector(myX-1,myY));
-//			}
-		
 	}
 	
+	public static void buildTileSet(){
 	
-//	public static void buildTileSet(){
-//		
-//		for(int i = 0; i < 40; i++){
-//			for(int j = 0; j < 40; j++){		
-//				tileSet[j][i] = new Tile();
-//				if(tileSet1.get(((40*i)+j)) == 1){
-//					tileSet[j][i].setCollision();
-//					tileSet[j][i].setWeight(100);
-//				}
-//			}
-//		}
-//		
-//		tileSet1.clear();
-//	}
+	for(int i = 0; i < 40; i++){
+		for(int j = 0; j < 40; j++){		
+			tileSet[j][i] = new Tile();
+			if(tileSet1.get(((40*i)+j)) == 1){
+				tileSet[j][i].setCollision();
+				tileSet[j][i].setWeight(100);
+			}
+		}
+	}
 	
-	
+	tileSet1.clear();
+}
 
 }
