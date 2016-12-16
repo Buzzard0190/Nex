@@ -8,9 +8,13 @@ public class Player extends Entity{
 	
 	private Vector velocity;
 	private Vector position;
+	static int health, shield;
 	
 	public Player(final int x, final int y){
 		super(x, y);
+		
+		health = 120;
+		shield = 0;
 		
 		addImageWithBoundingBox(ResourceManager.getImage(Nex.PLAYER));
 		velocity = new Vector(0, 0);
