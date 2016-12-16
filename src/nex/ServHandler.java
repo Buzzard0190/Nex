@@ -103,7 +103,7 @@ public class ServHandler extends Thread {
                 if(delta < 0)
                 {
                 	ServerData.updateEnemies();
-                	delta = 100;
+                	delta = 20;
                 }
                 else{
                 	delta--;
