@@ -19,11 +19,11 @@ public class ClientHandler extends Thread {
 	public void run(){
 
 		//setup socket and connect to server
-		String serverAddress = "localhost";
+//		String serverAddress = ConnectState.serverAddress;
 		Socket socket = null;
 		try {
 			
-			socket = new Socket("localhost", 1201);
+			socket = new Socket(ConnectState.serverAddress, 1201);
 			in = new DataInputStream(socket.getInputStream());
 		    out = new DataOutputStream(socket.getOutputStream());
 		
@@ -56,7 +56,21 @@ public class ClientHandler extends Thread {
 		//write to server until connection is terminated
 		while (true) {
 	
+					
 			try {
+				
+				if(PlayingState.playerNumber == 1){
+					for(int i = 0; i < 40; i++){
+						for(int j = 0; j < 40; j++){
+							try {
+								out.write(PlayingState.tileSet[j][i].getCollision());
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
 
 			    out.writeInt(PlayingState.player1x);
 			    out.writeInt(PlayingState.player1y);

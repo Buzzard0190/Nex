@@ -76,6 +76,17 @@ public class ServHandler extends Thread {
 			// This should be where the server gets input and updates server data and then outputs back to user
 			while (true) {
 
+				if(playerSpot == 1) {
+					for(int i = 0; i < 40; i++){
+						for(int j = 0; j < 40; j++){
+							int collision = in.read();
+//							System.out.println(collision);
+							ServerData.tileSet1.add(collision);
+						}
+					}
+					ServerData.buildTileSet();
+				}
+				
 				if(playerSpot == 1){
 					 data.p1X = in.readInt();
 					 data.p1Y = in.readInt();

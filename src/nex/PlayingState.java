@@ -12,6 +12,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 import jig.Entity;
@@ -49,6 +51,7 @@ public class PlayingState extends BasicGameState {
 	
 	private float xVelocity = 0; 
 	private float yVelocity = 0;
+	private int wait = 0;
 	/*
 	 * Graph setup
 	 */
@@ -221,7 +224,7 @@ public class PlayingState extends BasicGameState {
 		nx.ChestArray.add(new Chest(400 - (65 * 2) - 33, 300 - (65 * 3), RIGHT));
 		nx.ChestArray.add(new Chest(400 + (65 * 2) + 33, 300 - (65 * 3), LEFT));
 		
-		// ResourceManager.getSound(Nex.MUSIC_RSC).loop();
+		ResourceManager.getSound(Nex.BACKGROUND).loop();
 	}
 	
 	@Override
@@ -289,33 +292,33 @@ public class PlayingState extends BasicGameState {
 //			}
 //		}
 		
-		if(monsterDebug)
-		{
-			int drawY = 190;
-			for (EnemyCharacters e : monsters)
-			{
-				g.drawString("Monster #" + e.getID() + " position = " + e.getWorldCoords() + ", tilePosition = " + e.getTilePosition(), 10, drawY);
-				drawY += 20;
-			}
-		}
-		
-//		if(debugDijkstra){
-//			g.setColor(Color.white);
-//			for(Iterator<Node> dijkstraNode = dijkstraGraph.iterator(); dijkstraNode.hasNext();){
-//				Node printPath = dijkstraNode.next();
-//				g.drawLine(printPath.x*65+33, printPath.y*65+33, printPath.px*65+33, printPath.py*65+33);
+//		if(monsterDebug)
+//		{
+//			int drawY = 190;
+//			for (EnemyCharacters e : monsters)
+//			{
+//				g.drawString("Monster #" + e.getID() + " position = " + e.getWorldCoords() + ", tilePosition = " + e.getTilePosition(), 10, drawY);
+//				drawY += 20;
 //			}
 //		}
-		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + 
-				nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + 
-				playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
-		g.drawString("mouseX = " + mouseX + " mouseY = " + mouseY, 500, 50);
-		g.drawString("angle = " + angle, 500, 65);
-		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
-		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
-		g.drawString("Player Health = " + nx.player.getHealth(), 500, 110);
-		g.drawString("Player Gold = " + nx.player.getGold(), 500, 125);
-		g.drawString("Player Tile X = " + nx.player.getPlayerPosition().getX() + " Player tile Y = " + nx.player.getPlayerPosition().getY(), 400, 140);
+//		
+////		if(debugDijkstra){
+////			g.setColor(Color.white);
+////			for(Iterator<Node> dijkstraNode = dijkstraGraph.iterator(); dijkstraNode.hasNext();){
+////				Node printPath = dijkstraNode.next();
+////				g.drawLine(printPath.x*65+33, printPath.y*65+33, printPath.px*65+33, printPath.py*65+33);
+////			}
+////		}
+//		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + 
+//				nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + 
+//				playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
+//		g.drawString("mouseX = " + mouseX + " mouseY = " + mouseY, 500, 50);
+//		g.drawString("angle = " + angle, 500, 65);
+//		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
+//		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
+//		g.drawString("Player Health = " + nx.player.getHealth(), 500, 110);
+//		g.drawString("Player Gold = " + nx.player.getGold(), 500, 125);
+//		g.drawString("Player Tile X = " + nx.player.getPlayerPosition().getX() + " Player tile Y = " + nx.player.getPlayerPosition().getY(), 400, 140);
 		
 		
 		if(canInteract)
@@ -334,7 +337,7 @@ public class PlayingState extends BasicGameState {
 //		g.setColor(Color.yellow);
 		g.drawString("Health:", 10, 30);
 		g.setColor(Color.red);
-		g.fillRect(75, 35, nx.player.health, 10);
+		g.fillRect(75, 35, nx.player.getHealth(), 10);
 		
 		//health bar outline
 		g.setColor(Color.white);
@@ -344,7 +347,7 @@ public class PlayingState extends BasicGameState {
 		
 //		g.setColor(Color.yellow);
 		// How much gold has been acquired
-		g.drawString("Gold Acquired: " + goldAcquired, 10, 50);
+		g.drawString("Gold Acquired: " + nx.player.getGold(), 10, 50);
 		
 		// Current level of the player
 		g.drawString("Player Level: " + currentLevel, 10, 70);
@@ -355,7 +358,7 @@ public class PlayingState extends BasicGameState {
 		/*
 		 * Display UI for the other player
 		 */
-		if(otherPlayerX != 0 && otherPlayerY != 0)
+		if(numberOfPlayers == 2)
 		{
 			// Display the health		
 			g.drawString("P2 Health:", nx.ScreenWidth-225, 30);
@@ -755,8 +758,21 @@ public class PlayingState extends BasicGameState {
 		
 		nx.otherPlayer.setPlayerPosition(new Vector(otherX, otherY));
 		nx.otherPlayer.setPosition(new Vector(otherX, otherY));
-
+		
+		if(nx.player.getStatus() == 9)
+		{
+						
+			if(wait >= 100)
+			{
+				nx.enterState(Nex.GAMEOVERSTATE, new FadeOutTransition(), new FadeInTransition());
+			}
+			else
+				wait++;
+		}
+		
 	}
+
+	
 	
 	public void attemptAttack(final Vector attackPosition, final int damage){
 		

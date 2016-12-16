@@ -311,6 +311,8 @@ public class Player extends Entity{
 			
 			removeIdleImage();
 			
+			ResourceManager.getSound(Nex.SWORD_HIT).play();
+			
 			// This needs to come after removeIdleImage()
 			status = ATK1;
 			
