@@ -91,8 +91,8 @@ public class PlayingState extends BasicGameState {
 	/*
 	 * Debug booleans
 	 */
-	private boolean monsterDebug = true;
-	private boolean debugDijkstra = true;
+	private boolean monsterDebug = false;
+	private boolean debugDijkstra = false;
 	
 	
 	// Used to rotate the player to the mouse.
@@ -156,8 +156,8 @@ public class PlayingState extends BasicGameState {
 			
 				//-----
 				int offset = 0;
-				for(int i = 0; i < 3; i++){
-					int monsterX = 15+offset;
+				for(int i = 0; i < 30; i++){
+					int monsterX = 15;
 					int monsterY = 15;
 					
 					EnemyCharacters enemy = new EnemyCharacters(1,(monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
