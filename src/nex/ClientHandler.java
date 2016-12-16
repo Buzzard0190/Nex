@@ -57,19 +57,6 @@ public class ClientHandler extends Thread {
 					
 			try {
 				
-				if(PlayingState.playerNumber == 1){
-					for(int i = 0; i < 40; i++){
-						for(int j = 0; j < 40; j++){
-							try {
-								out.write(PlayingState.tileSet[j][i].getCollision());
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-
 			    out.writeInt(PlayingState.player1x);
 			    out.writeInt(PlayingState.player1y);
 
@@ -109,7 +96,7 @@ public class ClientHandler extends Thread {
 			    	int somey = in.readInt();
 			    	//System.out.println("x: " + somex + " y: " + somey);
 					e.setX(somex-PlayingState.offsetX);
-					e.setY(somey-PlayingState.offsetY);					
+					e.setY(somey-PlayingState.offsetY);	
 				}
 
 					

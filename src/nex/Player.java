@@ -311,7 +311,7 @@ public class Player extends Entity{
 			
 			removeIdleImage();
 			
-			ResourceManager.getSound(Nex.SWORD_HIT).play();
+//			ResourceManager.getSound(Nex.SWORD_HIT).play();
 			
 			// This needs to come after removeIdleImage()
 			status = ATK1;
@@ -322,6 +322,7 @@ public class Player extends Entity{
 						clericAtk1Up = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 3, 3, 3, true, 100, true);
 						addAnimation(clericAtk1Up);
 						clericAtk1Up.setLooping(false);
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_UP));
@@ -334,6 +335,7 @@ public class Player extends Entity{
 						clericAtk1Down 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 1, 3, 1, true, 100, true);
 						addAnimation(clericAtk1Down);
 						clericAtk1Down.setLooping(false);
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_DOWN));
@@ -346,6 +348,7 @@ public class Player extends Entity{
 						clericAtk1Left 	= new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 2, 3, 2, true, 100, true);
 						addAnimation(clericAtk1Left);
 						clericAtk1Left.setLooping(false);
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_LEFT));
@@ -358,6 +361,7 @@ public class Player extends Entity{
 						clericAtk1Right = new Animation(ResourceManager.getSpriteSheet(Nex.CLERIC_ATK1, 65, 65), 0, 0, 3, 0, true, 100, true);
 						addAnimation(clericAtk1Right);
 						clericAtk1Right.setLooping(false);
+						ResourceManager.getSound(Nex.SWORD_HIT).play();
 					}
 					else{
 						addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_BLOCK_RIGHT));

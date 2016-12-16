@@ -2,6 +2,7 @@ package nex;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import org.newdawn.slick.Color;
@@ -67,6 +68,7 @@ public class PlayingState extends BasicGameState {
 	private static TiledMap map;
 	static Tile[][] tileSet, tileSetGates, tileSetChests;
 	int stoneLayer, collisionLayer, gateLayer, chestLayer;
+	static List<Integer> tileSet1 = new ArrayList<Integer>();
 	
 
 //	volatile static Tile[][] tileSet;
