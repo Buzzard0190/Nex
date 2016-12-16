@@ -7,7 +7,7 @@ public class ServerEnemyData {
 
 	boolean skeleton, goblin, inCombat;
 	int futureX, futureY;
-	int health, attackingX, attackingY, lastHit;
+	static int health, attackingX, attackingY, lastHit;
 //	private int armorClass;
 	
 	private Vector velocity;
@@ -22,24 +22,8 @@ public class ServerEnemyData {
 	private Vector worldCoords;
 	
 	public ServerEnemyData(int x, int y){
-
 		setMapPosition(new Vector(x,y));
-		
-//		if(type == 1) {
-//			addImage(ResourceManager.getImage(Nex.BLOCK));
-//			goblin = true;
-//			health = 10;
-////			armorClass = 13;
-//			velocity = new Vector(.0f, .0f);
-//			inCombat = false;
-//		} else if (type == 2) {
-//			addImage(ResourceManager.getImage(Game.SKELLY_RSC).getScaledCopy((float) .12));
-//			skeleton = true;
-//			health = 15;
-//			armorClass = 15;
-//			velocity = new Vector(.0f, .0f);
-//			inCombat = false;
-//		}
+		health = 10;
 	}
 	
 	public void setVelocity(float vx, float vy) {

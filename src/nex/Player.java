@@ -49,10 +49,10 @@ public class Player extends Entity{
 	
 	private Vector velocity;
 	private Vector position;
+	static int health, shield;
 	
 	private int direction;
 	private int status;
-	private int health;
 	private int character;
 	private int gold;
 	private int attackStrength;
@@ -76,6 +76,9 @@ public class Player extends Entity{
 		attackStrength = 2;	// CHANGE THIS BASED ON CHARACTER MAYBE
 		
 		addImageWithBoundingBox(ResourceManager.getImage(Nex.CLERIC_IDLE_UP));
+		
+		health = 120;
+		shield = 0;
 		
 		velocity = new Vector(0, 0);
 		

@@ -25,8 +25,10 @@ public class EnemyCharacters extends Entity{
 	private boolean moving;
 	private int pixelCount = 0;
 	private Vector worldCoords;
+	public int damage = 0;
+	public int aliveOrDead = 1;
+	public int movingDirection = 0;
 	
-	private int damage;
 	
 	public EnemyCharacters(int type, int x, int y){
 

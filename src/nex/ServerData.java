@@ -12,7 +12,13 @@ public class ServerData {
 	
 	static int p1X;
 	static int p1Y;
-	static int p2X, p2Y;
+
+	static int p2X;
+	static int p2Y;
+	static int p1Health, p2Health;
+	static int p1Level, p2Level;
+	static int p1Gold, p2Gold;
+	static int p1Floor, p2Floor;
 	static int numberOfPlayers;
 	volatile boolean playerOne, playerTwo;
     //volatile HashSet<DataOutputStream> playerWriters;
@@ -141,6 +147,12 @@ public class ServerData {
 					}
 				}
 				
+				Random r = new Random();
+				int randoChance = r.nextInt(100);
+				if(randoChance < 10){
+					int randoDirection = r.nextInt(5);
+					enemy.setDirectionMovement(randoDirection);
+				}
 				
 				enemyX = (int) enemy.getMapPosition().getX();		//gets pixel
 				enemyY = (int) enemy.getMapPosition().getY();		//gets pixel
