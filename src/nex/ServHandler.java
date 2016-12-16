@@ -100,13 +100,14 @@ public class ServHandler extends Thread {
                 out.flush();
                 frame.updateFrame();
                 
-                if(delta == 50)
+                if(delta < 0)
                 {
                 	ServerData.updateEnemies();
-                	delta = 0;
+                	delta = 100;
                 }
-                else
-                	delta++;
+                else{
+                	delta--;
+                }
 			}
 			
 		} catch (IOException e) {

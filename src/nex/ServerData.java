@@ -39,13 +39,17 @@ public class ServerData {
 	
 	public ServerData(){
 		
-		int monsterX = 15;
-		int monsterY = 15;
-		
-		ServerEnemyData enemy = new ServerEnemyData((monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
-		enemy.setTilePosition(new Vector(monsterX, monsterY));
-		enemy.setWorldCoords(new Vector((monsterX*65)+33, (monsterY*65)+33));
-		monsters.add(enemy);
+		int offset = 0;
+		for(int i = 0; i < 3; i++){
+			int monsterX = 15+offset;
+			int monsterY = 15;
+			
+			ServerEnemyData enemy = new ServerEnemyData((monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
+			enemy.setTilePosition(new Vector(monsterX, monsterY));
+			enemy.setWorldCoords(new Vector((monsterX*65)+33, (monsterY*65)+33));
+			monsters.add(enemy);
+			offset+=5;
+		}
 
 		p1X = 0; p1Y = 0;
 		p2X = 0; p2Y = 0;
@@ -73,28 +77,66 @@ public class ServerData {
 			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
 					", p1x = " + p1x + ", p1y = " + p1y);
 			
+			int xDist = Math.abs(enemyX - p1X);
+			int yDist = Math.abs(enemyY - p1Y);
+
+			int p1Dist = (int) Math.sqrt(xDist*xDist + yDist*yDist);
+			
+			xDist = Math.abs(enemyX - p2X);
+			yDist = Math.abs(enemyY - p2Y);
+			
+			int p2Dist = (int) Math.sqrt(xDist*xDist + yDist*yDist);
+			
 			if(!enemy.getMoving())
 			{		
 				int tileX = (int) enemy.getTilePosition().getX();
 				int tileY = (int) enemy.getTilePosition().getY();
 			
 				
-				if (enemyX > p1x){ // Left
-					System.out.println("Go Left");
-					enemy.setDirectionMovement(1);
-				}	
-				else if (enemyX < p1x){ // Right
-					System.out.println("Go Right");
-					enemy.setDirectionMovement(2);
-				} 
-				else if(enemyY > p1y){ // Up
-					System.out.println("Go Up");
-					enemy.setDirectionMovement(3);
-				} 
-				else if (enemyY < p1y){ // Down
-					System.out.println("Go Down");
-					enemy.setDirectionMovement(4);
+				
+				if(p1Dist > p2Dist && numberOfPlayers > 1){
+					if (enemyX > p2X){ // Left
+						System.out.println("Go Left");
+						enemy.setDirectionMovement(1);
+					}	
+					else if (enemyX < p2X){ // Right
+						System.out.println("Go Right");
+						enemy.setDirectionMovement(2);
+					} 
+					else if(enemyY > p2Y){ // Up
+						System.out.println("Go Up");
+						enemy.setDirectionMovement(3);
+					} 
+					else if (enemyY < p2Y){ // Down
+						System.out.println("Go Down");
+						enemy.setDirectionMovement(4);
+					}
+					
+					if(p2Dist > 700){
+						enemy.setDirectionMovement(0);
+					}
+				} else {
+					if (enemyX > p1x){ // Left
+						System.out.println("Go Left");
+						enemy.setDirectionMovement(1);
+					}	
+					else if (enemyX < p1x){ // Right
+						System.out.println("Go Right");
+						enemy.setDirectionMovement(2);
+					} 
+					else if(enemyY > p1y){ // Up
+						System.out.println("Go Up");
+						enemy.setDirectionMovement(3);
+					} 
+					else if (enemyY < p1y){ // Down
+						System.out.println("Go Down");
+						enemy.setDirectionMovement(4);
+					}
+					if(p1Dist > 700){
+						enemy.setDirectionMovement(0);
+					}
 				}
+				
 				
 				enemyX = (int) enemy.getMapPosition().getX();		//gets pixel
 				enemyY = (int) enemy.getMapPosition().getY();		//gets pixel

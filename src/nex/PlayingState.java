@@ -115,14 +115,21 @@ public class PlayingState extends BasicGameState {
 				monsterY = 15;
 			
 				//-----
+				int offset = 0;
+				for(int i = 0; i < 3; i++){
+					int monsterX = 15+offset;
+					int monsterY = 15;
+					
+					EnemyCharacters enemy = new EnemyCharacters(1,(monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
+					enemy.setTilePosition(new Vector(monsterX, monsterY));
+					enemy.setWorldCoords(new Vector((monsterX*65)+33, (monsterY*65)+33));
+					enemy.setID(1);
+					monsters.add(enemy);
+					tileSet[monsterX][monsterY].setCollision();
+					offset+=5;
+				}
 			
-				EnemyCharacters enemy = new EnemyCharacters(1, (monsterX*65)-player1x+400+33, (monsterY*65)-player1y+300+33);
-				enemy.setTilePosition(new Vector(monsterX, monsterY));
-				enemy.setWorldCoords(new Vector((monsterX*65)+33, (monsterY*65)+33));
-//				enemy.setID(i);
-				enemy.setID(1);
-				monsters.add(enemy);
-				tileSet[monsterX][monsterY].setCollision();
+				
 //			}
 	}
 	
