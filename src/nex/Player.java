@@ -29,18 +29,21 @@ import jig.Vector;
 
 public class Player extends Entity{
 	
+	// Player direction
 	public static final int UP 		= 0;
 	public static final int DOWN 	= 1;
 	public static final int LEFT 	= 2;
-	public static final int RIGHT 	= 3;
+	public static final int RIGHT	= 3;
 	
+	// Player status
 	public static final int MOVING 		= 4;
 	public static final int ATK1 		= 5;
 	public static final int ATK2 		= 6;
 	public static final int IDLE 		= 7;
-	public static final int BLOCKING 	= 8;	// This is to stop the blocking animation when the cleric is hit.
-	public static final int DEAD 		= 9;	
+	public static final int BLOCKING 	= 8;	// This is to stop the blocking animation when the cleric is hit.	
+	public static final int DEAD 		= 9;
 	
+	// Player character
 	public static final int WIZARD 		= 0;
 	public static final int CLERIC 		= 1;
 	
@@ -113,17 +116,16 @@ public class Player extends Entity{
 				removeIdleImage();
 				
 				
-				System.out.println("1: Status = " + status);
-				
 				removeRunAnim();
 				animateDeath();
 				status = DEAD;
-				System.out.println("2: Status = " + status);
 				
 			}
 		}
 	}
 	
+	/*
+	 */
 	public void animateDeath(){
 		switch(direction){
 			case UP:

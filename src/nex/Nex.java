@@ -1,4 +1,4 @@
-package nex;
+package nex;  
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +33,28 @@ public class Nex extends StateBasedGame{
 	public static final String CLERIC_BLOCK_RIGHT = "nex/resource/sprites/player/Cleric_Block_Right.png";
 	public static final String CLERIC_BLOCK_LEFT = "nex/resource/sprites/player/Cleric_Block_Left.png";
 	
+	
+	public static final String GATE_VERT = "nex/resource/sprites/environment/Gate_Vert.png";
+	public static final String GATE_HORI = "nex/resource/sprites/environment/Gate_Hori.png";
+	
 	//----- Animations -----//
 	public static final String CLERIC_RUN = "nex/resource/sprites/player/Cleric_Walk.png";
 	public static final String CLERIC_ATK1 = "nex/resource/sprites/player/Cleric_Atk.png";
 	public static final String CLERIC_BLOCK_ANIM = "nex/resource/sprites/player/Cleric_Block_Anim.png";
 	public static final String CLERIC_DEATH = "nex/resource/sprites/player/Cleric_Death.png";
 	
+	public static final String GATE_VERT_ANIM = "nex/resource/sprites/environment/Gate_Anim.png";
+	public static final String GATE_HORI_ANIM = "nex/resource/sprites/environment/Gate_Anim_2.png";
 	
 	
 	public static final String BLOCK = "nex/resource/sprites/player/block.png";
+	
 	
 	//----- Sounds -----//
 	
 	// public static final String Z_GRUNT_RSC = "platformer/resource/zombie_grunt.wav";
 
-	public final int ScreenWidth;
+	public final int ScreenWidth; 
 	public final int ScreenHeight;
 
 	//----- Declare Objects -----//
@@ -55,6 +62,7 @@ public class Nex extends StateBasedGame{
 	Player player;
 	Temp block;
 	List<Temp> temp;
+	List<Gate> GateArray;
 
 	// ---- Declare Arrays -----//
 	
@@ -80,6 +88,8 @@ public class Nex extends StateBasedGame{
 		Entity.setCoarseGrainedCollisionBoundary(Entity.AABB);
 		
 		//----- Create Arrays -----//
+		
+		GateArray = new ArrayList<Gate>();
 		
 		temp = new ArrayList<Temp>(50);
 		// blocks = new ArrayList<Block>(100);
@@ -119,11 +129,19 @@ public class Nex extends StateBasedGame{
 		ResourceManager.loadImage(CLERIC_BLOCK_LEFT);
 		ResourceManager.loadImage(CLERIC_BLOCK_RIGHT);
 		
+		ResourceManager.loadImage(GATE_VERT);
+		ResourceManager.loadImage(GATE_HORI);
+		
+		
+		
 		//----- Animations ----//
 		ResourceManager.loadImage(CLERIC_RUN);
 		ResourceManager.loadImage(CLERIC_ATK1);
 		ResourceManager.loadImage(CLERIC_BLOCK_ANIM);
 		ResourceManager.loadImage(CLERIC_DEATH);
+		
+		ResourceManager.loadImage(GATE_VERT_ANIM);
+		ResourceManager.loadImage(GATE_HORI_ANIM);
 		
 		
 		
@@ -138,7 +156,7 @@ public class Nex extends StateBasedGame{
 	}
 	
 	public static void main(String[] args) {
-		AppGameContainer app;
+		AppGameContainer app;  
 		try {
 			app = new AppGameContainer(new Nex("Nex!", 800, 600));
 			app.setDisplayMode(800, 600, false);

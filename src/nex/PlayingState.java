@@ -22,24 +22,31 @@ public class PlayingState extends BasicGameState {
 	//-------------------- Variables --------------------//
 	//---------------------------------------------------//
 	
-	public static final int UP = 0;
-	public static final int DOWN = 1;
-	public static final int LEFT = 2;
-	public static final int RIGHT = 3;
+	// Player direction
+	public static final int UP 		= 0;
+	public static final int DOWN 	= 1;
+	public static final int LEFT 	= 2;
+	public static final int RIGHT	= 3;
 	
-	public static final int MOVING = 4;
-	public static final int ATK1 = 5;
-	public static final int ATK2 = 6;
-	public static final int IDLE = 7;
+	// Player status
+	public static final int MOVING 		= 4;
+	public static final int ATK1 		= 5;
+	public static final int ATK2 		= 6;
+	public static final int IDLE 		= 7;
 	public static final int BLOCKING 	= 8;	// This is to stop the blocking animation when the cleric is hit.	
 	public static final int DEAD 		= 9;
 	
-	private float xVelocity = 0;
+	// Gate orientation
+	public static final int VERT = 0;
+	public static final int HORI = 1;
+	
+	private float xVelocity = 0; 
 	private float yVelocity = 0;
 	public int count = 0;
 	private static TiledMap map;
 	static Tile[][] tileSet;
-	int stoneLayer, collisionLayer;
+	static Tile[][] tileSetGates;
+	int stoneLayer, collisionLayer, gateLayer;
 	static int player1x = 867, player1y = 967, player1Speed = 5;
 	boolean playerCollision = false;
 	String debugString;
@@ -54,8 +61,12 @@ public class PlayingState extends BasicGameState {
 	private int mouseX, mouseY;
 	private int angle;
 	private int playerDir;
+	private boolean canInteract;
 	
 	private int playerStatus;
+	
+	// Pointers to hold objects that can be interacted with when the player is close enough.
+	Gate gatePointer;
 	
 	
 	@Override
@@ -69,6 +80,7 @@ public class PlayingState extends BasicGameState {
 			//--------------------------
 			
 			tileSet = new Tile[40][40];
+			tileSetGates = new Tile[40][40];
 
 			try{
 				map = new TiledMap("nex/resource/sprites/tiled/Stone_Background.tmx");
@@ -79,6 +91,7 @@ public class PlayingState extends BasicGameState {
 			stoneLayer = map.getLayerIndex("Stone_Background");
 //			stoneLayer = map.getLayerIndex("Red_Line");
 			collisionLayer = map.getLayerIndex("Collision");
+			gateLayer = map.getLayerIndex("Gate_Collision");
 			
 			//System.out.println(stoneLayer);
 			//System.out.println(collisionLayer);
@@ -96,6 +109,11 @@ public class PlayingState extends BasicGameState {
 		container.setSoundOn(true);
 		
 		Nex nx = (Nex)game;
+		
+		// Add gates
+		nx.GateArray.add(new Gate(400 + (65*20), 300, VERT, new Vector(39, 19)));
+		nx.GateArray.add(new Gate(400 + (65*20), 300+65, VERT, new Vector(39, 20)));
+		nx.GateArray.add(new Gate(400 + (65*20), 300+(65*2), VERT, new Vector(39, 21)));
 		
 		// ResourceManager.getSound(Nex.MUSIC_RSC).loop();
 		
@@ -115,6 +133,7 @@ public class PlayingState extends BasicGameState {
 		
 		map.render(-player1x,-player1y,stoneLayer);
 		map.render(-player1x,-player1y,collisionLayer);
+		// map.render(-player1x,-player1y,gateLayer);
 		
 //		map.render(-hspeed,-vspeed,stoneLayer);
 		
@@ -130,10 +149,16 @@ public class PlayingState extends BasicGameState {
 //			System.out.println();
 //		}
 		
-		nx.player.render(g);
+		
 		
 		// DEBUG
 		nx.block.render(g);
+		
+		for (Gate gt : nx.GateArray){
+			gt.render(g);
+		}
+		
+		nx.player.render(g);
 		
 //		count = 0;
 //		for (Temp t : nx.temp)
@@ -153,6 +178,9 @@ public class PlayingState extends BasicGameState {
 		g.drawString("Player status = " + nx.player.getStatus(), 500, 80);
 		g.drawString("Player direction = " + nx.player.getDir(), 500, 95);
 		g.drawString("Player Health = " + nx.player.getHealth(), 500, 110);
+		
+		if(canInteract)
+			g.drawString("E: Interact", nx.player.getX() - 50, nx.player.getY() - 50);
 		
 		
 		
@@ -193,6 +221,11 @@ public class PlayingState extends BasicGameState {
 //			t.setX(t.getX()-hspeed);
 //			t.setY(t.getY()-vspeed);
 //		}
+		
+		for (Gate gt : nx.GateArray){
+			gt.setX(gt.getX()-hspeed);
+			gt.setY(gt.getY()-vspeed);
+		}
 		
 		// Debug
 		nx.block.setX(nx.block.getX()-hspeed);
@@ -254,6 +287,19 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		
 		
+		/*--------------------------------------------------------------------------------------------------------*/
+		/*--------------------------------------------- Interaction ----------------------------------------------*/
+		/*--------------------------------------------------------------------------------------------------------*/
+		
+		canInteract = false;
+		gatePointer = null;
+		for(Gate gt : nx.GateArray){
+			if(Math.abs(gt.getX() - nx.player.getX()) <= 100 && (Math.abs(gt.getY() - nx.player.getY()) <= 100) && gt.isActive()){
+				gatePointer = gt;
+				canInteract = true;
+			}
+					
+		}
 		
 		
 		/*--------------------------------------------------------------------------------------------------------*/
@@ -284,7 +330,8 @@ public class PlayingState extends BasicGameState {
 			// Running LEFT
 			if (input.isKeyDown(Input.KEY_A) && (hmove == false || hspeed > 0) 
 					&& vmove == false && !input.isKeyDown(Input.KEY_D)
-					&& tileSet[row][col-1].getCollision() == 0) {	// Left Key
+					&& tileSet[row][col-1].getCollision() == 0
+					&& tileSetGates[row][col-1].getCollision() == 0) {	// Left Key
 				hmove = true;
 				hspeed = -player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -296,7 +343,8 @@ public class PlayingState extends BasicGameState {
 			// Running RIGHT
 			else if (input.isKeyDown(Input.KEY_D) && (hmove == false || hspeed < 0) 
 					&& vmove == false && !input.isKeyDown(Input.KEY_A)
-					&& tileSet[row][col+1].getCollision() == 0) {
+					&& tileSet[row][col+1].getCollision() == 0
+					&& tileSetGates[row][col+1].getCollision() == 0) {
 				hmove = true;
 				hspeed = player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -308,7 +356,8 @@ public class PlayingState extends BasicGameState {
 			// Running UP
 			else if (input.isKeyDown(Input.KEY_W) && hmove == false 
 					&& (vmove == false || vspeed > 0) && !input.isKeyDown(Input.KEY_S)
-					&& tileSet[row-1][col].getCollision() == 0) {
+					&& tileSet[row-1][col].getCollision() == 0
+					&& tileSetGates[row-1][col].getCollision() == 0) {
 				vmove = true;
 				vspeed = -player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -320,7 +369,8 @@ public class PlayingState extends BasicGameState {
 			// Running DOWN
 			else if (input.isKeyDown(Input.KEY_S) && hmove == false 
 					&& (vmove == false || vspeed < 0) && !input.isKeyDown(Input.KEY_W)
-					&& tileSet[row+1][col].getCollision() == 0) {
+					&& tileSet[row+1][col].getCollision() == 0
+					&& tileSetGates[row+1][col].getCollision() == 0) {
 				vmove = true;
 				vspeed = player1Speed;
 				playerXPosition = nx.player.getPlayerPosition().getX();
@@ -331,6 +381,25 @@ public class PlayingState extends BasicGameState {
 			}
 		}
 
+		if(input.isKeyPressed(Input.KEY_E) && canInteract){
+			
+			// Interact with gates.
+			if(gatePointer != null){
+				
+				// Activates all nearby gates to animate simultaneously.
+				for(Gate gt : nx.GateArray){
+					if(gt != gatePointer && (Math.abs(gt.getX() - gatePointer.getX()) <= 150) 
+							&& (Math.abs(gt.getY() - gatePointer.getY()) <= 150) && gt.isActive()){
+						gt.gateAnim();
+						// Remove gate collisions of nearby gates when interacted with.
+						tileSetGates[(int) gt.getTileLocation().getY()][(int) gt.getTileLocation().getX()].resetCollision();
+					}
+				}
+				gatePointer.gateAnim();
+				// Remove gate collisions of nearby gates when interacted with.
+				tileSetGates[(int) gatePointer.getTileLocation().getY()][(int) gatePointer.getTileLocation().getX()].resetCollision();
+			}
+		}
 		
 		
 		// Left Mouse = Atk1
@@ -342,6 +411,7 @@ public class PlayingState extends BasicGameState {
 				nx.player.attack(2);
 		}
 		
+		// Removes the shield holding sprite when the player lets go as mouse2 as the Cleric.
 		if(!input.isMouseButtonDown(Input.MOUSE_RIGHT_BUTTON) && nx.player.getStatus() == ATK2){
 			nx.player.removeAtk2();
 		}
@@ -351,8 +421,7 @@ public class PlayingState extends BasicGameState {
 			nx.player.takeDamage(100);
 		}
 
-		System.out.println("3: Status = " + nx.player.getStatus());
-		
+
 		if((hmove || vmove) && nx.player.getStatus() != DEAD){
 			// DEBUG
 //			System.out.println("Shifting");
@@ -377,7 +446,6 @@ public class PlayingState extends BasicGameState {
 			shift(nx, hspeed, vspeed);
 		}
 		
-		System.out.println("4: Status = " + nx.player.getStatus());
 		
 		// Update player status to IDLE if they are not moving.
 		if(!hmove && !vmove){
@@ -419,6 +487,19 @@ public class PlayingState extends BasicGameState {
 				} else {
 					tileSet[j][i] = new Tile();
 					tileSet[j][i].setWeight(1);
+				}
+			}
+		}
+		
+		for(int i = 0; i < 40; i++){
+			for(int j = 0; j < 40; j++){
+				if(map.getTileId(i, j, map.getLayerIndex("Gate_Collision")) > 0){
+					tileSetGates[j][i] = new Tile();
+					tileSetGates[j][i].setCollision();
+					tileSetGates[j][i].setWeight(100);
+				} else {
+					tileSetGates[j][i] = new Tile();
+					tileSetGates[j][i].setWeight(1);
 				}
 			}
 		}
