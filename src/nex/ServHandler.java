@@ -89,17 +89,25 @@ public class ServHandler extends Thread {
 					 data.p1Y = in.readInt();
 					 data.p1Health = in.readInt();
 					 data.p1Gold = in.readInt();
+					 data.p1Level = in.readInt();
+					 data.p1Floor = in.readInt();
 					 
 					 out.writeInt(data.p2Health);
 					 out.writeInt(data.p2Gold);
+					 out.writeInt(data.p2Level);
+					 out.writeInt(data.p2Floor);
 				} else {
 					 data.p2X = in.readInt();
 					 data.p2Y = in.readInt();
 					 data.p2Health = in.readInt();
 					 data.p2Gold = in.readInt();
+					 data.p2Level = in.readInt();
+					 data.p2Floor = in.readInt();
 
 					 out.writeInt(data.p1Health);
 					 out.writeInt(data.p1Gold);
+					 out.writeInt(data.p1Level);
+					 out.writeInt(data.p1Floor);
 				}
                
                 out.write(data.numberOfPlayers);
