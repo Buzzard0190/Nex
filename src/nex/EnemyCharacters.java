@@ -19,11 +19,17 @@ public class EnemyCharacters extends Entity{
 	private Vector tilePosition, mapPosition, futureTile;
 	private int ID;
 	private int enemySpeed = 5;
+	private int directionMovement = 0;
+	private boolean hmove, vmove;
+	private int hspeed, vspeed;
+	private boolean moving;
+	private int pixelCount = 0;
+	private Vector worldCoords;
 	
 	public EnemyCharacters(int type, int x, int y){
 
 		super(x, y);
-
+		
 		if(type == 1) {
 			addImage(ResourceManager.getImage(Nex.BLOCK));
 			goblin = true;
@@ -63,6 +69,86 @@ public class EnemyCharacters extends Entity{
 	public Vector getTilePosition()
 	{
 		return this.tilePosition;
+	}
+	
+	public void setWorldCoords(Vector worldCoords)
+	{
+		this.worldCoords = worldCoords;
+	}
+	
+	public Vector getWorldCoords()
+	{
+		return this.worldCoords;
+	}
+	
+	public void setPixelCount(int pixelCount)
+	{
+		this.pixelCount = pixelCount;
+	}
+	
+	public int getPixelCount()
+	{
+		return this.pixelCount;
+	}
+	
+	public void setMoving(boolean moving)
+	{
+		this.moving = moving;
+	}
+	
+	public boolean getMoving()
+	{
+		return this.moving;
+	}
+	
+	public void sethmove(boolean hmove)
+	{
+		this.hmove = hmove;
+	}
+	
+	public boolean gethmove()
+	{
+		return this.hmove;
+	}
+	
+	public void setvspeed(int vspeed)
+	{
+		this.vspeed = vspeed;
+	}
+	
+	public int getvpeed()
+	{
+		return this.vspeed;
+	}
+	
+	public void sethspeed(int hspeed)
+	{
+		this.hspeed = hspeed;
+	}
+	
+	public int gethspeed()
+	{
+		return this.hspeed;
+	}
+	
+	public void setvmove(boolean vmove)
+	{
+		this.vmove = vmove;
+	}
+	
+	public boolean getvmove()
+	{
+		return this.vmove;
+	}
+	
+	public void setDirectionMovement(int directionMovement)
+	{
+		this.directionMovement = directionMovement;
+	}
+	
+	public int getDirectionMovement()
+	{
+		return this.directionMovement;
 	}
 	
 	public void setFutureTile(int x, int y) {

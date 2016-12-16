@@ -89,13 +89,15 @@ public class ServHandler extends Thread {
                 out.writeInt(data.p2Y);
 
                     
-                for (ServerEnemyData e : ServerData.monsters) {
-                	out.writeInt((int)e.getMapPosition().getX());
-                	out.writeInt((int)e.getMapPosition().getY());
-             	}
+//                for (ServerEnemyData e : ServerData.monsters) {
+//                	out.writeInt((int)e.getMapPosition().getX());
+//                	out.writeInt((int)e.getMapPosition().getY());
+//             	}
     		
                 out.flush();
                 frame.updateFrame();
+//                ServerData.buildGraph();
+                //ServerData.updateEnemies();
                 ServerData.updateEnemies();
 			}
 			
