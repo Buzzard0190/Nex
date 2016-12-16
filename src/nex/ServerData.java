@@ -3,6 +3,7 @@ package nex;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import jig.Vector;
 
@@ -40,9 +41,13 @@ public class ServerData {
 	public ServerData(){
 		
 		int offset = 0;
-		for(int i = 0; i < 3; i++){
-			int monsterX = 15+offset;
-			int monsterY = 15;
+		for(int i = 0; i < 30; i++){
+			Random r = new Random();
+			int monsterX = (r.nextInt(36)+2);
+			int monsterY = (r.nextInt(36)+2);
+//			int monsterX = 15+offset;
+//			int monsterY = 15;
+			System.out.println("x " + monsterX + " y " + monsterY);
 			
 			ServerEnemyData enemy = new ServerEnemyData((monsterX*65)-1268+400+33, (monsterY*65)-1268+300+33);
 			enemy.setTilePosition(new Vector(monsterX, monsterY));
@@ -74,8 +79,8 @@ public class ServerData {
 			
 			int enemySpeed = 1;
 			
-			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-					", p1x = " + p1x + ", p1y = " + p1y);
+//			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
+//					", p1x = " + p1x + ", p1y = " + p1y);
 			
 			int xDist = Math.abs(enemyX - p1X);
 			int yDist = Math.abs(enemyY - p1Y);
