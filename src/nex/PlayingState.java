@@ -11,6 +11,8 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.tiled.TiledMap;
 
 import jig.Entity;
@@ -49,6 +51,7 @@ public class PlayingState extends BasicGameState {
 	
 	private float xVelocity = 0; 
 	private float yVelocity = 0;
+	private int wait = 0;
 	/*
 	 * Graph setup
 	 */
@@ -203,7 +206,7 @@ public class PlayingState extends BasicGameState {
 		nx.ChestArray.add(new Chest(400 - (65 * 2) - 33, 300 - (65 * 3), RIGHT));
 		nx.ChestArray.add(new Chest(400 + (65 * 2) + 33, 300 - (65 * 3), LEFT));
 		
-		// ResourceManager.getSound(Nex.MUSIC_RSC).loop();
+		ResourceManager.getSound(Nex.BACKGROUND).loop();
 	}
 	
 	@Override
@@ -625,70 +628,6 @@ public class PlayingState extends BasicGameState {
 //				debugDijkstra = true;
 //		}
 		
-//		//------------------------------------------------------------------------
-//		//Monsters follow path
-//		//------------------------------------------------------------------------
-//
-//		for(Iterator<Node> n = dijkstraGraph.iterator(); n.hasNext();){
-//			Node cycleNode = n.next();
-//			
-//			for(Iterator<EnemyCharacters> e = monsters.iterator(); e.hasNext();){
-//			
-//				EnemyCharacters enemy = e.next();			
-//
-//				int myX = (int) enemy.getX();
-//				int myY = (int) enemy.getX();
-//				int futureX = (int) enemy.getFutureTile().getX()*65+33;
-//				int futureY = (int) enemy.getFutureTile().getY()*65+33;
-//				
-//
-//				System.out.println(myX);
-//				float vx, vy;
-//				
-//				if(enemy.health <= 0){
-//					e.remove();
-//				}
-//				 
-//				//------------------------------------------------------------------------
-//				//Check to find a vector for character to move. Uses dijkstra graph
-//				//------------------------------------------------------------------------
-//				if(cycleNode.x == myX && cycleNode.y == myY && enemy.inCombat == false){
-//					
-//					if((cycleNode.px - enemy.getTilePosition().getX()) == 0){
-//						vx = .0f;
-//					} else if ((cycleNode.px - enemy.getTilePosition().getX()) > 0){
-//						vx = .2f;
-//					} else {
-//						vx = -.2f;
-//					}
-//					
-//					
-//					if((cycleNode.py - enemy.getTilePosition().getY()) == 0){
-//						vy = .0f;
-//					} else if ((cycleNode.py - enemy.getTilePosition().getY()) > 0){
-//						vy = .2f;
-//					} else {
-//						vy = -.2f;
-//					}
-//					
-//					if(vx != 0){
-//						vy = 0;
-//					} else if(vy != 0){
-//						vx = 0;
-//					}
-//					
-//					enemy.setVelocity(vx, vy);
-//					enemy.update(delta);
-//				} else if (enemy.inCombat == true){
-//					
-//					//-------------------------------------------------------------
-//					//If the enemy is in combat it will set the velocity to 0
-//					//-------------------------------------------------------------
-//					enemy.setVelocity(.0f, .0f);
-//					enemy.update(delta);
-//				}
-//			}
-//		}
 				
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*---------------------------------------- Update other Player -------------------------------------------*/
@@ -700,172 +639,19 @@ public class PlayingState extends BasicGameState {
 		nx.otherPlayer.setPlayerPosition(new Vector(otherX, otherY));
 		nx.otherPlayer.setPosition(new Vector(otherX, otherY));
 		
-		/*--------------------------------------------------------------------------------------------------------*/
-		/*-------------------------------------------- Enemy Movement --------------------------------------------*/
-		/*--------------------------------------------------------------------------------------------------------*/
-//		for (EnemyCharacters enemy : monsters)
-//		{
-//			
-////			enemy.setPosition(new Vector(enemy.getX(),enemy.getY()));
-//			
-//			int enemyX = (int) enemy.getWorldCoords().getX(); // gets pixel
-//			int enemyY = (int) enemy.getWorldCoords().getY(); // gets pixel
-//			
-//			int p1x = player1x;
-//			int p1y = player1y;
-//			
-//			int enemySpeed = 1;
-//			
-////			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
-////					", p1x = " + p1x + ", p1y = " + p1y);
-//			
-//			if(!enemy.getMoving())
-//			{		
-//				int tileX = (int) enemy.getTilePosition().getX();
-//				int tileY = (int) enemy.getTilePosition().getY();
-//				
-//				System.out.println("tileX = " + tileX + ", tileY" + tileY);
-//				
-//				if (enemyX > p1x){ // Left
-//					System.out.println("Go Left");
-//					enemy.setDirectionMovement(1);
-//				}	
-//				else if (enemyX < p1x){ // Right
-//					System.out.println("Go Right");
-//					enemy.setDirectionMovement(2);
-//				} 
-//				else if(enemyY > p1y){ // Up
-//					System.out.println("Go Up");
-//					enemy.setDirectionMovement(3);
-//				} 
-//				else if (enemyY < p1y){ // Down
-//					System.out.println("Go Down");
-//					enemy.setDirectionMovement(4);
-//				}
-//				
-//				enemyX = (int) enemy.getPosition().getX();		//gets pixel
-//				enemyY = (int) enemy.getPosition().getY();		//gets pixel
-//				
-//				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				} 
-//				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				} 
-//				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				} 
-//				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//					enemy.setMoving(true);
-//				}
-//				else if(enemy.getDirectionMovement() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY)); // Don't move
-//				}
-//				
-//			}
-//			else if(enemy.getMoving() && enemy.getPixelCount() < 65)
-//			{
-//				enemyX = (int) enemy.getPosition().getX();		//gets pixel
-//				enemyY = (int) enemy.getPosition().getY();		//gets pixel
-//				
-//				int tileX = (int) enemy.getTilePosition().getX();
-//				int tileY = (int) enemy.getTilePosition().getY();
-//				
-//				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				} 
-//				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				} 
-//				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				} 
-//				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
-//					enemy.setPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
-//					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
-//				}
-//				else if(enemy.getDirectionMovement() == 0){
-//					enemy.setPosition(new Vector(enemyX,enemyY)); // Don't move
-//				}
-//				
-//			}
-//			else if(enemy.getPixelCount() == 65) // Hit the center of a tile
-//			{
-//				enemy.setMoving(false);
-//				enemy.setPixelCount(0);
-//				
-//				int tileX = (int) enemy.getTilePosition().getX();
-//				int tileY = (int) enemy.getTilePosition().getY();
-//				
-//				if(enemy.getDirectionMovement() == 1)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()-65, enemy.getWorldCoords().getY()));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX][tileY-1].setCollision();
-//					enemy.setTilePosition(new Vector(tileX, tileY-1));
-//				}
-//				else if (enemy.getDirectionMovement() == 2)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()+65, enemy.getWorldCoords().getY()));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX][tileY+1].setCollision();
-//					enemy.setTilePosition(new Vector(tileX, tileY+1));
-//				}
-//				else if(enemy.getDirectionMovement() == 3)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()-65));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX-1][tileY].setCollision();
-//					enemy.setTilePosition(new Vector(tileX-1, tileY));
-//				}
-//				else if (enemy.getDirectionMovement() == 4)
-//				{
-//					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()+65));
-//					tileSet[tileX][tileY].resetCollision();
-//					tileSet[tileX+1][tileY].setCollision();
-//					enemy.setTilePosition(new Vector(tileX+1, tileY));
-//				}
-//			}
-//			else if(enemy.getPixelCount() > 65)
-//			{
-//				System.out.println("Uh-oh");
-//			}
-//		}
+		if(nx.player.getStatus() == 9)
+		{
+						
+			if(wait >= 100)
+			{
+				nx.enterState(Nex.GAMEOVERSTATE, new FadeOutTransition(), new FadeInTransition());
+			}
+			else
+				wait++;
+		}
+		
 	}
 	
-	//this builds a new graph based on changes made to the map and will rerun dijkstras to produce a usable graph
-//	public static void buildGraph(){
-//
-//		graph = new Graph();
-//
-//		for(Iterator<Node> i = graph.nodes.iterator(); i.hasNext();){
-//			Node n = i.next();
-//			for(Iterator<Edge> j = n.edges.iterator(); j.hasNext();){
-//				Edge e = j.next();
-//				e.weight = tileSet[e.myX][e.myY].getWeight();
-//			}
-//		}		
-		
-		
-//		dijkstraGraph = Dijkstra.runDijkstra(graph, row, col);
-
-//		System.out.println(dijkstraGraph.size());
-//		for (Node g : dijkstraGraph)
-//		{
-//			System.out.println("x = " + g.x + ", y = " + g.y + ", dist = " + g.dist);
-//		}
-//	}
 		
 	//Finds a place to put a monster on the game board
 	public void generateMonsterLoc(){

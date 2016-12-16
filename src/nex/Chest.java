@@ -49,6 +49,7 @@ public class Chest extends Entity{
 	public int interact(){
 		
 		if(status == CLOSED){
+			ResourceManager.getSound(Nex.OPEN_CHEST).play();
 			switch(orientation){
 				case UP:
 					removeImage(ResourceManager.getImage(Nex.CHEST_CLOSED_U));
