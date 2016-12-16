@@ -191,7 +191,7 @@ public class PlayingState extends BasicGameState {
 			
 				//-----
 				int offset = 0;
-				for(int i = 0; i < 2; i++){
+				for(int i = 0; i < 30; i++){
 					int monsterX = 15;
 					int monsterY = 15;
 					
@@ -783,8 +783,8 @@ public class PlayingState extends BasicGameState {
 		for(EnemyCharacters e : monsters){
 			
 			System.out.println("Enemy " + e + " is at pos: " + e.getTilePosition());
-			
 			System.out.println("Check = " + (e.getTilePosition().getX() == attackPosition.getX()));
+
 			if((e.getTilePosition().getX() == attackPosition.getX()) && (e.getTilePosition().getY() == attackPosition.getY())){
 				System.out.println("Hit em");
 				e.doDamage(damage);

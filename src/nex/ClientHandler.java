@@ -8,6 +8,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import jig.Vector;
+
 public class ClientHandler extends Thread {
 	
 	DataInputStream in;
@@ -90,13 +92,19 @@ public class ClientHandler extends Thread {
 			    for (EnemyCharacters e : PlayingState.monsters)
 				{
 			    	out.writeInt(e.damage);
+			    	e.damage = 0;
 			    	e.aliveOrDead = in.readInt();
 			    	e.movingDirection = in.readInt();
+			    	out.writeInt(e.attackOrIdle);
+			    	e.attackOrIdle = in.readInt();
 			    	int somex = in.readInt();
 			    	int somey = in.readInt();
 			    	//System.out.println("x: " + somex + " y: " + somey);
 					e.setX(somex-PlayingState.offsetX);
 					e.setY(somey-PlayingState.offsetY);	
+					e.setY(somey-PlayingState.offsetY);	
+			    	//System.out.println("x: " + e.getX() + " y: " + e.getY());
+					e.setTilePosition(new Vector((int)Math.floor(( (somey+1268-300-33)/65)), (int)Math.floor(( (somex+1268-400-33) /65))) );
 				}
 
 					
