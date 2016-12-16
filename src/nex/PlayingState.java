@@ -1,6 +1,7 @@
 package nex;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 import org.newdawn.slick.GameContainer;
@@ -38,7 +39,8 @@ public class PlayingState extends BasicGameState {
 	/*
 	 * Player setup
 	 */
-	static int player1x = 867, player1y = 967, player1Speed = 5;
+//	static int player1x = 867, player1y = 967, player1Speed = 5;
+	static int player1x = 19*65+33, player1y = 19*65+33, player1Speed = 5;
 	boolean playerCollision = false;
 	String debugString;
 	boolean hmove = false, vmove = false;
@@ -87,10 +89,10 @@ public class PlayingState extends BasicGameState {
 			
 			stoneLayer = map.getLayerIndex("Stone_Background");
 //			stoneLayer = map.getLayerIndex("Red_Line");
-			collisionLayer = map.getLayerIndex("Collision");
+//			collisionLayer = map.getLayerIndex("Collision");
 			
 			//System.out.println(stoneLayer);
-			//System.out.println(collisionLayer);			
+			System.out.println(collisionLayer);			
 			
 			initVars();
 		
@@ -98,30 +100,30 @@ public class PlayingState extends BasicGameState {
 			nx.player.setPlayerPosition(new Vector(19,19));
 			tileSet[19][19].setCollision();
 			
-			monsterX = (int)nx.player.getPlayerPosition().getX();
-			monsterY = (int)nx.player.getPlayerPosition().getY();
+//			monsterX = (int)nx.player.getPlayerPosition().getX();
+//			monsterY = (int)nx.player.getPlayerPosition().getY();
 			
 			/*
 			 * Add and set up enemies
 			 */
-//			for(int i = 0; i < 3; i++)
-//			{
+			for(int i = 0; i < 2; i++)
+			{
 				
 				// DEBUG
-				//generateMonsterLoc();
-					monsterX = 15;
-					monsterY = 19;
+				generateMonsterLoc();
+//				monsterX = 15+2*i;
+//				monsterY = 15+i;
 			
 				//-----
 			
-				EnemyCharacters enemy = new EnemyCharacters(1, (monsterY*65)-player1x+33, (monsterX*65)-player1y+33);
-				monsters.add(enemy);
+				EnemyCharacters enemy = new EnemyCharacters(1, (monsterX*65)-player1x+400+33, (monsterY*65)-player1y+300+33);
 				enemy.setTilePosition(new Vector(monsterX, monsterY));
-				enemy.setMapPosition(new Vector((monsterY*65)-player1x+32, (monsterX*65)-player1y+32));
-//				enemy.setID(i);
-				enemy.setID(0);
+				enemy.setWorldCoords(new Vector((monsterX*65)+33, (monsterY*65)+33));
+				enemy.setID(i);
+				enemy.setID(1);
+				monsters.add(enemy);
 				tileSet[monsterX][monsterY].setCollision();
-//			}
+			}
 	}
 	
 	@Override
@@ -141,8 +143,8 @@ public class PlayingState extends BasicGameState {
 		
 		//----- Render -----//
 		
-		map.render(-player1x,-player1y,stoneLayer);
-		map.render(-player1x,-player1y,collisionLayer);
+		map.render(-player1x+400,-player1y+300,stoneLayer);
+		map.render(-player1x+400,-player1y+300,collisionLayer);
 //		map.render(-hspeed,-vspeed,stoneLayer);
 		
 //		System.out.println(map.getTileId(20, 20, map.getLayerIndex("Stone_Background")));
@@ -186,7 +188,8 @@ public class PlayingState extends BasicGameState {
 			int drawY = 190;
 			for (EnemyCharacters e : monsters)
 			{
-				g.drawString("Monster #" + e.getID() + " position = " + e.getPosition(), 10, drawY);
+				g.drawString("Monster #" + e.getID() + " position = " + e.getWorldCoords() + ", tilePosition = " + e.getTilePosition() + ", collision " +
+						tileSet[(int)e.getTilePosition().getX()][(int)e.getTilePosition().getY()].getCollision(), 10, drawY);
 				drawY += 20;
 			}
 		}
@@ -198,7 +201,9 @@ public class PlayingState extends BasicGameState {
 //				g.drawLine(printPath.x*65+33, printPath.y*65+33, printPath.px*65+33, printPath.py*65+33);
 //			}
 //		}
-		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
+		g.drawString("hmove = " + hmove + ", vmove = " + vmove + "\nhspeed = " + hspeed + ", vspeed = " + vspeed + "\nplayer position = " + 
+				nx.player.getPlayerPosition() + "\nOther player position = " + nx.otherPlayer.getPlayerPosition() + "\nPlayerNumber = " + 
+				playerNumber + "\nNumber of Players = " + numberOfPlayers, 10, 50);
 		
 		//		System.out.println(count + " blocks rendered"); // DEBUG
 		
@@ -233,11 +238,11 @@ public class PlayingState extends BasicGameState {
 	public void shift(Nex nx, int hspeed, int vspeed)
 	{
 	
-//		for (EnemyCharacters e : monsters)
-//		{
-//			e.setX(e.getX()-hspeed);
-//			e.setY(e.getY()-vspeed);
-//		}
+		for (EnemyCharacters e : monsters)
+		{
+			e.setX(e.getX()-hspeed);
+			e.setY(e.getY()-vspeed);
+		}
 		
 		offsetX += hspeed;
 		offsetY += vspeed;
@@ -269,7 +274,9 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- Moving Player ---------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
-		if(Math.abs(player1x) % 65 == 22 || Math.abs(player1x) % 65 == 43)
+		
+//		System.out.println("player1x = " + player1x + ", player1y = " + player1y);
+		if(Math.abs(player1x) % 65 == 33)
 		{
 			hmove = false;
 			hspeed = 0;
@@ -278,7 +285,7 @@ public class PlayingState extends BasicGameState {
 			col = (int)nx.player.getPlayerPosition().getY();
 		}
 		
-		if(Math.abs(player1y) % 65 == 57 || Math.abs(player1y) % 65 == 8)
+		if(Math.abs(player1y) % 65 == 33)
 		{
 			vmove = false;
 			vspeed = 0;
@@ -447,25 +454,145 @@ public class PlayingState extends BasicGameState {
 		/*--------------------------------------------------------------------------------------------------------*/
 		/*-------------------------------------------- Enemy Movement --------------------------------------------*/
 		/*--------------------------------------------------------------------------------------------------------*/
-		for (EnemyCharacters e : monsters)
+		for (EnemyCharacters enemy : monsters)
 		{
-			int playerX = (int)nx.player.getPlayerPosition().getX();
-			int playerY = (int)nx.player.getPlayerPosition().getY();
-			int enemyX = (int)e.getTilePosition().getX();
-			int enemyY = (int)e.getTilePosition().getY();
 			
-//			System.out.println("playerX = " + playerX + ", playerY = " + playerY);
-//			
-//			if(playerY >= enemyY) // Player is to the left of the enemy
-//			{
-//				e.setX(e.getX());
-//				e.setY(e.getY()+3);
-//			}
+//			enemy.setPosition(new Vector(enemy.getX(),enemy.getY()));
 			
-//			if()
+			int enemyX = (int) enemy.getWorldCoords().getX(); // gets pixel
+			int enemyY = (int) enemy.getWorldCoords().getY(); // gets pixel
+			
+			int p1x = player1x;
+			int p1y = player1y;
+			
+			int enemySpeed = 1;
+			
+//			System.out.println("enemyX = " + enemyX + ", enemyY = " + enemyY + 
+//					", p1x = " + p1x + ", p1y = " + p1y);
+			
+			if(!enemy.getMoving())
+			{		
+				int tileX = (int) enemy.getTilePosition().getX();
+				int tileY = (int) enemy.getTilePosition().getY();
+				
+				System.out.println("tileX = " + tileX + ", tileY" + tileY);
+				
+				if (enemyX > p1x){ // Left
+					System.out.println("Go Left");
+					enemy.setDirectionMovement(1);
+				}	
+				else if (enemyX < p1x){ // Right
+					System.out.println("Go Right");
+					enemy.setDirectionMovement(2);
+				} 
+				else if(enemyY > p1y){ // Up
+					System.out.println("Go Up");
+					enemy.setDirectionMovement(3);
+				} 
+				else if (enemyY < p1y){ // Down
+					System.out.println("Go Down");
+					enemy.setDirectionMovement(4);
+				}
+				
+				enemyX = (int) enemy.getPosition().getX();		//gets pixel
+				enemyY = (int) enemy.getPosition().getY();		//gets pixel
+				
+				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				} 
+				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				} 
+				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				} 
+				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+					enemy.setMoving(true);
+				}
+				else if(enemy.getDirectionMovement() == 0){
+					enemy.setPosition(new Vector(enemyX,enemyY)); // Don't move
+				}
+				
+			}
+			else if(enemy.getMoving() && enemy.getPixelCount() < 65)
+			{
+				enemyX = (int) enemy.getPosition().getX();		//gets pixel
+				enemyY = (int) enemy.getPosition().getY();		//gets pixel
+				
+				int tileX = (int) enemy.getTilePosition().getX();
+				int tileY = (int) enemy.getTilePosition().getY();
+				
+				if(enemy.getDirectionMovement() == 3 && tileSet[tileX-1][tileY].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX, enemyY-enemySpeed)); // Up
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				} 
+				else if(enemy.getDirectionMovement() == 4 && tileSet[tileX+1][tileY].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX,enemyY+enemySpeed)); // Down
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				} 
+				else if(enemy.getDirectionMovement() == 2 && tileSet[tileX][tileY+1].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX+enemySpeed,enemyY)); // Right
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				} 
+				else if(enemy.getDirectionMovement() == 1 && tileSet[tileX][tileY-1].getCollision() == 0){
+					enemy.setPosition(new Vector(enemyX-enemySpeed,enemyY)); // Left
+					enemy.setPixelCount(enemy.getPixelCount()+enemySpeed);
+				}
+				else if(enemy.getDirectionMovement() == 0){
+					enemy.setPosition(new Vector(enemyX,enemyY)); // Don't move
+				}
+				
+			}
+			else if(enemy.getPixelCount() == 65) // Hit the center of a tile
+			{
+				enemy.setMoving(false);
+				enemy.setPixelCount(0);
+				
+				int tileX = (int) enemy.getTilePosition().getX();
+				int tileY = (int) enemy.getTilePosition().getY();
+				
+				if(enemy.getDirectionMovement() == 1)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()-65, enemy.getWorldCoords().getY()));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX][tileY-1].setCollision();
+					enemy.setTilePosition(new Vector(tileX, tileY-1));
+				}
+				else if (enemy.getDirectionMovement() == 2)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX()+65, enemy.getWorldCoords().getY()));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX][tileY+1].setCollision();
+					enemy.setTilePosition(new Vector(tileX, tileY+1));
+				}
+				else if(enemy.getDirectionMovement() == 3)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()-65));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX-1][tileY].setCollision();
+					enemy.setTilePosition(new Vector(tileX-1, tileY));
+				}
+				else if (enemy.getDirectionMovement() == 4)
+				{
+					enemy.setWorldCoords(new Vector(enemy.getWorldCoords().getX(), enemy.getWorldCoords().getY()+65));
+					tileSet[tileX][tileY].resetCollision();
+					tileSet[tileX+1][tileY].setCollision();
+					enemy.setTilePosition(new Vector(tileX+1, tileY));
+				}
+			}
+			else if(enemy.getPixelCount() > 65)
+			{
+				System.out.println("Uh-oh");
+			}
 		}
-		
-	
 	}
 	
 	//this builds a new graph based on changes made to the map and will rerun dijkstras to produce a usable graph

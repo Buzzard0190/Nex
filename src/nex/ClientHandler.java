@@ -58,6 +58,7 @@ public class ClientHandler extends Thread {
 
 			    out.writeInt(PlayingState.player1x);
 			    out.writeInt(PlayingState.player1y);
+			    
 			   
 			    PlayingState.numberOfPlayers = in.read();
 			    if(PlayingState.playerNumber == 1){
@@ -76,14 +77,14 @@ public class ClientHandler extends Thread {
 			    
 			    }
 			    
-			    for (EnemyCharacters e : PlayingState.monsters)
-				{
-			    	int somex = in.readInt();
-			    	int somey = in.readInt();
-//			    	System.out.println("x: " + somex + " y: " + somey);
-					e.setX(somex-PlayingState.offsetX);
-					e.setY(somey-PlayingState.offsetY);
-				}
+//			    for (EnemyCharacters e : PlayingState.monsters)
+//				{
+//			    	int somex = in.readInt();
+//			    	int somey = in.readInt();
+////			    	System.out.println("x: " + somex + " y: " + somey);
+//					e.setX(somex-PlayingState.offsetX);
+//					e.setY(somey-PlayingState.offsetY);
+//				}
 
 					
 			} catch (IOException e) {
